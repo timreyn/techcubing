@@ -3,10 +3,19 @@ package(
 )
 
 java_library(
+    name = "BaseHandler",
+    srcs = ["BaseHandler.java"],
+    deps = [
+        "@org_freemarker_freemarker//jar",
+        "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+    ],
+)
+
+java_library(
     name = "HomeHandler",
     srcs = ["HomeHandler.java"],
     deps = [
-        "@org_freemarker_freemarker//jar",
+        ":BaseHandler",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
     ],
 )
