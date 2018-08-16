@@ -11,8 +11,8 @@ enum Role {
 }
 
 message Avatar {
-  url = 1;
-  thumb_url = 2;
+  string url = 1;
+  string thumb_url = 2;
 }
 
 message PersonalBest {
