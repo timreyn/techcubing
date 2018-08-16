@@ -11,7 +11,7 @@ public class ServerState {
   public ServerState() throws IOException {
     templateConfig = new Configuration(Configuration.VERSION_2_3_28);
     templateConfig.setDirectoryForTemplateLoading(new File(
-          "src/main/java/org/cubingusa/techcubing/server/templates"));
+          "src/main/java/org/cubingusa/techcubing/templates"));
     templateConfig.setDefaultEncoding("UTF-8");
     templateConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
   }
