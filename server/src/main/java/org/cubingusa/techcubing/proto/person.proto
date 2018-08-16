@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package techcubing;
 
@@ -12,34 +12,36 @@ enum Gender {
 }
 
 enum Role {
-  DELEGATE = 0;
-  ORGANIZER = 1;
+  NONE = 0;
+  DELEGATE = 1;
+  ORGANIZER = 2;
 }
 
 message PersonalBest {
-  optional string event_id = 1;
-  optional int64 result = 2;
-  optional int32 world_ranking = 3;
-  optional int32 continental_ranking = 4;
-  optional int32 national_ranking = 5;
+  string event_id = 1;
+  int64 result = 2;
+  int32 world_ranking = 3;
+  int32 continental_ranking = 4;
+  int32 national_ranking = 5;
 
   enum Type {
-    SINGLE = 0;
-    AVERAGE = 1;
+    UNKNOWN = 0;
+    SINGLE = 1;
+    AVERAGE = 2;
   }
-  optional Type type = 6;
+  Type type = 6;
 }
 
 message Person {
-  optional int32 registrant_id = 1;
-  optional string name = 2;
-  optional int32 wca_user_id = 3;
-  optional string wca_id = 4;
-  optional string country_iso2 = 5;
+  int32 registrant_id = 1;
+  string name = 2;
+  int32 wca_user_id = 3;
+  string wca_id = 4;
+  string country_iso2 = 5;
 
-  optional Gender gender = 6 [default = UNKNOWN];
+  Gender gender = 6;
 
-  optional string avatar_thumbnail = 7;
+  string avatar_thumbnail = 7;
 
   repeated Role roles = 8;
 
