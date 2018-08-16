@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package techcubing;
+
+option java_package = "org.cubingusa.techcubing.proto";
+
+enum DeviceType {
+  JUDGE = 0;
+  SCRAMBLER = 1;
+}
+
+message Device {
+  optional uint64 device_id = 1;
+
+  optional DeviceType type = 2;
+
+  optional string visible_name = 3;
+}
