@@ -10,3 +10,10 @@ local_repository(
 
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 grpc_java_repositories()
+
+maven_jar(
+    name = "org_freemarker_freemarker",
+    artifact = "org.freemarker:freemarker:2.3.28",
+    sha1 = "7200064467a935052f99d114c2c05c3d189bc6d6",
+    sha1_src = "b9e763fd0149515ec3b19cc7025385e7a177bdb0",
+)
