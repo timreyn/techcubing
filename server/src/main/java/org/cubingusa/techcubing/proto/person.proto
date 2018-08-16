@@ -17,11 +17,11 @@ enum Role {
 }
 
 message PersonalBest {
-  optional string eventId = 1;
+  optional string event_id = 1;
   optional int64 result = 2;
-  optional int32 worldRanking = 3;
-  optional int32 continentalRanking = 4;
-  optional int32 nationalRanking = 5;
+  optional int32 world_ranking = 3;
+  optional int32 continental_ranking = 4;
+  optional int32 national_ranking = 5;
 
   enum Type {
     SINGLE = 0;
@@ -31,17 +31,17 @@ message PersonalBest {
 }
 
 message Person {
-  optional int32 registrantId = 1;
+  optional int32 registrant_id = 1;
   optional string name = 2;
-  optional int32 wcaUserId = 3;
-  optional string wcaId = 4;
-  optional string countryIso2 = 5;
+  optional int32 wca_user_id = 3;
+  optional string wca_id = 4;
+  optional string country_iso2 = 5;
 
   optional Gender gender = 6 [default = UNKNOWN];
 
-  optional string avatarThumbnail = 7;
+  optional string avatar_thumbnail = 7;
 
   repeated Role roles = 8;
 
-  repeated PersonalBest personalBests = 9;
+  repeated PersonalBest personal_bests = 9;
 }
