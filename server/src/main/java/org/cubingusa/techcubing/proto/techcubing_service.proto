@@ -25,6 +25,6 @@ message AcquireDeviceResponse {
   Person person = 3;
 }
 
-service AcquireDeviceService {
+service TechcubingService {
   rpc AcquireDevice (AcquireDeviceRequest) returns (AcquireDeviceResponse);
 }

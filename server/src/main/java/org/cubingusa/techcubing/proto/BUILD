@@ -21,8 +21,8 @@ java_proto_library(
 )
 
 proto_library(
-    name = "acquire_device_service_proto",
-    srcs = ["acquire_device_service.proto"],
+    name = "techcubing_service_proto",
+    srcs = ["techcubing_service.proto"],
     deps = [
         ":person_proto",
         ":device_proto",
@@ -30,12 +30,12 @@ proto_library(
 )
 
 java_proto_library(
-    name = "acquire_device_service_java_proto",
-    deps = [":acquire_device_service_proto"],
+    name = "techcubing_service_java_proto",
+    deps = [":techcubing_service_proto"],
 )
 
 java_grpc_library(
-    name = "acquire_device_service_java_grpc",
-    srcs = [":acquire_device_service_proto"],
-    deps = [":acquire_device_service_java_proto"],
+    name = "techcubing_service_java_grpc",
+    srcs = [":techcubing_service_proto"],
+    deps = [":techcubing_service_java_proto"],
 )
