@@ -3,3 +3,5 @@ bazel-genfiles
 bazel-out
 bazel-server
 bazel-testlogs
+*.swp
+*.swo
