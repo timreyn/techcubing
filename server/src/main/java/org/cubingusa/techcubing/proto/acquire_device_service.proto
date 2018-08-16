@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "org.cubingusa.techcubing.proto";
+
+import "src/main/java/org/cubingusa/techcubing/proto/device.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/person.proto";
+
+message AcquireDeviceRequest {
+  uint64 device_id = 1;
+  uint64 person_wca_id = 2;
+}
+
+enum AcquireDeviceResult {
+  ok = 0;
+  not_available = 1;
+}
+
+message AcquireDeviceResponse {
+  AcquireDeviceResult result = 1;
+
+  Device device = 2;
+
+  Person person = 3;
+}
+
+service AcquireDeviceService {
+  rpc AcquireDevice (AcquireDeviceRequest) returns (AcquireDeviceResponse);
+}
