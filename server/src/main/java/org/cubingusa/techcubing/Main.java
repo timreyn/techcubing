@@ -3,8 +3,8 @@ package org.cubingusa.techcubing;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import org.cubingusa.techcubing.server.HomeHandler;
-import org.cubingusa.techcubing.server.ServerState;
+import org.cubingusa.techcubing.framework.ServerState;
+import org.cubingusa.techcubing.handlers.HomeHandler;
 
 public class Main {
   public static void main(String args[]) {

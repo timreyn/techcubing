@@ -1,4 +1,4 @@
-package org.cubingusa.techcubing.server;
+package org.cubingusa.techcubing.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
+import org.cubingusa.techcubing.framework.ServerState;
 
 public class HomeHandler implements HttpHandler {
   private ServerState serverState;

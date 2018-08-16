@@ -1,4 +1,4 @@
-package org.cubingusa.techcubing.server;
+package org.cubingusa.techcubing.framework;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
