@@ -38,3 +38,10 @@ maven_jar(
     sha1 = "f20d4304a476a92001930d75747adcc232dbe779",
     sha1_src = "ee1a774b4e839b293d7d4ce5bcf59ec70224569c",
 )
+
+maven_jar(
+    name = "mysql_mysql_connector_java",
+    artifact = "mysql:mysql-connector-java:8.0.12",
+    sha1 = "08e201602cc1ddd145c4c74e67d4002d3d4b1796",
+    sha1_src = "b1eadbd4489464ace2249c118a8d83539f2409f5",
+)

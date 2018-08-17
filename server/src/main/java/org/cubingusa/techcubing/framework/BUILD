@@ -23,3 +23,11 @@ java_library(
     name = "QueryParser",
     srcs = ["QueryParser.java"],
 )
+
+java_library(
+    name = "MysqlConnection",
+    srcs = ["MysqlConnection.java"],
+    deps = [
+        "@mysql_mysql_connector_java//jar",
+    ],
+)
