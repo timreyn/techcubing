@@ -1,10 +1,19 @@
 <html>
 <head>
-  <title>Welcome!</title>
+  <title>Select a Competition</title>
 </head>
 <body>
   <h1>
-    My Competitions
+    Select Competition
   </h1>
+  <ul>
+    <#list competitions as competition>
+      <li>
+        <a href="/select_competition?id=${competition.id}">
+          ${competition.short_name}
+        </a>
+      </li>
+    </#list>
+  </ul>
 </body>
 </html>
