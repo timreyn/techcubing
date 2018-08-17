@@ -6,6 +6,7 @@ java_library(
     name = "ServerState",
     srcs = ["ServerState.java"],
     deps = [
+        ":MysqlConnection",
         "@org_freemarker_freemarker//jar",
     ],
 )

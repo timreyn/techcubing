@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import org.cubingusa.techcubing.framework.ServerState;
+import org.cubingusa.techcubing.framework.MysqlConnection;
 import org.cubingusa.techcubing.handlers.CompetitionsHandler;
 import org.cubingusa.techcubing.handlers.HomeHandler;
 import org.cubingusa.techcubing.handlers.OAuthRedirectHandler;
@@ -19,6 +20,7 @@ public class Main {
         new ServerState()
         .setWcaEnvironment(ServerState.WcaEnvironment.PROD)
         .setTemplateConfig(getTemplateConfig())
+        .setMysqlConnection(new MysqlConnection())
         .setPort(8118);
       //server.createContext("/", new HomeHandler(serverState));
       server.createContext("/oauth_redirect", new OAuthRedirectHandler(serverState));
@@ -26,7 +28,7 @@ public class Main {
       server.start();
       System.out.println("TechCubing is running!");
       System.out.println("Visit http://localhost:8118 in a browser to get started.");
-    } catch (IOException e) {
+    } catch (Exception e) {
       System.out.println("Failed to start the server!");
       e.printStackTrace();
     }

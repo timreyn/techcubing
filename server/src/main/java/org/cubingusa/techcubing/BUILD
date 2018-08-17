@@ -5,6 +5,7 @@ java_binary(
     deps = [
         "@org_freemarker_freemarker//jar",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+        "//src/main/java/org/cubingusa/techcubing/framework:MysqlConnection",
         "//src/main/java/org/cubingusa/techcubing/handlers:CompetitionsHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:HomeHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:OAuthRedirectHandler",

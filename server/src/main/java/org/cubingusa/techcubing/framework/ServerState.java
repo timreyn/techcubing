@@ -8,6 +8,7 @@ public class ServerState {
   private String accessToken = null;
   private String accessTokenGuard = "";
   private int port;
+  private MysqlConnection mysqlConnection;
   private WcaEnvironment wcaEnvironment = WcaEnvironment.PROD;
 
   public ServerState setTemplateConfig(Configuration templateConfig) {
@@ -26,6 +27,15 @@ public class ServerState {
 
   public int getPort() {
     return port;
+  }
+
+  public ServerState setMysqlConnection(MysqlConnection connection) {
+    this.mysqlConnection = connection;
+    return this;
+  }
+
+  public MysqlConnection getMysqlConnection() {
+    return mysqlConnection;
   }
 
   public enum WcaEnvironment {
