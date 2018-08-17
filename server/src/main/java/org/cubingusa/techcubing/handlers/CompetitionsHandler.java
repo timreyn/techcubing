@@ -1,7 +1,6 @@
 package org.cubingusa.techcubing.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +13,7 @@ public class CompetitionsHandler extends BaseHandler {
   }
 
   @Override
-  protected void handleImpl(HttpExchange t) throws IOException {
+  protected void handleImpl(HttpExchange t) throws Exception {
     ZonedDateTime fromTime = ZonedDateTime.now().minusMonths(1);
     JSONArray response = (JSONArray) getWcaApi(
         "/competitions?managed_by_me=true&start=" + fromTime.toString());

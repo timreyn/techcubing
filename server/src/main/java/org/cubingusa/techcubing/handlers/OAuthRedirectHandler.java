@@ -1,7 +1,6 @@
 package org.cubingusa.techcubing.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +13,7 @@ public class OAuthRedirectHandler extends BaseHandler {
   }
 
   @Override
-  protected void handleImpl(HttpExchange t) throws IOException {
+  protected void handleImpl(HttpExchange t) throws Exception {
     URI requestUri = t.getRequestURI();
     Map<String, String> query = QueryParser.parseQuery(requestUri);
     if (query.isEmpty()) {
@@ -25,7 +24,6 @@ public class OAuthRedirectHandler extends BaseHandler {
     
     serverState.storeAccessToken(query.get("access_token"));
 
-    t.getResponseHeaders().add("Location", query.get("state"));
-    t.sendResponseHeaders(302, 0);
+    redirectTo(URI.create(query.get("state")), t);
   }
 }

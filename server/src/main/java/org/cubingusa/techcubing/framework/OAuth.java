@@ -5,8 +5,8 @@ import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 
 public class OAuth {
-  public static String redirectUri(URI targetUri, ServerState serverState) {
-    URI uri = UriBuilder.fromUri(serverState.getWcaSite())
+  public static URI redirectUri(URI targetUri, ServerState serverState) {
+    return UriBuilder.fromUri(serverState.getWcaSite())
       .path("/oauth/authorize")
       .queryParam("client_id", serverState.getOAuthClientId())
       .queryParam("redirect_uri", String.format("http://localhost:%d/oauth_redirect", serverState.getPort()))
@@ -14,6 +14,5 @@ public class OAuth {
       .queryParam("scope", "public manage_competitions")
       .queryParam("state", targetUri.toString())
       .build();
-    return uri.toString();
   }
 }

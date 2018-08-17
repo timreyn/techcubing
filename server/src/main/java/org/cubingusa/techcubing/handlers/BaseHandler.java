@@ -15,6 +15,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.UriBuilder;
+import org.cubingusa.techcubing.framework.QueryParser;
 import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.framework.OAuth;
 import org.json.simple.JSONObject;
@@ -23,6 +24,7 @@ import org.json.simple.JSONValue;
 public abstract class BaseHandler implements HttpHandler {
   protected ServerState serverState;
   private String accessToken;
+  protected Map<String, String> queryParams;
 
   public BaseHandler(ServerState serverState) {
     this.serverState = serverState;
@@ -51,13 +53,13 @@ public abstract class BaseHandler implements HttpHandler {
       if (requiresOAuthToken()) {
         this.accessToken = serverState.takeAccessToken();
         if (this.accessToken == null) {
-          t.getResponseHeaders().add(
-              "Location", OAuth.redirectUri(t.getRequestURI(), serverState));
-          t.sendResponseHeaders(302, 0);
-          t.getResponseBody().close();
+          redirectTo(OAuth.redirectUri(t.getRequestURI(), serverState), t);
           return;
         }
       }
+
+      queryParams = QueryParser.parseQuery(t.getRequestURI());
+
       handleImpl(t);
     } catch (Exception e) {
       e.printStackTrace();
@@ -89,10 +91,15 @@ public abstract class BaseHandler implements HttpHandler {
     return JSONValue.parse(content.toString());
   }
 
-  protected abstract void handleImpl(HttpExchange t) throws IOException;
+  protected abstract void handleImpl(HttpExchange t) throws Exception;
 
   protected boolean requiresOAuthToken() {
     return false;
   }
-}
 
+  protected void redirectTo(URI target, HttpExchange t) throws IOException {
+    t.getResponseHeaders().add("Location", target.toString());
+    t.sendResponseHeaders(302, 0);
+    t.getResponseBody().close();
+  }
+}

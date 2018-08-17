@@ -9,7 +9,7 @@
   <ul>
     <#list competitions as competition>
       <li>
-        <a href="/select_competition?id=${competition.id}">
+        <a href="/set_competition?id=${competition.id}">
           ${competition.short_name}
         </a>
       </li>

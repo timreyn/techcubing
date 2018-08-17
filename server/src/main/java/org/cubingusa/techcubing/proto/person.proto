@@ -3,6 +3,7 @@ syntax = "proto3";
 package techcubing;
 
 option java_package = "org.cubingusa.techcubing.proto";
+option java_outer_classname = "PersonProto";
 
 enum Role {
   none = 0;

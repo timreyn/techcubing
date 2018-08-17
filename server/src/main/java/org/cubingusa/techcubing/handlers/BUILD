@@ -44,3 +44,16 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
     ],
 )
+
+java_library(
+    name = "SetCompetitionHandler",
+    srcs = ["SetCompetitionHandler.java"],
+    deps = [
+        ":BaseHandler",
+        "@com_google_protobuf//:protobuf_java_util",
+        "@com_googlecode_json_simple_json_simple//jar",
+        "//src/main/java/org/cubingusa/techcubing/framework:MysqlConnection",
+        "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+        "//src/main/java/org/cubingusa/techcubing/proto:person_java_proto",
+    ],
+)
