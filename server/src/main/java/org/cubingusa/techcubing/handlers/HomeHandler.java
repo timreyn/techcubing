@@ -12,7 +12,7 @@ public class HomeHandler extends BaseHandler {
   }
 
   @Override
-  public void handle(HttpExchange t) throws IOException {
+  protected void handleImpl(HttpExchange t) throws IOException {
     Map<String, Object> model = new HashMap<>();
     writeResponse(model, "home.ftlh", t);
   }

@@ -7,7 +7,11 @@ java_library(
     srcs = ["BaseHandler.java"],
     deps = [
         "@org_freemarker_freemarker//jar",
+        "@com_googlecode_json_simple_json_simple//jar",
+        "@javax_javaee_web_api//jar",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+        "//src/main/java/org/cubingusa/techcubing/framework:OAuth",
+        "//src/main/java/org/cubingusa/techcubing/framework:QueryParser",
     ],
 )
 
@@ -16,6 +20,27 @@ java_library(
     srcs = ["HomeHandler.java"],
     deps = [
         ":BaseHandler",
+        "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+    ],
+)
+
+java_library(
+    name = "OAuthRedirectHandler",
+    srcs = ["OAuthRedirectHandler.java"],
+    deps = [
+        ":BaseHandler",
+        "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+        "//src/main/java/org/cubingusa/techcubing/framework:OAuth",
+        "//src/main/java/org/cubingusa/techcubing/framework:QueryParser",
+    ],
+)
+
+java_library(
+    name = "CompetitionsHandler",
+    srcs = ["CompetitionsHandler.java"],
+    deps = [
+        ":BaseHandler",
+        "@com_googlecode_json_simple_json_simple//jar",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
     ],
 )

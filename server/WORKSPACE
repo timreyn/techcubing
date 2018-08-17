@@ -17,3 +17,24 @@ maven_jar(
     sha1 = "7200064467a935052f99d114c2c05c3d189bc6d6",
     sha1_src = "b9e763fd0149515ec3b19cc7025385e7a177bdb0",
 )
+
+maven_jar(
+    name = "com_googlecode_json_simple_json_simple",
+    artifact = "com.googlecode.json-simple:json-simple:1.1.1",
+    sha1 = "c9ad4a0850ab676c5c64461a05ca524cdfff59f1",
+    sha1_src = "15bba08e3a239d54b68209c001f9c911559d2fed",
+)
+
+maven_jar(
+    name = "javax_javaee_web_api",
+    artifact = "javax:javaee-web-api:8.0",
+    sha1 = "dd21587dd7515f8ddad285cf019a6acb18d6e3ba",
+    sha1_src = "c0c9f8a15ba50eb7ec73dded40ee46c5d6ce67e6",
+)
+
+maven_jar(
+    name = "org_glassfish_jersey_core_jersey_common",
+    artifact = "org.glassfish.jersey.core:jersey-common:2.27",
+    sha1 = "f20d4304a476a92001930d75747adcc232dbe779",
+    sha1_src = "ee1a774b4e839b293d7d4ce5bcf59ec70224569c",
+)
