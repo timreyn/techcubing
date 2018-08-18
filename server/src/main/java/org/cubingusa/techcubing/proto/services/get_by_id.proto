@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "org.cubingusa.techcubing.proto.services";
+option java_outer_classname = "GetByIdProto";
+
+import "google/protobuf/any.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/request_context.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/response_context.proto";
+
+message GetByIdRequest {
+  RequestContext context = 1;
+
+  string proto_type = 2;
+  string id = 3;
+}
+
+message GetByIdResponse {
+  ResponseContext context = 1;
+
+  enum Status {
+    OK = 0;
+    PROTO_NOT_FOUND = 1;
+    ENTITY_NOT_FOUND = 2;
+  }
+  Status status = 2;
+
+  google.protobuf.Any entity = 3;
+}
