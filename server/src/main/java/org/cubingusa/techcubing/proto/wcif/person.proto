@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package techcubing.wcif;
+
+option java_package = "org.cubingusa.techcubing.proto.wcif";
+option java_multiple_files = true;
+
+import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
+
+enum WcifRole {
+  delegate = 0;
+  organizer = 1;
+}
+
+message WcifAvatar {
+  string url = 1;
+  string thumb_url = 2;
+}
+
+message WcifPersonalBest {
+  string event_id = 1 [
+    (techcubing.message_type) = "techcubing.wcif.WcifEvent"
+  ];
+  int64 best = 2;
+  int32 world_ranking = 3;
+  int32 continental_ranking = 4;
+  int32 national_ranking = 5;
+
+  enum Type {
+    single = 0;
+    average = 1;
+  }
+  Type type = 6;
+}
+
+message WcifPerson {
+  option (techcubing.mysql_table_name) = "Person";
+
+  int32 registrant_id = 1;
+  string name = 2;
+  int32 wca_user_id = 3 [(techcubing.primary_key) = true];
+  string wca_id = 4;
+  string country_iso2 = 5;
+
+  // Omitted: gender
+  // Omitted: birthdate
+  // Omitted: email
+
+  WcifAvatar avatar = 6;
+
+  repeated WcifRole roles = 7;
+
+  // Omitted: registration
+  // Omitted: assignment
+
+  repeated WcifPersonalBest personal_bests = 8;
+
+  string competition_id = 9 [
+    (techcubing.parent_ref) = true,
+    (techcubing.message_type) = "techcubing.wcif.WcifCompetition"
+  ];
+}

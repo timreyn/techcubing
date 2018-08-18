@@ -1,13 +1,16 @@
 package(default_visibility = ["//visibility:public"])
 
 proto_library(
-    name = "person_proto",
-    srcs = ["person.proto"],
+    name = "options_proto",
+    srcs = ["options.proto"],
+    deps = [
+        "@com_google_protobuf//:descriptor_proto",
+    ],
 )
 
 java_proto_library(
-    name = "person_java_proto",
-    deps = [":person_proto"],
+    name = "options_java_proto",
+    deps = [":options_proto"],
 )
 
 proto_library(

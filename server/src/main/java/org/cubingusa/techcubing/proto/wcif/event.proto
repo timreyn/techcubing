@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package techcubing.wcif;
+
+option java_package = "org.cubingusa.techcubing.proto.wcif";
+option java_multiple_files = true;
+
+import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/wcif/round.proto";
+
+message WcifEvent {
+  option (techcubing.mysql_table_name) = "Event";
+
+  string id = 1 [(techcubing.primary_key) = true];
+
+  repeated WcifRound rounds = 2;
+  repeated string round_ids = 3 [
+    (techcubing.id_for) = "rounds",
+    (techcubing.message_type) = "techcubing.wcif.WcifRound"
+  ];
+
+  // Omitted: competitorLimit
+  // Omitted: qualification
+
+  string competition_id = 4 [
+    (techcubing.parent_ref) = true,
+    (techcubing.message_type) = "techcubing.wcif.WcifCompetition"
+  ];
+}
