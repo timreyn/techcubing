@@ -3,9 +3,9 @@ package org.cubingusa.techcubing.handlers;
 import com.google.protobuf.util.JsonFormat;
 import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
-import org.cubingusa.techcubing.framework.MysqlConnection;
 import org.cubingusa.techcubing.framework.ServerState;
-import org.cubingusa.techcubing.proto.PersonProto.Person;
+//import org.cubingusa.techcubing.framework.ProtoDb;
+import org.cubingusa.techcubing.proto.wcif.WcifCompetition;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -24,15 +24,12 @@ public class SetCompetitionHandler extends BaseHandler {
     JSONObject response = (JSONObject) getWcaApi(
         "/competitions/" + competitionId + "/wcif");
 
-    MysqlConnection connection = serverState.getMysqlConnection();
-    connection.initializeCompetition(competitionId, false);
+    //MysqlConnection connection = serverState.getMysqlConnection();
+    //ProtoDb.initializeCompetition(competitionId, serverState);
 
-    for (Object personJson : (JSONArray) response.get("persons")) {
-      Person.Builder personBuilder = Person.newBuilder();
-      JsonFormat.parser().ignoringUnknownFields().merge(personJson.toString(), personBuilder);
-      Person person = personBuilder.build();
-      connection.putProto(person, person.getWcaUserId(), connection.getPersonsTable());
-    }
+    WcifCompetition.Builder competitionBuilder = WcifCompetition.newBuilder();
+    JsonFormat.parser().ignoringUnknownFields().merge(response.toString(), competitionBuilder);
+    //ProtoDb.recursivelyWrite(competitionBuilder.build(), serverState);
 
     writeResponse(response, "set_competition.ftlh", t);
   }

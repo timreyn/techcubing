@@ -12,6 +12,17 @@ java_library(
 )
 
 java_library(
+    name = "ServerStateInitializer",
+    srcs = ["ServerStateInitializer.java"],
+    deps = [
+        ":MysqlConnection",
+        ":ServerState",
+        "@org_freemarker_freemarker//jar",
+    ],
+    visibility = ["//src/main/java/org/cubingusa/techcubing:__pkg__"],
+)
+
+java_library(
     name = "OAuth",
     srcs = ["OAuth.java"],
     deps = [

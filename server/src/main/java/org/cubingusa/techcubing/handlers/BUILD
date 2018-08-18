@@ -54,6 +54,6 @@ java_library(
         "@com_googlecode_json_simple_json_simple//jar",
         "//src/main/java/org/cubingusa/techcubing/framework:MysqlConnection",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
-        "//src/main/java/org/cubingusa/techcubing/proto:person_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto/wcif:competition_java_proto",
     ],
 )
