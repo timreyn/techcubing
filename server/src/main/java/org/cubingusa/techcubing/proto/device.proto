@@ -9,6 +9,7 @@ enum DeviceType {
   UNKNOWN = 0;
   JUDGE = 1;
   SCRAMBLER = 2;
+  COMMAND_LINE = 3;
 }
 
 message Device {
