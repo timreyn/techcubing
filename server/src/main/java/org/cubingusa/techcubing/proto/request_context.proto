@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "org.cubingusa.techcubing.proto";
+option java_outer_classname = "RequestContextProto";
+
+import "src/main/java/org/cubingusa/techcubing/proto/device.proto";
+
+message RequestContext {
+  Device device = 1;
+}

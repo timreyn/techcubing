@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "org.cubingusa.techcubing.proto.services";
+option java_outer_classname = "TechcubingServiceProto";
+
+import "src/main/java/org/cubingusa/techcubing/proto/services/list_persons.proto";
+
+service TechcubingService {
+  rpc ListPersons (ListPersonsRequest) returns (ListPersonsResponse);
+}

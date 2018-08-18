@@ -1,7 +1,5 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
-
 proto_library(
     name = "person_proto",
     srcs = ["person.proto"],
@@ -23,21 +21,22 @@ java_proto_library(
 )
 
 proto_library(
-    name = "techcubing_service_proto",
-    srcs = ["techcubing_service.proto"],
-    deps = [
-        ":person_proto",
-        ":device_proto",
-    ],
+    name = "request_context_proto",
+    srcs = ["request_context.proto"],
+    deps = [":device_proto"],
 )
 
 java_proto_library(
-    name = "techcubing_service_java_proto",
-    deps = [":techcubing_service_proto"],
+    name = "request_context_java_proto",
+    deps = [":request_context_proto"],
 )
 
-java_grpc_library(
-    name = "techcubing_service_java_grpc",
-    srcs = [":techcubing_service_proto"],
-    deps = [":techcubing_service_java_proto"],
+proto_library(
+    name = "response_context_proto",
+    srcs = ["response_context.proto"],
+)
+
+java_proto_library(
+    name = "response_context_java_proto",
+    deps = [":response_context_proto"],
 )
