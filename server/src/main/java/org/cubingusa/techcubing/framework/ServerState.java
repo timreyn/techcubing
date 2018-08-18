@@ -8,6 +8,7 @@ public class ServerState {
   private String accessToken = null;
   private String accessTokenGuard = "";
   private int port;
+  private int grpcPort;
   private MysqlConnection mysqlConnection;
   private WcaEnvironment wcaEnvironment = WcaEnvironment.PROD;
 
@@ -27,6 +28,15 @@ public class ServerState {
 
   public int getPort() {
     return port;
+  }
+
+  public ServerState setGrpcPort(int port) {
+    this.grpcPort = port;
+    return this;
+  }
+
+  public int getGrpcPort() {
+    return grpcPort;
   }
 
   public ServerState setMysqlConnection(MysqlConnection connection) {

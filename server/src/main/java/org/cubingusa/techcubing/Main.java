@@ -1,6 +1,8 @@
 package org.cubingusa.techcubing;
 
 import com.sun.net.httpserver.HttpServer;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
@@ -12,6 +14,7 @@ import org.cubingusa.techcubing.handlers.CompetitionsHandler;
 import org.cubingusa.techcubing.handlers.HomeHandler;
 import org.cubingusa.techcubing.handlers.OAuthRedirectHandler;
 import org.cubingusa.techcubing.handlers.SetCompetitionHandler;
+import org.cubingusa.techcubing.services.TechCubingServiceImpl;
 
 public class Main {
   public static void main(String args[]) {
@@ -22,14 +25,20 @@ public class Main {
         .setWcaEnvironment(ServerState.WcaEnvironment.PROD)
         .setTemplateConfig(getTemplateConfig())
         .setMysqlConnection(new MysqlConnection())
-        .setPort(8118);
-      //server.createContext("/", new HomeHandler(serverState));
+        .setPort(8118)
+        .setGrpcPort(8119);
       server.createContext("/oauth_redirect", new OAuthRedirectHandler(serverState));
       server.createContext("/competitions", new CompetitionsHandler(serverState));
       server.createContext("/set_competition", new SetCompetitionHandler(serverState));
       server.start();
       System.out.println("TechCubing is running!");
       System.out.println("Visit http://localhost:8118 in a browser to get started.");
+
+      TechCubingServiceImpl grpcImpl = new TechCubingServiceImpl(serverState);
+      Server grpcServer = ServerBuilder.forPort(8119).addService(grpcImpl).build();
+      grpcServer.start();
+      System.out.println("gRPC service listening on port 8119.");
+      grpcServer.awaitTermination();
     } catch (Exception e) {
       System.out.println("Failed to start the server!");
       e.printStackTrace();

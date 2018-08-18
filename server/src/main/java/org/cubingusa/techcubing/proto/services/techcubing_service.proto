@@ -3,10 +3,10 @@ syntax = "proto3";
 package techcubing;
 
 option java_package = "org.cubingusa.techcubing.proto.services";
-option java_outer_classname = "TechcubingServiceProto";
+option java_outer_classname = "TechCubingServiceProto";
 
 import "src/main/java/org/cubingusa/techcubing/proto/services/list_persons.proto";
 
-service TechcubingService {
+service TechCubingService {
   rpc ListPersons (ListPersonsRequest) returns (ListPersonsResponse);
 }
