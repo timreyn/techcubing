@@ -141,11 +141,11 @@ public class ProtoDb {
     statement.executeUpdate();
   }
 
-  public static <E extends Message.Builder> E getById(
-      String id, E e, ServerState serverState)
+  public static Message getById(
+      String id, Message.Builder tmpl, ServerState serverState)
       throws SQLException, IOException {
-    e.clear();
-    String tableName = getTable(e.getDescriptorForType(), serverState);
+    tmpl.clear();
+    String tableName = getTable(tmpl.getDescriptorForType(), serverState);
     if (tableName == null) {
       return null;
     }
@@ -154,19 +154,19 @@ public class ProtoDb {
     statement.setString(1, id);
     ResultSet results = statement.executeQuery();
     if (results.next()) {
-      e.mergeFrom(results.getBlob("data").getBinaryStream());
-      return e;
+      tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
+      return tmpl.build();
     } else {
       return null;
     }
   }
 
-  public static <E extends Message.Builder> List<E> getAll(
-      E e, ServerState serverState)
+  public static List<Message> getAll(
+      Message.Builder tmpl, ServerState serverState)
       throws SQLException, IOException {
-    e.clear();
-    List<E> values = new ArrayList<>();
-    String tableName = getTable(e.getDescriptorForType(), serverState);
+    tmpl.clear();
+    List<Message> values = new ArrayList<>();
+    String tableName = getTable(tmpl.getDescriptorForType(), serverState);
     if (tableName == null) {
       return values;
     }
@@ -174,9 +174,9 @@ public class ProtoDb {
         "SELECT data FROM " + tableName)
       .executeQuery();
     while (results.next()) {
-      E eClone = (E) e.clone();
-      eClone.mergeFrom(results.getBlob("data").getBinaryStream());
-      values.add(eClone);
+      Message.Builder value = (Message.Builder) tmpl.clone();
+      tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
+      values.add(tmpl.build());
     }
     return values;
   }

@@ -21,15 +21,15 @@ public class ProtoRegistry {
     builders.put(descriptor.getFullName(), builder);
   }
 
-  Descriptor getProto(String name) {
+  public Descriptor getProto(String name) {
     return descriptors.get(name);
   }
 
-  Collection<Descriptor> allProtos() {
+  public Collection<Descriptor> allProtos() {
     return descriptors.values();
   }
 
-  Message.Builder getBuilder(String name) {
+  public Message.Builder getBuilder(String name) {
     return builders.get(name);
   }
 }

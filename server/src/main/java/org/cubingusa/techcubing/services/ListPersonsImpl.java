@@ -1,5 +1,6 @@
 package org.cubingusa.techcubing.services;
 
+import com.google.protobuf.Message;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.cubingusa.techcubing.framework.ProtoDb;
@@ -18,9 +19,9 @@ class ListPersonsImpl {
   public ListPersonsResponse listPersons(ListPersonsRequest request) {
     ListPersonsResponse.Builder responseBuilder = ListPersonsResponse.newBuilder();
     try {
-      for (WcifPerson.Builder personBuilder :
+      for (Message person :
            ProtoDb.getAll(WcifPerson.newBuilder(), serverState)) {
-        responseBuilder.addPersons(personBuilder.build());
+        responseBuilder.addPersons((WcifPerson) person);
       }
     } catch (SQLException | IOException e) {
       e.printStackTrace();
