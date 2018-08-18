@@ -46,7 +46,6 @@ java_library(
     name = "MysqlConnection",
     srcs = ["MysqlConnection.java"],
     deps = [
-        "@com_google_protobuf//:protobuf_java",
         "@mysql_mysql_connector_java//jar",
     ],
 )
@@ -63,6 +62,18 @@ java_library(
     name = "ProtoUtil",
     srcs = ["ProtoUtil.java"],
     deps = [
+        "@com_google_protobuf//:protobuf_java",
+        "//src/main/java/org/cubingusa/techcubing/proto:options_java_proto",
+    ],
+)
+
+java_library(
+    name = "ProtoDb",
+    srcs = ["ProtoDb.java"],
+    deps = [
+        ":MysqlConnection",
+        ":ProtoUtil",
+        ":ServerState",
         "@com_google_protobuf//:protobuf_java",
         "//src/main/java/org/cubingusa/techcubing/proto:options_java_proto",
     ],

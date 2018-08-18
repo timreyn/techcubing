@@ -4,7 +4,7 @@ import com.google.protobuf.util.JsonFormat;
 import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
 import org.cubingusa.techcubing.framework.ServerState;
-//import org.cubingusa.techcubing.framework.ProtoDb;
+import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.proto.wcif.WcifCompetition;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,12 +24,11 @@ public class SetCompetitionHandler extends BaseHandler {
     JSONObject response = (JSONObject) getWcaApi(
         "/competitions/" + competitionId + "/wcif");
 
-    //MysqlConnection connection = serverState.getMysqlConnection();
-    //ProtoDb.initializeCompetition(competitionId, serverState);
+    ProtoDb.initializeCompetition(competitionId, serverState);
 
     WcifCompetition.Builder competitionBuilder = WcifCompetition.newBuilder();
     JsonFormat.parser().ignoringUnknownFields().merge(response.toString(), competitionBuilder);
-    //ProtoDb.recursivelyWrite(competitionBuilder.build(), serverState);
+    ProtoDb.recursivelyWrite(competitionBuilder.build(), serverState);
 
     writeResponse(response, "set_competition.ftlh", t);
   }

@@ -12,6 +12,7 @@ public class ServerState {
   private MysqlConnection mysqlConnection;
   private WcaEnvironment wcaEnvironment = WcaEnvironment.PROD;
   private ProtoRegistry protoRegistry;
+  private String competitionId;
 
   public ServerState setTemplateConfig(Configuration templateConfig) {
     this.templateConfig = templateConfig;
@@ -104,5 +105,14 @@ public class ServerState {
 
   public ProtoRegistry getProtoRegistry() {
     return protoRegistry;
+  }
+
+  public ServerState setCompetitionId(String competitionId) {
+    this.competitionId = competitionId;
+    return this;
+  }
+
+  public String getCompetitionId() {
+    return competitionId;
   }
 }
