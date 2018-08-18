@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.cubingusa.techcubing.framework.MysqlConnection;
 import org.cubingusa.techcubing.framework.ServerState;
-import org.cubingusa.techcubing.proto.PersonProto.Person;
+import org.cubingusa.techcubing.proto.wcif.WcifPerson;
 import org.cubingusa.techcubing.proto.services.ListPersonsProto.ListPersonsRequest;
 import org.cubingusa.techcubing.proto.services.ListPersonsProto.ListPersonsResponse;
 
@@ -25,7 +25,7 @@ class ListPersonsImpl {
         .executeQuery();
       while (results.next()) {
         responseBuilder.addPersons(
-            Person.parseFrom(results.getBlob("data").getBinaryStream()));
+            WcifPerson.parseFrom(results.getBlob("data").getBinaryStream()));
       }
     } catch (SQLException | IOException e) {
       e.printStackTrace();

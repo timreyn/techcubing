@@ -18,8 +18,8 @@ java_library(
     deps = [
         "//src/main/java/org/cubingusa/techcubing/framework:MysqlConnection",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
-        "//src/main/java/org/cubingusa/techcubing/proto:person_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/services:list_persons_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto/wcif:person_java_proto",
     ],
 )
 

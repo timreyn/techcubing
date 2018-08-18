@@ -28,9 +28,9 @@ proto_library(
     name = "list_persons_proto",
     srcs = ["list_persons.proto"],
     deps = [
-        "//src/main/java/org/cubingusa/techcubing/proto:person_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:request_context_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:response_context_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto/wcif:person_proto",
     ],
 )
 

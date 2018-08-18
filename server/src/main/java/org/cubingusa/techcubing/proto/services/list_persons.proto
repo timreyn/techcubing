@@ -7,7 +7,7 @@ option java_outer_classname = "ListPersonsProto";
 
 import "src/main/java/org/cubingusa/techcubing/proto/request_context.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/response_context.proto";
-import "src/main/java/org/cubingusa/techcubing/proto/person.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/wcif/person.proto";
 
 message ListPersonsRequest {
   RequestContext context = 1;
@@ -16,5 +16,5 @@ message ListPersonsRequest {
 message ListPersonsResponse {
   ResponseContext context = 1;
 
-  repeated Person persons = 2;
+  repeated wcif.WcifPerson persons = 2;
 }
