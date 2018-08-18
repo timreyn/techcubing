@@ -11,6 +11,7 @@ public class ServerState {
   private int grpcPort;
   private MysqlConnection mysqlConnection;
   private WcaEnvironment wcaEnvironment = WcaEnvironment.PROD;
+  private ProtoRegistry protoRegistry;
 
   public ServerState setTemplateConfig(Configuration templateConfig) {
     this.templateConfig = templateConfig;
@@ -94,5 +95,14 @@ public class ServerState {
       this.accessToken = null;
       return token;
     }
+  }
+
+  public ServerState setProtoRegistry(ProtoRegistry protoRegistry) {
+    this.protoRegistry = protoRegistry;
+    return this;
+  }
+
+  public ProtoRegistry getProtoRegistry() {
+    return protoRegistry;
   }
 }
