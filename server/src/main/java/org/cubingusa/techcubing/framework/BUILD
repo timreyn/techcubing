@@ -58,3 +58,12 @@ java_library(
         "@com_google_protobuf//:protobuf_java",
     ],
 )
+
+java_library(
+    name = "ProtoUtil",
+    srcs = ["ProtoUtil.java"],
+    deps = [
+        "@com_google_protobuf//:protobuf_java",
+        "//src/main/java/org/cubingusa/techcubing/proto:options_java_proto",
+    ],
+)
