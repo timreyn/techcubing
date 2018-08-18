@@ -3,6 +3,7 @@ package org.cubingusa.techcubing;
 import com.sun.net.httpserver.HttpServer;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.protobuf.services.ProtoReflectionService;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
@@ -35,7 +36,11 @@ public class Main {
       System.out.println("Visit http://localhost:8118 in a browser to get started.");
 
       TechCubingServiceImpl grpcImpl = new TechCubingServiceImpl(serverState);
-      Server grpcServer = ServerBuilder.forPort(8119).addService(grpcImpl).build();
+      Server grpcServer = ServerBuilder
+        .forPort(8119)
+        .addService(grpcImpl)
+        .addService(ProtoReflectionService.newInstance())
+        .build();
       grpcServer.start();
       System.out.println("gRPC service listening on port 8119.");
       grpcServer.awaitTermination();

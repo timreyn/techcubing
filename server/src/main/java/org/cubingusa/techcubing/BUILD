@@ -5,6 +5,8 @@ java_binary(
     deps = [
         "@org_freemarker_freemarker//jar",
         "@io_grpc_grpc_java//core",
+        "@io_grpc_grpc_java//protobuf",
+        "@io_grpc_grpc_services//jar",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/framework:MysqlConnection",
         "//src/main/java/org/cubingusa/techcubing/handlers:CompetitionsHandler",

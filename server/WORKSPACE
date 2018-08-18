@@ -12,6 +12,13 @@ load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 grpc_java_repositories()
 
 maven_jar(
+    name = "io_grpc_grpc_services",
+    artifact = "io.grpc:grpc-services:1.14.0",
+    sha1 = "ea4b522eb829a30e43a5695f8590993a70bb92c5",
+    sha1_src = "86c9866fb466efe90d633ea25096f0408845fa49",
+)
+
+maven_jar(
     name = "org_freemarker_freemarker",
     artifact = "org.freemarker:freemarker:2.3.28",
     sha1 = "7200064467a935052f99d114c2c05c3d189bc6d6",
