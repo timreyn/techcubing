@@ -32,10 +32,10 @@ public class ServerStateInitializer {
 
   static ProtoRegistry getProtoRegistry() {
     ProtoRegistry registry = new ProtoRegistry();
-    registry.registerProto(WcifCompetition.getDescriptor());
-    registry.registerProto(WcifEvent.getDescriptor());
-    registry.registerProto(WcifPerson.getDescriptor());
-    registry.registerProto(WcifRound.getDescriptor());
+    registry.registerProto(WcifCompetition.newBuilder());
+    registry.registerProto(WcifEvent.newBuilder());
+    registry.registerProto(WcifPerson.newBuilder());
+    registry.registerProto(WcifRound.newBuilder());
     return registry;
   }
 }
