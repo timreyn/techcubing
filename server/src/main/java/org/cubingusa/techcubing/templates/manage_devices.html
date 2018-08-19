@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>Devices</title>
+</head>
+<body>
+  <h1>Devices</h1>
+  <h2>Existing devices</h2>
+  <#list devicesByType as deviceType, devices>
+    <h3>${deviceType}</h3>
+    <ul>
+      <#list devices as device>
+        <li>
+          ${visible_name} (device ${device.id})
+        </li>
+      </#list>
+    </ul>
+  </#list>
+  <h2>Create a new device</h2>
+  <form action="/create_device" method="POST">
+    <p>
+      <div>Type of device:</div>
+      <select name="deviceType">
+        <#list devicesByType as deviceType, devices>
+          <option>${deviceType}</option>
+        </#list>
+      </select>
+    </p>
+    <p>
+      <div>Name of device:</div>
+      <input type="text" name="deviceName" width="50">
+    </p>
+    <p>
+      <button type="submit" value="Submit">Submit</button>
+    </p>
+  </form>
+</body>
+</html>

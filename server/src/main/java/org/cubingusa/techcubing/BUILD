@@ -10,6 +10,7 @@ java_binary(
         "//src/main/java/org/cubingusa/techcubing/framework:ServerStateInitializer",
         "//src/main/java/org/cubingusa/techcubing/handlers:CompetitionsHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:IndexHandler",
+        "//src/main/java/org/cubingusa/techcubing/handlers:ManageDevicesHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:OAuthRedirectHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:SetCompetitionHandler",
         "//src/main/java/org/cubingusa/techcubing/services:TechCubingServiceImpl",
