@@ -43,7 +43,7 @@ public class ProtoDb {
       System.out.println("Preparing table " + tableName);
       connection.prepareStatement(
           "CREATE TABLE IF NOT EXISTS " + tableName + " (" +
-          "  id VARCHAR(50) PRIMARY KEY, " +
+          "  id VARCHAR(50) PRIMARY KEY UNIQUE, " +
           "  data BLOB " +
           ")").executeUpdate();
       // TODO: add other fields as needed.
@@ -134,10 +134,9 @@ public class ProtoDb {
     String tableName = getTable(descriptor, serverState);
     PreparedStatement statement = serverState.getMysqlConnection().prepareStatement(
         "INSERT INTO " + tableName + " (id, data) VALUES (?, ?) " +
-        "ON DUPLICATE KEY UPDATE data = ?");
+        "ON DUPLICATE KEY UPDATE data = VALUES(data)");
     statement.setString(1, id);
     statement.setBlob(2, new SerialBlob(message.toByteArray()));
-    statement.setBlob(3, new SerialBlob(message.toByteArray()));
     statement.executeUpdate();
   }
 
@@ -175,8 +174,8 @@ public class ProtoDb {
       .executeQuery();
     while (results.next()) {
       Message.Builder value = (Message.Builder) tmpl.clone();
-      tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
-      values.add(tmpl.build());
+      value.mergeFrom(results.getBlob("data").getBinaryStream());
+      values.add(value.build());
     }
     return values;
   }
