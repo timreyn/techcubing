@@ -8,8 +8,9 @@ option java_multiple_files = true;
 import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
 
 enum WcifRole {
-  delegate = 0;
-  organizer = 1;
+  unknown = 0;
+  delegate = 1;
+  organizer = 2;
 }
 
 message WcifAvatar {
@@ -27,8 +28,9 @@ message WcifPersonalBest {
   int32 national_ranking = 5;
 
   enum Type {
-    single = 0;
-    average = 1;
+    unknown = 0;
+    single = 1;
+    average = 2;
   }
   Type type = 6;
 }
@@ -42,9 +44,10 @@ message WcifRegistration {
   ];
 
   enum Status {
-    accepted = 0;
-    pending = 1;
-    deleted = 2;
+    unknown = 0;
+    accepted = 1;
+    pending = 2;
+    deleted = 3;
   }
   Status status = 2;
 

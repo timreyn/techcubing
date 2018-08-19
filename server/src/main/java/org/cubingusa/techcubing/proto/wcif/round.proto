@@ -21,9 +21,10 @@ message WcifCutoff {
 
 message WcifAdvancementCondition {
   enum Type {
-    ranking = 0;
-    percent = 1;
-    attemptResult = 2;
+    unknown = 0;
+    ranking = 1;
+    percent = 2;
+    attemptResult = 3;
   }
   Type type = 1;
   uint32 level = 2;
