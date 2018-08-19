@@ -25,6 +25,7 @@ message AcquireScorecardResponse {
     SCORECARD_NOT_AVAILABLE = 3;
     ROUND_COMPLETED = 4;
     INTERNAL_ERROR = 5;
+    ALREADY_HAVE_A_SCORECARD = 6;
   }
   Status status = 2;
 

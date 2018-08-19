@@ -2,6 +2,8 @@ package org.cubingusa.techcubing.services;
 
 import com.google.protobuf.Message;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.framework.ServerState;
@@ -27,6 +29,24 @@ class AcquireScorecardImpl {
       final Device device = (Device) ProtoDb.getById(
           request.getContext().getDeviceId(), Device.newBuilder(), serverState);
 
+      // Check if the device already has a scorecard.
+      PreparedStatement statement =
+        serverState.getMysqlConnection().prepareStatement(
+            "SELECT data FROM " +
+            ProtoDb.getTable(Scorecard.getDescriptor(), serverState) +
+            " where active_device_id = ?");
+      statement.setString(1, device.getId());
+
+      ResultSet results = statement.executeQuery();
+      if (results.next()) {
+        responseBuilder.getScorecardBuilder().mergeFrom(
+            results.getBlob("data").getBinaryStream());
+        responseBuilder.setStatus(
+            AcquireScorecardResponse.Status.ALREADY_HAVE_A_SCORECARD);
+        return responseBuilder.build();
+      }
+
+      // Try to atomically acquire the scorecard.
       ProtoDb.UpdateResult updateResult = ProtoDb.atomicUpdate(
           Scorecard.newBuilder(), scorecardId,
           new ProtoDb.ProtoUpdate() {
@@ -64,6 +84,7 @@ class AcquireScorecardImpl {
     } catch (SQLException | IOException e) {
       responseBuilder.setStatus(
           AcquireScorecardResponse.Status.INTERNAL_ERROR);
+      e.printStackTrace();
     }
 
     return responseBuilder.build();
