@@ -45,8 +45,10 @@ public class ProtoDb {
       connection.prepareStatement(
           "CREATE TABLE IF NOT EXISTS " + tableName + " (" +
           "  id VARCHAR(50) PRIMARY KEY UNIQUE, " +
-          "  data BLOB " +
+          "  data BLOB, " +
+          "  last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP " +
           ")").executeUpdate();
+
       // Add other columns that might be needed.
       for (FieldDescriptor field : descriptor.getFields()) {
         String mysqlColumnName =
@@ -262,5 +264,45 @@ public class ProtoDb {
       values.add(value.build());
     }
     return values;
+  }
+
+  // Used to atomically update a message in the database, and ensure that no
+  // intervening updates occur.
+  public interface ProtoUpdate {
+    public void update(Message.Builder builder);
+  }
+  public static void atomicUpdate(
+      Message.Builder tmpl, String id, ProtoUpdate update,
+      ServerState serverState)
+      throws SQLException, IllegalArgumentException, IOException {
+    String tableName = getTable(tmpl.getDescriptorForType(), serverState);
+    for (int i = 0; i < 10; i++) {
+      tmpl.clear();
+      PreparedStatement statement = serverState.getMysqlConnection().prepareStatement(
+          "SELECT data, last_update FROM " + tableName + " WHERE id = ?");
+      statement.setString(1, id);
+      ResultSet results = statement.executeQuery();
+      if (!results.next()) {
+        throw new IllegalArgumentException("No entity of ID " + id + "found.");
+      }
+      tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
+
+      update.update(tmpl);
+
+      statement = serverState.getMysqlConnection().prepareStatement(
+          "UPDATE " + tableName + " SET data = ? WHERE id = ? AND last_update = ?");
+      statement.setBlob(1, new SerialBlob(tmpl.build().toByteArray()));
+      statement.setString(2, id);
+      statement.setTimestamp(3, results.getTimestamp("last_update"));
+      if (statement.executeUpdate() == 1) {
+        return;
+      }
+      System.out.println(
+          "Failed to atomically update " + tableName + " row " + id + " " +
+          (i + 1) + " times.");
+    }
+    throw new RuntimeException(
+        "Failed to atomically update " + tableName + " row " + id +
+        "after 10 tries.");
   }
 }

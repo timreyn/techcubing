@@ -16,11 +16,16 @@ public class DeleteDeviceHandler extends BaseHandler {
 
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
-    Device device = (Device) ProtoDb.getById(
-        queryParams.get("id"), Device.newBuilder(), serverState);
-    if (device != null && device.getDeactivated().getSeconds() == 0) {
-      device = device.toBuilder().setDeactivated(ProtoUtil.getCurrentTime()).build();
-      ProtoDb.write(device, serverState);
+    try {
+      ProtoDb.atomicUpdate(
+          Device.newBuilder(), queryParams.get("id"), new ProtoDb.ProtoUpdate() {
+            @Override
+            public void update(Message.Builder builder) {
+              ((Device.Builder) builder).setDeactivated(ProtoUtil.getCurrentTime());
+            }
+          }, serverState);
+    } catch (IllegalArgumentException e) {
+      // This happens when an invalid id gets passed.  It's okay.
     }
     redirectTo(URI.create("/manage_devices"), t);
   }
