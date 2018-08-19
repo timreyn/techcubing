@@ -6,6 +6,7 @@ proto_library(
     name = "techcubing_service_proto",
     srcs = ["techcubing_service.proto"],
     deps = [
+        ":acquire_scorecard_proto",
         ":get_by_id_proto",
         ":list_persons_proto",
     ],
@@ -20,6 +21,7 @@ java_grpc_library(
     name = "techcubing_service_java_grpc",
     srcs = [":techcubing_service_proto"],
     deps = [
+        ":acquire_scorecard_java_proto",
         ":get_by_id_java_proto",
         ":list_persons_java_proto",
         ":techcubing_service_java_proto",
@@ -54,4 +56,19 @@ proto_library(
 java_proto_library(
     name = "get_by_id_java_proto",
     deps = [":get_by_id_proto"],
+)
+
+proto_library(
+    name = "acquire_scorecard_proto",
+    srcs = ["acquire_scorecard.proto"],
+    deps = [
+        "//src/main/java/org/cubingusa/techcubing/proto:request_context_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto:response_context_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto:scorecard_proto",
+    ],
+)
+
+java_proto_library(
+    name = "acquire_scorecard_java_proto",
+    deps = [":acquire_scorecard_proto"],
 )

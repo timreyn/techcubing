@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "org.cubingusa.techcubing.proto.services";
+option java_outer_classname = "AcquireScorecardProto";
+
+import "src/main/java/org/cubingusa/techcubing/proto/request_context.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/response_context.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/scorecard.proto";
+
+message AcquireScorecardRequest {
+  RequestContext context = 1;
+
+  string scorecard_id = 2;
+}
+
+message AcquireScorecardResponse {
+  ResponseContext context = 1;
+
+  enum Status {
+    OK = 0;
+    SCORECARD_NOT_FOUND = 1;
+    OUT_OF_ORDER_REQUEST = 2;
+    SCORECARD_NOT_AVAILABLE = 3;
+    ROUND_COMPLETED = 4;
+  }
+  Status status = 2;
+
+  Scorecard scorecard = 3;
+}
