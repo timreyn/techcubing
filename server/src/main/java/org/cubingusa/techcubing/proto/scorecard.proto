@@ -57,6 +57,11 @@ message Scorecard {
     (techcubing.mysql_column_name) = "round_id"
   ];
 
+  string active_device_id = 6 [
+    (techcubing.message_type) = "techcubing.Device",
+    (techcubing.mysql_column_name) = "active_device_id"
+  ];
+
   repeated Attempt attempts = 4;
 
   bool deleted = 5;
