@@ -190,6 +190,15 @@ public class ProtoDb {
     statement.setBlob(2, new SerialBlob(message.toByteArray()));
     statement.executeUpdate();
 
+    writeAdditionalColumns(message, serverState);
+  }
+
+  private static void writeAdditionalColumns(
+      Message message, ServerState serverState)
+      throws SQLException {
+    Descriptor descriptor = message.getDescriptorForType();
+    String id = ProtoUtil.getId(message);
+    String tableName = getTable(descriptor, serverState);
     for (FieldDescriptor field : descriptor.getFields()) {
       String mysqlColumnName =
         field.getOptions().getExtension(OptionsProto.mysqlColumnName);
@@ -291,12 +300,16 @@ public class ProtoDb {
       statement.setString(2, id);
       statement.setTimestamp(3, results.getTimestamp("last_update"));
       if (statement.executeUpdate() == 1) {
+        // Note that columns other than data are *not* updated atomically.
+        writeAdditionalColumns(tmpl.build(), serverState);
+
         return UpdateResult.OK;
       }
       System.out.println(
           "Failed to atomically update " + tableName + " row " + id + " " +
           (i + 1) + " times.");
     }
+
     return UpdateResult.RETRIES_EXCEEDED;
   }
 }
