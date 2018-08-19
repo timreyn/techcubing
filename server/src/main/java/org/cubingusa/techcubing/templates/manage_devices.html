@@ -10,13 +10,13 @@
     <ul>
       <#list devices as device>
         <li>
-          ${visible_name} (device ${device.id})
+          ${device.getVisibleName()} (device ${device.getId()})
         </li>
       </#list>
     </ul>
   </#list>
   <h2>Create a new device</h2>
-  <form action="/create_device" method="POST">
+  <form action="/add_device" method="POST">
     <p>
       <div>Type of device:</div>
       <select name="deviceType">

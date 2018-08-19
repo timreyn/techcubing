@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +111,15 @@ public abstract class BaseHandler implements HttpHandler {
         }
       }
 
-      queryParams = QueryParser.parseQuery(t.getRequestURI());
+      // Parse the request body and query params.
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      byte[] buffer = new byte[1024];
+      int length;
+      while ((length = t.getRequestBody().read(buffer)) != -1) {
+        baos.write(buffer, 0, length);
+      }
+      String requestBody = baos.toString(StandardCharsets.UTF_8.name());
+      queryParams = QueryParser.parseQuery(t.getRequestURI(), requestBody);
 
       handleImpl(t);
     } catch (Exception e) {

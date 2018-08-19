@@ -8,6 +8,7 @@ java_binary(
         "@io_grpc_grpc_services//jar",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerStateInitializer",
+        "//src/main/java/org/cubingusa/techcubing/handlers:AddDeviceHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:CompetitionsHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:IndexHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:ManageDevicesHandler",

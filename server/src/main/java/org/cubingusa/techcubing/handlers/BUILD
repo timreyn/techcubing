@@ -68,3 +68,15 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
     ],
 )
+
+java_library(
+    name = "AddDeviceHandler",
+    srcs = ["AddDeviceHandler.java"],
+    deps = [
+        ":BaseHandler",
+        "@com_google_protobuf//:protobuf_java",
+        "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
+        "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+        "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
+    ],
+)

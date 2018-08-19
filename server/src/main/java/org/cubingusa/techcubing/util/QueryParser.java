@@ -7,12 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class QueryParser {
-  public static Map<String, String> parseQuery(URI uri) {
+  public static Map<String, String> parseQuery(URI uri, String requestBody) {
     Map<String, String> queryPairs = new HashMap<>();
-    if (uri.getQuery() == null) {
-      return queryPairs;
+    String query = requestBody;
+    if (uri.getQuery() != null) {
+      query = requestBody + "&" + uri.getQuery();
     }
-    for (String pair : uri.getQuery().split("&")) {
+    for (String pair : query.split("&")) {
+      if (pair.isEmpty()) {
+        continue;
+      }
       int idx = pair.indexOf("=");
       try {
         queryPairs.put(
