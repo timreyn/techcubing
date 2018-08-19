@@ -78,5 +78,19 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/util:ProtoUtil",
+    ],
+)
+
+java_library(
+    name = "DeleteDeviceHandler",
+    srcs = ["DeleteDeviceHandler.java"],
+    deps = [
+        ":BaseHandler",
+        "@com_google_protobuf//:protobuf_java",
+        "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
+        "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+        "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/util:ProtoUtil",
     ],
 )

@@ -5,6 +5,7 @@ import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.DescriptorProtos.FieldOptions;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
+import com.google.protobuf.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import org.cubingusa.techcubing.proto.OptionsProto;
@@ -57,5 +58,12 @@ public class ProtoUtil {
     } else {
       builder.setField(descriptor, object);
     }
+  }
+
+  public static Timestamp getCurrentTime() {
+    long millis = System.currentTimeMillis();
+
+    return Timestamp.newBuilder().setSeconds(millis / 1000)
+      .setNanos((int) ((millis % 1000) * 1000000)).build();
   }
 }

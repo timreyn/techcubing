@@ -9,6 +9,7 @@ import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.framework.ServerStateInitializer;
 import org.cubingusa.techcubing.handlers.AddDeviceHandler;
 import org.cubingusa.techcubing.handlers.CompetitionsHandler;
+import org.cubingusa.techcubing.handlers.DeleteDeviceHandler;
 import org.cubingusa.techcubing.handlers.IndexHandler;
 import org.cubingusa.techcubing.handlers.ManageDevicesHandler;
 import org.cubingusa.techcubing.handlers.OAuthRedirectHandler;
@@ -29,6 +30,7 @@ public class Main {
       server.createContext("/set_competition", new SetCompetitionHandler(serverState));
       server.createContext("/manage_devices", new ManageDevicesHandler(serverState));
       server.createContext("/add_device", new AddDeviceHandler(serverState));
+      server.createContext("/delete_device", new DeleteDeviceHandler(serverState));
       server.start();
       System.out.println("TechCubing is running!");
       System.out.println("Visit http://localhost:8118 in a browser to get started.");

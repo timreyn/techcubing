@@ -10,6 +10,7 @@ import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.proto.DeviceProto.Device;
 import org.cubingusa.techcubing.proto.DeviceProto.DeviceType;
+import org.cubingusa.techcubing.util.ProtoUtil;
 
 public class AddDeviceHandler extends BaseHandler {
   public AddDeviceHandler(ServerState serverState) {
@@ -21,7 +22,8 @@ public class AddDeviceHandler extends BaseHandler {
     Device.Builder deviceBuilder =
       Device.newBuilder()
           .setId(String.valueOf(new Random().nextInt(90000000) + 10000000))
-          .setVisibleName(queryParams.get("deviceName"));
+          .setVisibleName(queryParams.get("deviceName"))
+          .setActivated(ProtoUtil.getCurrentTime());
 
     for (EnumValueDescriptor enumValue : DeviceType.getDescriptor().getValues()) {
       if (enumValue.getName().equals(queryParams.get("deviceType"))) {

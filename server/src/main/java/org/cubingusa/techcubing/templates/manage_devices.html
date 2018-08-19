@@ -10,7 +10,15 @@
     <ul>
       <#list devices as device>
         <li>
+          <form action="/delete_device" method="POST" id="${device.getId()}">
+            <input type="hidden" name="id" value="${device.getId()}">
+          </form>
           ${device.getVisibleName()} (device ${device.getId()})
+          <#if device.getDeactivated().getSeconds() == 0>
+            <button type="submit" value="Delete" form="${device.getId()}">Delete</button>
+          <#else>
+            [deleted]
+          </#if>
         </li>
       </#list>
     </ul>

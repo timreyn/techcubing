@@ -5,6 +5,7 @@ package techcubing;
 option java_package = "org.cubingusa.techcubing.proto";
 option java_outer_classname = "DeviceProto";
 
+import "google/protobuf/timestamp.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
 
 enum DeviceType {
@@ -22,4 +23,7 @@ message Device {
   DeviceType type = 2;
 
   string visible_name = 3;
+
+  google.protobuf.Timestamp activated = 4;
+  google.protobuf.Timestamp deactivated = 5;
 }

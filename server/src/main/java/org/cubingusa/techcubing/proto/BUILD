@@ -18,6 +18,7 @@ proto_library(
     srcs = ["device.proto"],
     deps = [
         ":options_proto",
+        "@com_google_protobuf//:timestamp_proto",
     ]
 )
 
