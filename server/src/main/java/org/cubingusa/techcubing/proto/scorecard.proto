@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package techcubing;
 
-option java_package = "org.cubingusa.techcubing.proto.wcif";
+option java_package = "org.cubingusa.techcubing.proto";
 option java_outer_classname = "ScorecardProto";
 
 import "google/protobuf/timestamp.proto";
@@ -55,5 +55,7 @@ message Scorecard {
     (techcubing.message_type) = "techcubing.wcif.WcifRound"
   ];
 
-  bool deleted = 4;
+  repeated Attempt attempts = 4;
+
+  bool deleted = 5;
 }
