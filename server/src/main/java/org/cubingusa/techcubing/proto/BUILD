@@ -16,6 +16,9 @@ java_proto_library(
 proto_library(
     name = "device_proto",
     srcs = ["device.proto"],
+    deps = [
+        ":options_proto",
+    ]
 )
 
 java_proto_library(

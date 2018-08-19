@@ -5,6 +5,7 @@ import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import org.cubingusa.techcubing.proto.DeviceProto.Device;
 import org.cubingusa.techcubing.proto.ScorecardProto.Scorecard;
 import org.cubingusa.techcubing.proto.wcif.WcifCompetition;
 import org.cubingusa.techcubing.proto.wcif.WcifEvent;
@@ -33,6 +34,7 @@ public class ServerStateInitializer {
 
   static ProtoRegistry getProtoRegistry() {
     ProtoRegistry registry = new ProtoRegistry();
+    registry.registerProto(Device.newBuilder());
     registry.registerProto(Scorecard.newBuilder());
     registry.registerProto(WcifCompetition.newBuilder());
     registry.registerProto(WcifEvent.newBuilder());
