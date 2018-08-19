@@ -18,6 +18,7 @@ import org.cubingusa.techcubing.util.WcifUtil;
 public class ScorecardGenerator {
   static public void generateScorecards(ServerState serverState)
       throws IOException, SQLException {
+    System.out.println("Generating scorecards");
     // TODO: Currently this is generating scorecards based on event registrations.
     // In the future this should use group assignments.
     Map<String, Scorecard> scorecardsByPersonAndRound = new HashMap<>();
@@ -65,6 +66,8 @@ public class ScorecardGenerator {
         }
       }
     }
+    System.out.println("Writing " + newScorecards.size() + " new scorecards.");
+    System.out.println("Deleting " + scorecardsByPersonAndRound.size() + " scorecards.");
     // Write new scorecards to the database.
     for (Scorecard scorecard : newScorecards) {
       ProtoDb.write(scorecard, serverState);
