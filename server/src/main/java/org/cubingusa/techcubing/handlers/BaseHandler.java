@@ -61,7 +61,7 @@ public abstract class BaseHandler implements HttpHandler {
       os.close();
     } catch (TemplateException e) {
       e.printStackTrace();
-      t.sendResponseHeaders(500, 0);
+      respondWithStatus(500, t);
     }
   }
 
@@ -92,8 +92,7 @@ public abstract class BaseHandler implements HttpHandler {
 
   protected void redirectTo(URI target, HttpExchange t) throws IOException {
     t.getResponseHeaders().add("Location", target.toString());
-    t.sendResponseHeaders(302, 0);
-    t.getResponseBody().close();
+    respondWithStatus(302, t);
   }
 
   // Core implementation:
@@ -102,8 +101,7 @@ public abstract class BaseHandler implements HttpHandler {
     try {
       System.out.println(t.getRequestURI().toString());
       if (!supportedMethods().contains(t.getRequestMethod())) {
-        t.sendResponseHeaders(501, 0);
-        t.getResponseBody().close();
+        respondWithStatus(501, t);
         return;
       }
 
@@ -134,5 +132,10 @@ public abstract class BaseHandler implements HttpHandler {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  protected void respondWithStatus(int status, HttpExchange t) {
+    t.sendResponseHeaders(status, 0);
+    t.getResponseBody().close();
   }
 }
