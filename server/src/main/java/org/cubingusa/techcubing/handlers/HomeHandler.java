@@ -12,7 +12,15 @@ public class HomeHandler extends BaseHandler {
 
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
+    // This is the default handler for any unmatched path.  If it's not /, return.
+    if (!t.getRequestURI().getPath().equals("/")) {
+      t.sendResponseHeaders(404, 0);
+      t.getResponseBody().close();
+      return;
+    }
     Map<String, Object> model = new HashMap<>();
+    model.put("competitionId", serverState.getCompetitionId());
+    model.put("hasCompetitionId", serverState.getCompetitionId() != null);
     writeResponse(model, "home.ftlh", t);
   }
 }

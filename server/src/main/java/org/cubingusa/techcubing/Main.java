@@ -21,6 +21,7 @@ public class Main {
       HttpServer server = HttpServer.create(
           new InetSocketAddress(serverState.getPort()), 50);
 
+      server.createContext("/", new HomeHandler(serverState));
       server.createContext("/oauth_redirect", new OAuthRedirectHandler(serverState));
       server.createContext("/competitions", new CompetitionsHandler(serverState));
       server.createContext("/set_competition", new SetCompetitionHandler(serverState));

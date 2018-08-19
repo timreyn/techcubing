@@ -33,7 +33,7 @@ public class SetCompetitionHandler extends BaseHandler {
 
     ScorecardGenerator.generateScorecards(serverState);
 
-    writeResponse(response, "set_competition.ftlh", t);
+    redirectTo(URI.create("/"), t);
   }
 
   @Override
