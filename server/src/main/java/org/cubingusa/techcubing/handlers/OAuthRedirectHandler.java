@@ -24,4 +24,9 @@ public class OAuthRedirectHandler extends BaseHandler {
 
     redirectTo(URI.create(queryParams.get("state")), t);
   }
+
+  @Override
+  protected boolean requiresActiveCompetition() {
+    return false;
+  }
 }

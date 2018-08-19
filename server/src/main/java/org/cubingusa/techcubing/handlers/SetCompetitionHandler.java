@@ -40,4 +40,9 @@ public class SetCompetitionHandler extends BaseHandler {
   protected boolean requiresOAuthToken() {
     return true;
   }
+
+  @Override
+  protected boolean requiresActiveCompetition() {
+    return false;
+  }
 }

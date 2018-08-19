@@ -43,6 +43,10 @@ public abstract class BaseHandler implements HttpHandler {
     return List.of("GET");
   }
 
+  protected boolean requiresActiveCompetition() {
+    return true;
+  }
+
   // Methods to be called by subclasses:
   protected void writeResponse(
       Map<String, Object> model, String template, HttpExchange t)
@@ -100,6 +104,11 @@ public abstract class BaseHandler implements HttpHandler {
       if (!supportedMethods().contains(t.getRequestMethod())) {
         t.sendResponseHeaders(501, 0);
         t.getResponseBody().close();
+        return;
+      }
+
+      if (requiresActiveCompetition() && serverState.getCompetitionId() == null) {
+        redirectTo(URI.create("/competitions"), t);
         return;
       }
 
