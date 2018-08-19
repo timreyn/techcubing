@@ -267,14 +267,17 @@ public class ProtoDb {
   }
 
   // Used to atomically update a message in the database, and ensure that no
-  // intervening updates occur.
+  // intervening updates occur.  Updates can return false to decline to make this
+  // update.
   public interface ProtoUpdate {
-    public void update(Message.Builder builder);
+    public boolean update(Message.Builder builder);
   }
-  public static void atomicUpdate(
+  public enum UpdateResult {
+    OK, ID_NOT_FOUND, DECLINED, RETRIES_EXCEEDED
+  };
+  public static UpdateResult atomicUpdate(
       Message.Builder tmpl, String id, ProtoUpdate update,
-      ServerState serverState)
-      throws SQLException, IllegalArgumentException, IOException {
+      ServerState serverState) throws SQLException, IOException {
     String tableName = getTable(tmpl.getDescriptorForType(), serverState);
     for (int i = 0; i < 10; i++) {
       tmpl.clear();
@@ -283,11 +286,13 @@ public class ProtoDb {
       statement.setString(1, id);
       ResultSet results = statement.executeQuery();
       if (!results.next()) {
-        throw new IllegalArgumentException("No entity of ID " + id + "found.");
+        return UpdateResult.ID_NOT_FOUND;
       }
       tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
 
-      update.update(tmpl);
+      if (!update.update(tmpl)) {
+        return UpdateResult.DECLINED;
+      }
 
       statement = serverState.getMysqlConnection().prepareStatement(
           "UPDATE " + tableName + " SET data = ? WHERE id = ? AND last_update = ?");
@@ -295,14 +300,12 @@ public class ProtoDb {
       statement.setString(2, id);
       statement.setTimestamp(3, results.getTimestamp("last_update"));
       if (statement.executeUpdate() == 1) {
-        return;
+        return UpdateResult.OK;
       }
       System.out.println(
           "Failed to atomically update " + tableName + " row " + id + " " +
           (i + 1) + " times.");
     }
-    throw new RuntimeException(
-        "Failed to atomically update " + tableName + " row " + id +
-        "after 10 tries.");
+    return UpdateResult.RETRIES_EXCEEDED;
   }
 }

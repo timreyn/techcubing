@@ -131,10 +131,11 @@ public abstract class BaseHandler implements HttpHandler {
       handleImpl(t);
     } catch (Exception e) {
       e.printStackTrace();
+      respondWithStatus(500, t);
     }
   }
 
-  protected void respondWithStatus(int status, HttpExchange t) {
+  protected void respondWithStatus(int status, HttpExchange t) throws IOException {
     t.sendResponseHeaders(status, 0);
     t.getResponseBody().close();
   }
