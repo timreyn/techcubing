@@ -30,6 +30,6 @@ public class ProtoRegistry {
   }
 
   public Message.Builder getBuilder(String name) {
-    return builders.get(name);
+    return builders.get(name).clone();
   }
 }
