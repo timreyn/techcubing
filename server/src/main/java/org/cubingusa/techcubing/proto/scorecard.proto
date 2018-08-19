@@ -44,15 +44,18 @@ message Attempt {
 
 message Scorecard {
   option (techcubing.mysql_table_name) = "Scorecard";
+  option (techcubing.mysql_extra_string_columns) = "active_device_id";
 
   string id = 1 [(techcubing.primary_key) = true];
 
   string person_id = 2 [
-    (techcubing.message_type) = "techcubing.wcif.WcifPerson"
+    (techcubing.message_type) = "techcubing.wcif.WcifPerson",
+    (techcubing.mysql_column_name) = "person_id"
   ];
 
   string round_id = 3 [
-    (techcubing.message_type) = "techcubing.wcif.WcifRound"
+    (techcubing.message_type) = "techcubing.wcif.WcifRound",
+    (techcubing.mysql_column_name) = "round_id"
   ];
 
   repeated Attempt attempts = 4;

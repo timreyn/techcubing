@@ -47,8 +47,65 @@ public class ProtoDb {
           "  id VARCHAR(50) PRIMARY KEY UNIQUE, " +
           "  data BLOB " +
           ")").executeUpdate();
-      // TODO: add other fields as needed.
+      // Add other columns that might be needed.
+      for (FieldDescriptor field : descriptor.getFields()) {
+        String mysqlColumnName =
+          field.getOptions().getExtension(OptionsProto.mysqlColumnName);
+        if (mysqlColumnName.isEmpty()) {
+          continue;
+        }
+        String columnType = "";
+        switch (field.getType()) {
+          case STRING:
+            columnType = "VARCHAR (50)";
+            break;
+          case FIXED32:
+          case FIXED64:
+          case INT32:
+          case INT64:
+          case UINT32:
+          case UINT64:
+            columnType = "INT";
+            break;
+          default:
+            System.out.println(
+                "Unsupported column type for " + field.getName() +
+                ".  Skipping.");
+            continue;
+        }
+        maybeAddColumn(tableName, mysqlColumnName, columnType, connection);
+      }
+      // Also add any table-level fields.
+      for (String mysqlColumnName : descriptor.getOptions().getExtension(
+            OptionsProto.mysqlExtraIntColumns)) {
+        maybeAddColumn(tableName, mysqlColumnName, "INT", connection);
+      }
+      for (String mysqlColumnName : descriptor.getOptions().getExtension(
+            OptionsProto.mysqlExtraStringColumns)) {
+        maybeAddColumn(tableName, mysqlColumnName, "VARCHAR (50)", connection);
+      }
     }
+  }
+
+  private static void maybeAddColumn(
+      String tableName, String columnName, String columnType,
+      MysqlConnection connection) throws SQLException {
+    // First check if the column already exists.
+    PreparedStatement statement = connection.prepareStatement(
+        "SELECT column_name FROM information_schema.columns " +
+        "WHERE table_name = ? AND column_name = ? AND " +
+        "table_schema = 'techcubing'");
+    statement.setString(1, tableName);
+    statement.setString(2, columnName);
+    ResultSet resultSet = statement.executeQuery();
+    if (resultSet.next()) {
+      // The column already exists!
+      return;
+    }
+
+    connection.prepareStatement(
+        "ALTER TABLE " + tableName + " ADD COLUMN " +
+        columnName + " " + columnType).executeUpdate();
   }
 
   public static void recursivelyWrite(
@@ -139,6 +196,32 @@ public class ProtoDb {
     statement.setString(1, id);
     statement.setBlob(2, new SerialBlob(message.toByteArray()));
     statement.executeUpdate();
+
+    for (FieldDescriptor field : descriptor.getFields()) {
+      String mysqlColumnName =
+        field.getOptions().getExtension(OptionsProto.mysqlColumnName);
+      if (mysqlColumnName.isEmpty()) {
+        continue;
+      }
+      PreparedStatement updateStatement =
+        serverState.getMysqlConnection().prepareStatement(
+            "UPDATE " + tableName + " SET " + mysqlColumnName + " = ? WHERE id = ?");
+      switch (field.getType()) {
+        case STRING:
+          updateStatement.setString(1, (String) message.getField(field));
+          break;
+        case FIXED32:
+        case FIXED64:
+        case INT32:
+        case INT64:
+        case UINT32:
+        case UINT64:
+          updateStatement.setInt(1, (int) message.getField(field));
+          break;
+      }
+      updateStatement.setString(2, id);
+      updateStatement.executeUpdate();
+    }
   }
 
   public static Message getById(
