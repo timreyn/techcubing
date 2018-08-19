@@ -20,6 +20,7 @@ java_library(
         ":ProtoRegistry",
         ":ServerState",
         "@org_freemarker_freemarker//jar",
+        "//src/main/java/org/cubingusa/techcubing/proto:scorecard_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/wcif:competition_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/wcif:event_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/wcif:person_java_proto",
