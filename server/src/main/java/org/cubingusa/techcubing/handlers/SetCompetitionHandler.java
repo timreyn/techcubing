@@ -3,6 +3,7 @@ package org.cubingusa.techcubing.handlers;
 import com.google.protobuf.util.JsonFormat;
 import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
+import org.cubingusa.techcubing.framework.ScorecardGenerator;
 import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.proto.wcif.WcifCompetition;
@@ -29,6 +30,8 @@ public class SetCompetitionHandler extends BaseHandler {
     WcifCompetition.Builder competitionBuilder = WcifCompetition.newBuilder();
     JsonFormat.parser().ignoringUnknownFields().merge(response.toString(), competitionBuilder);
     ProtoDb.recursivelyWrite(competitionBuilder.build(), serverState);
+
+    ScorecardGenerator.generateScorecards(serverState);
 
     writeResponse(response, "set_competition.ftlh", t);
   }

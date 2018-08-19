@@ -78,3 +78,19 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/proto:options_java_proto",
     ],
 )
+
+java_library(
+    name = "ScorecardGenerator",
+    srcs = ["ScorecardGenerator.java"],
+    deps = [
+        "@com_google_protobuf//:protobuf_java",
+        ":ProtoDb",
+        ":ProtoUtil",
+        ":ServerState",
+        "//src/main/java/org/cubingusa/techcubing/proto:scorecard_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto/wcif:event_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto/wcif:person_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto/wcif:round_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/util:WcifUtil",
+    ],
+)

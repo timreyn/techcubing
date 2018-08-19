@@ -53,6 +53,7 @@ java_library(
         "@com_google_protobuf//:protobuf_java_util",
         "@com_googlecode_json_simple_json_simple//jar",
         "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
+        "//src/main/java/org/cubingusa/techcubing/framework:ScorecardGenerator",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/proto/wcif:competition_java_proto",
     ],
