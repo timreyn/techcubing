@@ -33,6 +33,25 @@ message WcifPersonalBest {
   Type type = 6;
 }
 
+message WcifRegistration {
+
+  // Omitted: wcaRegistrationId
+
+  repeated string event_ids = 1 [
+    (techcubing.message_type) = "techcubing.wcif.WcifEvent"
+  ];
+
+  enum Status {
+    accepted = 0;
+    pending = 1;
+    deleted = 2;
+  }
+  Status status = 2;
+
+  // Omitted: guests
+  // Omitted: comments
+}
+
 message WcifPerson {
   option (techcubing.mysql_table_name) = "Person";
 
@@ -50,7 +69,8 @@ message WcifPerson {
 
   repeated WcifRole roles = 7;
 
-  // Omitted: registration
+  WcifRegistration registration = 10;
+
   // Omitted: assignment
 
   repeated WcifPersonalBest personal_bests = 8;
