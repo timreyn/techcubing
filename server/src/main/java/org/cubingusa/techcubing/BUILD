@@ -9,7 +9,7 @@ java_binary(
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerStateInitializer",
         "//src/main/java/org/cubingusa/techcubing/handlers:CompetitionsHandler",
-        "//src/main/java/org/cubingusa/techcubing/handlers:HomeHandler",
+        "//src/main/java/org/cubingusa/techcubing/handlers:IndexHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:OAuthRedirectHandler",
         "//src/main/java/org/cubingusa/techcubing/handlers:SetCompetitionHandler",
         "//src/main/java/org/cubingusa/techcubing/services:TechCubingServiceImpl",

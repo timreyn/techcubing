@@ -16,8 +16,8 @@ java_library(
 )
 
 java_library(
-    name = "HomeHandler",
-    srcs = ["HomeHandler.java"],
+    name = "IndexHandler",
+    srcs = ["IndexHandler.java"],
     deps = [
         ":BaseHandler",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",

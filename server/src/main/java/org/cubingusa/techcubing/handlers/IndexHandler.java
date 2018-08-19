@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.cubingusa.techcubing.framework.ServerState;
 
-public class HomeHandler extends BaseHandler {
-  public HomeHandler(ServerState serverState) {
+public class IndexHandler extends BaseHandler {
+  public IndexHandler(ServerState serverState) {
     super(serverState);
   }
 
