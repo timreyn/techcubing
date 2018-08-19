@@ -21,7 +21,7 @@ public class CompetitionsHandler extends BaseHandler {
     Map<String, Object> model = new HashMap<>();
     model.put("competitions", response);
 
-    writeResponse(model, "competitions.ftlh", t);
+    writeResponse(model, "competitions.html", t);
   }
 
   @Override

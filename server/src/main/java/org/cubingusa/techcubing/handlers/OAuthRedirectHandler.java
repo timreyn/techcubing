@@ -18,7 +18,7 @@ public class OAuthRedirectHandler extends BaseHandler {
     Map<String, String> query = QueryParser.parseQuery(requestUri);
     if (query.isEmpty()) {
       Map<String, Object> model = new HashMap<>();
-      writeResponse(model, "oauth_redirect.ftlh", t);
+      writeResponse(model, "oauth_redirect.html", t);
       return;
     }
     
