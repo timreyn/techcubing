@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
 
 enum EventCode {
-  UNKNOWN = 0;
+  UNKNOWN_EVENT = 0;
   SCRAMBLE_ACQUIRED = 1;
   SCRAMBLE_RELEASED = 2;
   JUDGE_ACQUIRED = 3;

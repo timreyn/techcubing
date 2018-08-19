@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
 
 enum DeviceType {
-  UNKNOWN = 0;
+  UNKNOWN_DEVICE = 0;
   JUDGE = 1;
   SCRAMBLER = 2;
   ADMIN = 3;
