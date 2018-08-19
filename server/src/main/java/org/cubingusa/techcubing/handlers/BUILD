@@ -30,7 +30,6 @@ java_library(
     deps = [
         ":BaseHandler",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
-        "//src/main/java/org/cubingusa/techcubing/util:QueryParser",
     ],
 )
 
