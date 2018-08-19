@@ -56,7 +56,8 @@ public class ScorecardGenerator {
         if (scorecard == null) {
           Scorecard.Builder scorecardBuilder =
             Scorecard.newBuilder()
-                .setId(String.valueOf(new Random().nextInt()))
+                .setId(String.valueOf(
+                      String.valueOf(new Random().nextInt(90000000) + 10000000)))
                 .setPersonId(personId)
                 .setRoundId(round.getId());
           int numAttempts = WcifUtil.attemptsForRound(round);

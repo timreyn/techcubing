@@ -12,5 +12,5 @@ import "src/main/java/org/cubingusa/techcubing/proto/services/list_persons.proto
 service TechCubingService {
   rpc ListPersons (ListPersonsRequest) returns (ListPersonsResponse);
   rpc GetById (GetByIdRequest) returns (GetByIdResponse);
-  rpc AcquireDevice (AcquireScorecardRequest) returns (AcquireScorecardResponse);
+  rpc AcquireScorecard (AcquireScorecardRequest) returns (AcquireScorecardResponse);
 }

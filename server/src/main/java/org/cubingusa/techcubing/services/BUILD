@@ -4,9 +4,11 @@ java_library(
     visibility = ["//src/main/java/org/cubingusa/techcubing:__pkg__"],
     deps = [
         "@io_grpc_grpc_java//stub",
-        ":ListPersonsImpl",
+        ":AcquireScorecardImpl",
         ":GetByIdImpl",
+        ":ListPersonsImpl",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+        "//src/main/java/org/cubingusa/techcubing/proto/services:acquire_scorecard_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/services:get_by_id_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/services:list_persons_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/services:techcubing_service_java_proto",
@@ -34,5 +36,18 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/proto/services:get_by_id_java_proto",
+    ],
+)
+
+java_library(
+    name = "AcquireScorecardImpl",
+    srcs = ["AcquireScorecardImpl.java"],
+    deps = [
+        "@com_google_protobuf//:protobuf_java",
+        "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
+        "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
+        "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto:scorecard_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto/services:acquire_scorecard_java_proto",
     ],
 )

@@ -24,6 +24,7 @@ message AcquireScorecardResponse {
     OUT_OF_ORDER_REQUEST = 2;
     SCORECARD_NOT_AVAILABLE = 3;
     ROUND_COMPLETED = 4;
+    INTERNAL_ERROR = 5;
   }
   Status status = 2;
 
