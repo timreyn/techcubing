@@ -43,3 +43,17 @@ java_proto_library(
     name = "response_context_java_proto",
     deps = [":response_context_proto"],
 )
+
+proto_library(
+    name = "scorecard_proto",
+    srcs = ["scorecard.proto"],
+    deps = [
+        ":options_proto",
+        "@com_google_protobuf//:timestamp_proto",
+    ],
+)
+
+java_proto_library(
+    name = "scorecard_java_proto",
+    deps = [":scorecard_proto"],
+)

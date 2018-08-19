@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "org.cubingusa.techcubing.proto.wcif";
+option java_outer_classname = "ScorecardProto";
+
+import "google/protobuf/timestamp.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
+
+enum EventCode {
+  UNKNOWN = 0;
+  SCRAMBLE_ACQUIRED = 1;
+  SCRAMBLE_RELEASED = 2;
+  JUDGE_ACQUIRED = 3;
+  INSPECTION_STARTED = 4;
+  INSPECTION_ENDED = 5;
+  SOLVE_ENDED = 6;
+  JUDGE_RELEASED = 7;
+}
+
+message Attempt {
+  uint64 result = 1;
+
+  string judge_id = 2 [
+    (techcubing.message_type) = "techcubing.wcif.WcifPerson"
+  ];
+  string judge_device_id = 3 [
+    (techcubing.message_type) = "techcubing.Device"
+  ];
+
+  string scrambler_id = 4 [
+    (techcubing.message_type) = "techcubing.wcif.WcifPerson"
+  ];
+  string scrambler_device_id = 5 [
+    (techcubing.message_type) = "techcubing.Device"
+  ];
+
+  message AttemptEvent {
+    EventCode code = 1;
+    google.protobuf.Timestamp timestamp = 2;
+  }
+}
+
+message Scorecard {
+  option (techcubing.mysql_table_name) = "Scorecard";
+
+  string id = 1 [(techcubing.primary_key) = true];
+
+  string person_id = 2 [
+    (techcubing.message_type) = "techcubing.wcif.WcifPerson"
+  ];
+
+  string round_id = 3 [
+    (techcubing.message_type) = "techcubing.wcif.WcifRound"
+  ];
+
+  bool deleted = 4;
+}
