@@ -10,8 +10,8 @@ java_library(
         "@com_googlecode_json_simple_json_simple//jar",
         "@javax_javaee_web_api//jar",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
-        "//src/main/java/org/cubingusa/techcubing/framework:OAuth",
-        "//src/main/java/org/cubingusa/techcubing/framework:QueryParser",
+        "//src/main/java/org/cubingusa/techcubing/util:OAuth",
+        "//src/main/java/org/cubingusa/techcubing/util:QueryParser",
     ],
 )
 
@@ -30,8 +30,7 @@ java_library(
     deps = [
         ":BaseHandler",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
-        "//src/main/java/org/cubingusa/techcubing/framework:OAuth",
-        "//src/main/java/org/cubingusa/techcubing/framework:QueryParser",
+        "//src/main/java/org/cubingusa/techcubing/util:QueryParser",
     ],
 )
 

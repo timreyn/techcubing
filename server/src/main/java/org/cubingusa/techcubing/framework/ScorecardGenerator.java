@@ -13,6 +13,7 @@ import org.cubingusa.techcubing.proto.wcif.WcifEvent;
 import org.cubingusa.techcubing.proto.wcif.WcifPerson;
 import org.cubingusa.techcubing.proto.wcif.WcifRegistration;
 import org.cubingusa.techcubing.proto.wcif.WcifRound;
+import org.cubingusa.techcubing.util.ProtoUtil;
 import org.cubingusa.techcubing.util.WcifUtil;
 
 public class ScorecardGenerator {

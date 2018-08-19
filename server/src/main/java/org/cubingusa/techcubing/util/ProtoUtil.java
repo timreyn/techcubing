@@ -1,4 +1,4 @@
-package org.cubingusa.techcubing.framework;
+package org.cubingusa.techcubing.util;
 
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;

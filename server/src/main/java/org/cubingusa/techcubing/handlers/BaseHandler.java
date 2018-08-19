@@ -15,9 +15,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.UriBuilder;
-import org.cubingusa.techcubing.framework.QueryParser;
 import org.cubingusa.techcubing.framework.ServerState;
-import org.cubingusa.techcubing.framework.OAuth;
+import org.cubingusa.techcubing.util.OAuth;
+import org.cubingusa.techcubing.util.QueryParser;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 

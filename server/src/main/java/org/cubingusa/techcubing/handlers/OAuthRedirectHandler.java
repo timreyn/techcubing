@@ -4,8 +4,8 @@ import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import org.cubingusa.techcubing.framework.QueryParser;
 import org.cubingusa.techcubing.framework.ServerState;
+import org.cubingusa.techcubing.util.QueryParser;
 
 public class OAuthRedirectHandler extends BaseHandler {
   public OAuthRedirectHandler(ServerState serverState) {

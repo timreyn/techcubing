@@ -1,4 +1,4 @@
-package org.cubingusa.techcubing.framework;
+package org.cubingusa.techcubing.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

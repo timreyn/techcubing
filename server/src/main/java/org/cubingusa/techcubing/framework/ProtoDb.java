@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.rowset.serial.SerialBlob;
 import org.cubingusa.techcubing.proto.OptionsProto;
+import org.cubingusa.techcubing.util.ProtoUtil;
 
 public class ProtoDb {
   public static String getTable(
