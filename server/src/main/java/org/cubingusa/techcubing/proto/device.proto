@@ -6,14 +6,8 @@ option java_package = "org.cubingusa.techcubing.proto";
 option java_outer_classname = "DeviceProto";
 
 import "google/protobuf/timestamp.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/device_type.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
-
-enum DeviceType {
-  UNKNOWN_DEVICE = 0;
-  JUDGE = 1;
-  SCRAMBLER = 2;
-  ADMIN = 3;
-}
 
 message Device {
   option (techcubing.mysql_table_name) = "Device";

@@ -9,7 +9,7 @@ import java.util.Random;
 import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.proto.DeviceProto.Device;
-import org.cubingusa.techcubing.proto.DeviceProto.DeviceType;
+import org.cubingusa.techcubing.proto.DeviceTypeProto.DeviceType;
 import org.cubingusa.techcubing.util.ProtoUtil;
 
 public class AddDeviceHandler extends BaseHandler {

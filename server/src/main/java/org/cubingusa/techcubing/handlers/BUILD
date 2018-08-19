@@ -66,6 +66,7 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto:device_type_java_proto",
     ],
 )
 
@@ -78,6 +79,7 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto:device_type_java_proto",
         "//src/main/java/org/cubingusa/techcubing/util:ProtoUtil",
     ],
 )

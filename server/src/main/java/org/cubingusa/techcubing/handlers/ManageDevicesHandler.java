@@ -6,7 +6,7 @@ import com.sun.net.httpserver.HttpExchange;
 import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.proto.DeviceProto.Device;
-import org.cubingusa.techcubing.proto.DeviceProto.DeviceType;
+import org.cubingusa.techcubing.proto.DeviceTypeProto.DeviceType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

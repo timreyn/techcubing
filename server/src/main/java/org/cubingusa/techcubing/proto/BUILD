@@ -17,6 +17,7 @@ proto_library(
     name = "device_proto",
     srcs = ["device.proto"],
     deps = [
+        ":device_type_proto",
         ":options_proto",
         "@com_google_protobuf//:timestamp_proto",
     ]
@@ -25,6 +26,16 @@ proto_library(
 java_proto_library(
     name = "device_java_proto",
     deps = [":device_proto"],
+)
+
+proto_library(
+    name = "device_type_proto",
+    srcs = ["device_type.proto"],
+)
+
+java_proto_library(
+    name = "device_type_java_proto",
+    deps = [":device_type_proto"],
 )
 
 proto_library(
