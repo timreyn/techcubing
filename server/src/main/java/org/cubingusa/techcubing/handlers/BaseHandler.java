@@ -13,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.UriBuilder;
 import org.cubingusa.techcubing.framework.ServerState;
@@ -30,7 +31,20 @@ public abstract class BaseHandler implements HttpHandler {
     this.serverState = serverState;
   }
 
-  void writeResponse(Map<String, Object> model, String template, HttpExchange t)
+  // Methods to be implemented by subclasses:
+  protected abstract void handleImpl(HttpExchange t) throws Exception;
+
+  protected boolean requiresOAuthToken() {
+    return false;
+  }
+
+  protected List<String> supportedMethods() {
+    return List.of("GET");
+  }
+
+  // Methods to be called by subclasses:
+  protected void writeResponse(
+      Map<String, Object> model, String template, HttpExchange t)
       throws IOException {
     try {
       Template temp = serverState.getTemplateConfig().getTemplate(template);
@@ -43,26 +57,6 @@ public abstract class BaseHandler implements HttpHandler {
     } catch (TemplateException e) {
       e.printStackTrace();
       t.sendResponseHeaders(500, 0);
-    }
-  }
-
-  @Override
-  public void handle(HttpExchange t) throws IOException {
-    try {
-      System.out.println(t.getRequestURI().toString());
-      if (requiresOAuthToken()) {
-        this.accessToken = serverState.takeAccessToken();
-        if (this.accessToken == null) {
-          redirectTo(OAuth.redirectUri(t.getRequestURI(), serverState), t);
-          return;
-        }
-      }
-
-      queryParams = QueryParser.parseQuery(t.getRequestURI());
-
-      handleImpl(t);
-    } catch (Exception e) {
-      e.printStackTrace();
     }
   }
 
@@ -91,15 +85,36 @@ public abstract class BaseHandler implements HttpHandler {
     return JSONValue.parse(content.toString());
   }
 
-  protected abstract void handleImpl(HttpExchange t) throws Exception;
-
-  protected boolean requiresOAuthToken() {
-    return false;
-  }
-
   protected void redirectTo(URI target, HttpExchange t) throws IOException {
     t.getResponseHeaders().add("Location", target.toString());
     t.sendResponseHeaders(302, 0);
     t.getResponseBody().close();
+  }
+
+  // Core implementation:
+  @Override
+  public void handle(HttpExchange t) throws IOException {
+    try {
+      System.out.println(t.getRequestURI().toString());
+      if (!supportedMethods().contains(t.getRequestMethod())) {
+        t.sendResponseHeaders(501, 0);
+        t.getResponseBody().close();
+        return;
+      }
+
+      if (requiresOAuthToken()) {
+        this.accessToken = serverState.takeAccessToken();
+        if (this.accessToken == null) {
+          redirectTo(OAuth.redirectUri(t.getRequestURI(), serverState), t);
+          return;
+        }
+      }
+
+      queryParams = QueryParser.parseQuery(t.getRequestURI());
+
+      handleImpl(t);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }
