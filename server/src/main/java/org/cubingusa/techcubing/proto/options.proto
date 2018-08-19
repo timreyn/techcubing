@@ -10,12 +10,6 @@ import "google/protobuf/descriptor.proto";
 extend google.protobuf.MessageOptions {
   // The name of the mysql table in which this message should be stored.
   string mysql_table_name = 5000;
-
-  // The name of any extra int columns that should be added to this table.
-  repeated string mysql_extra_int_columns = 5001;
-
-  // The name of any extra string columns that should be added to this table.
-  repeated string mysql_extra_string_columns = 5002;
 }
 
 extend google.protobuf.FieldOptions {

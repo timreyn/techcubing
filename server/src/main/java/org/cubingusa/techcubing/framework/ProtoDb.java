@@ -77,15 +77,6 @@ public class ProtoDb {
         }
         maybeAddColumn(tableName, mysqlColumnName, columnType, connection);
       }
-      // Also add any table-level fields.
-      for (String mysqlColumnName : descriptor.getOptions().getExtension(
-            OptionsProto.mysqlExtraIntColumns)) {
-        maybeAddColumn(tableName, mysqlColumnName, "INT", connection);
-      }
-      for (String mysqlColumnName : descriptor.getOptions().getExtension(
-            OptionsProto.mysqlExtraStringColumns)) {
-        maybeAddColumn(tableName, mysqlColumnName, "VARCHAR (50)", connection);
-      }
     }
   }
 

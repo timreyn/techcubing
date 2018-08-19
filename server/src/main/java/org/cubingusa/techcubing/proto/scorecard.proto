@@ -44,7 +44,6 @@ message Attempt {
 
 message Scorecard {
   option (techcubing.mysql_table_name) = "Scorecard";
-  option (techcubing.mysql_extra_string_columns) = "active_device_id";
 
   string id = 1 [(techcubing.primary_key) = true];
 
