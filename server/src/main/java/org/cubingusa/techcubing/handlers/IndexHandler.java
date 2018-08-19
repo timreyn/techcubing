@@ -14,8 +14,7 @@ public class IndexHandler extends BaseHandler {
   protected void handleImpl(HttpExchange t) throws Exception {
     // This is the default handler for any unmatched path.  If it's not /, return.
     if (!t.getRequestURI().getPath().equals("/")) {
-      t.sendResponseHeaders(404, 0);
-      t.getResponseBody().close();
+      respondWithStatus(404, t);
       return;
     }
     Map<String, Object> model = new HashMap<>();
