@@ -21,6 +21,6 @@ public class IndexHandler extends BaseHandler {
     Map<String, Object> model = new HashMap<>();
     model.put("competitionId", serverState.getCompetitionId());
     model.put("hasCompetitionId", serverState.getCompetitionId() != null);
-    writeResponse(model, "home.html", t);
+    writeResponse(model, "index.html", t);
   }
 }
