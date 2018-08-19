@@ -30,7 +30,7 @@ java_proto_library(
 proto_library(
     name = "request_context_proto",
     srcs = ["request_context.proto"],
-    deps = [":device_proto"],
+    deps = [":options_proto"],
 )
 
 java_proto_library(

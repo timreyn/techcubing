@@ -5,8 +5,8 @@ package techcubing;
 option java_package = "org.cubingusa.techcubing.proto";
 option java_outer_classname = "RequestContextProto";
 
-import "src/main/java/org/cubingusa/techcubing/proto/device.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
 
 message RequestContext {
-  Device device = 1;
+  string device_id = 1 [(techcubing.message_type) = "techcubing.Device"];
 }
