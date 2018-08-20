@@ -3,6 +3,7 @@ package org.cubingusa.techcubing.framework;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Message;
+import com.google.protobuf.MessageOrBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
