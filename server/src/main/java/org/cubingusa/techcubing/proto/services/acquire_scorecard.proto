@@ -27,8 +27,12 @@ message AcquireScorecardResponse {
     ROUND_COMPLETED = 4;
     INTERNAL_ERROR = 5;
     ALREADY_HAVE_A_SCORECARD = 6;
+    MISSED_CUTOFF = 7;
+    CUMULATIVE_TIME_LIMIT = 8;
   }
   Status status = 2;
 
   Scorecard scorecard = 3;
+
+  int32 attempt_number = 4;
 }

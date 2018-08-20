@@ -51,6 +51,8 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:scorecard_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/services:acquire_scorecard_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto/wcif:round_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/util:WcifUtil",
     ],
 )
 
@@ -62,6 +64,7 @@ java_library(
         "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
         "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto:device_type_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:scorecard_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto/services:release_scorecard_java_proto",
     ],

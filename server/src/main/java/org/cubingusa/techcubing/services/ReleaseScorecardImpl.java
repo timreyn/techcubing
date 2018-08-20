@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.proto.DeviceProto.Device;
+import org.cubingusa.techcubing.proto.DeviceTypeProto.DeviceType;
 import org.cubingusa.techcubing.proto.ScorecardProto;
 import org.cubingusa.techcubing.proto.ScorecardProto.Attempt;
 import org.cubingusa.techcubing.proto.ScorecardProto.Scorecard;
@@ -47,7 +48,8 @@ class ReleaseScorecardImpl {
 
               // Merge data from the request.
               Attempt.Builder attemptBuilder =
-                  scorecardBuilder.getAttemptsBuilder(request.getAttemptNumber());
+                  scorecardBuilder.getAttemptsBuilder(
+                      request.getAttemptNumber() - 1);
               for (Attempt.AttemptEvent attemptEvent :
                    request.getAttempt().getEventsList()) {
                 EnumValueDescriptor enumDescriptor =
@@ -58,17 +60,15 @@ class ReleaseScorecardImpl {
                   attemptBuilder.addEvents(attemptEvent);
                 }
               }
-              // Store other data from the result.
-              switch (device.getType()) {
-                case JUDGE:
-                  attemptBuilder.setResult(request.getAttempt().getResult());
-                  attemptBuilder.setJudgeDeviceId(device.getId());
-                  // TODO: store judge ID.
-                  break;
-                case SCRAMBLER:
-                  attemptBuilder.setScramblerDeviceId(device.getId());
-                  // TODO: store scrambler ID.
-                  break;
+              // Store the result.
+              if (device.getType() == DeviceType.JUDGE) {
+                if (request.getAttempt().getResult().getFinalTime() == 0 &&
+                    !request.getAttempt().getResult().getIsDnf()) {
+                  responseBuilder.setStatus(
+                      ReleaseScorecardResponse.Status.TIME_NOT_SET);
+                  return false;
+                }
+                attemptBuilder.setResult(request.getAttempt().getResult());
               }
               scorecardBuilder.setActiveDeviceId("");
               return true;

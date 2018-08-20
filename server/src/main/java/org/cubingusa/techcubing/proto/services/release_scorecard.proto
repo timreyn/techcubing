@@ -28,6 +28,7 @@ message ReleaseScorecardResponse {
     SCORECARD_NOT_FOUND = 1;
     SCORECARD_NOT_HELD_BY_DEVICE = 2;
     INTERNAL_ERROR = 3;
+    TIME_NOT_SET = 4;
   }
   Status status = 2;
 }

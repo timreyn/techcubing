@@ -8,9 +8,14 @@ import java.sql.SQLException;
 import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.proto.DeviceProto.Device;
+import org.cubingusa.techcubing.proto.ScorecardProto.Attempt;
 import org.cubingusa.techcubing.proto.ScorecardProto.Scorecard;
 import org.cubingusa.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardRequest;
 import org.cubingusa.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardResponse;
+import org.cubingusa.techcubing.proto.wcif.WcifCutoff;
+import org.cubingusa.techcubing.proto.wcif.WcifRound;
+import org.cubingusa.techcubing.proto.wcif.WcifTimeLimit;
+import org.cubingusa.techcubing.util.WcifUtil;
 
 class AcquireScorecardImpl {
   ServerState serverState;
@@ -58,12 +63,93 @@ class AcquireScorecardImpl {
                     AcquireScorecardResponse.Status.SCORECARD_NOT_AVAILABLE);
                 return false;
               }
-              // TODO: Check for whether this device is allowed to acquire this
-              // competitor:
-              // -is it the right device type? (judge/scrambler)
-              // -is the judge allowed to see this scramble?
-              // -does the competitor have more attempts?
+
+              // Check which attempt the competitor is on, and whether they get
+              // more.
+              WcifRound round = null;
+              try {
+                round = ProtoDb.getIdField(
+                    scorecardBuilder, "round_id", serverState);
+              } catch (SQLException | IOException e) {
+                e.printStackTrace();
+                responseBuilder.setStatus(
+                    AcquireScorecardResponse.Status.INTERNAL_ERROR);
+                return false;
+              }
+              int attempts = WcifUtil.attemptsForRound(round);
+              WcifCutoff cutoff = round.getCutoff();
+              boolean madeCutoff = cutoff.getNumberOfAttempts() == 0;
+              int totalElapsedTime = 0;
+              int nextAttemptNumber = 0;
+
+              for (int i = 0; i < scorecardBuilder.getAttemptsList().size();
+                   i++) {
+                Attempt.Builder attemptBuilder =
+                  scorecardBuilder.getAttemptsBuilder(i);
+                if (attemptBuilder.getResult().getFinalTime() > 0) {
+                  totalElapsedTime += attemptBuilder.getResult().getFinalTime();
+                  if (!attemptBuilder.getResult().getIsDnf() &&
+                      i < cutoff.getNumberOfAttempts() &&
+                      attemptBuilder.getResult().getFinalTime() <
+                      cutoff.getAttemptResult()) {
+                    madeCutoff = true;
+                  }
+                } else {
+                  nextAttemptNumber = i + 1;
+                  break;
+                }
+              }
+
+              if (nextAttemptNumber == 0) {
+                responseBuilder.setStatus(
+                    AcquireScorecardResponse.Status.ROUND_COMPLETED);
+                return false;
+              }
+
+              if (nextAttemptNumber > cutoff.getNumberOfAttempts() &&
+                  !madeCutoff) {
+                responseBuilder.setStatus(
+                    AcquireScorecardResponse.Status.MISSED_CUTOFF);
+                return false;
+              }
+
+              // TODO: Support cross-round cumulative limits.
+              WcifTimeLimit timeLimit = round.getTimeLimit();
+              if (timeLimit.getCumulativeRoundIdsList().size() > 0 &&
+                  totalElapsedTime >= timeLimit.getCentiseconds()) {
+                responseBuilder.setStatus(
+                    AcquireScorecardResponse.Status.CUMULATIVE_TIME_LIMIT);
+                return false;
+              }
+
+              // Check whether everything is in the right order.
+              Attempt.Builder attemptBuilder =
+                scorecardBuilder.getAttemptsBuilder(nextAttemptNumber - 1);
+              switch (device.getType()) {
+                case SCRAMBLER:
+                  if (!attemptBuilder.getJudgeDeviceId().isEmpty() ||
+                      !attemptBuilder.getScramblerDeviceId().isEmpty()) {
+                    responseBuilder.setStatus(
+                        AcquireScorecardResponse.Status.OUT_OF_ORDER_REQUEST);
+                    return false;
+                  }
+                  attemptBuilder.setScramblerDeviceId(device.getId());
+                  // TODO: store scrambler ID.
+                  break;
+                case JUDGE:
+                  if (attemptBuilder.getScramblerDeviceId().isEmpty()) {
+                    responseBuilder.setStatus(
+                        AcquireScorecardResponse.Status.OUT_OF_ORDER_REQUEST);
+                    return false;
+                  }
+                  attemptBuilder.setJudgeDeviceId(device.getId());
+                  // TODO: store judge ID.
+                  break;
+              }
+
+              // TODO: Check whether this scrambler is allowed to do this scramble.
               scorecardBuilder.setActiveDeviceId(device.getId());
+              responseBuilder.setAttemptNumber(nextAttemptNumber);
               return true;
             }
           }, serverState);

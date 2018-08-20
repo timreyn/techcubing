@@ -25,8 +25,15 @@ enum EventCode {
   JUDGE_RELEASED = 7 [(permitted_devices) = JUDGE];
 }
 
+message AttemptResult {
+  uint64 final_time = 1;
+  bool is_dnf = 2;
+
+  // TODO: define schema for penalty information.
+}
+
 message Attempt {
-  uint64 result = 1;
+  AttemptResult result = 1;
 
   string judge_id = 2 [
     (techcubing.message_type) = "techcubing.wcif.WcifPerson"
@@ -48,7 +55,6 @@ message Attempt {
   }
   repeated AttemptEvent events = 6;
 
-  // TODO: define schema for penalty information.
   // TODO: define schema for extra attempts.
 }
 
