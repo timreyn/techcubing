@@ -312,4 +312,14 @@ public class ProtoDb {
 
     return UpdateResult.RETRIES_EXCEEDED;
   }
+
+  public static <T extends Message> T getFieldById(
+      Message message, String fieldName, ServerState serverState)
+      throws SQLException, IOException {
+    FieldDescriptor field =
+      message.getDescriptorForType().findFieldByName(fieldName);
+    String messageType = field.getOptions().getExtension(OptionsProto.messageType);
+    Message.Builder builder = serverState.getProtoRegistry().getBuilder(messageType);
+    return (T) getById((String) message.getField(field), builder, serverState);
+  }
 }
