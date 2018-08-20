@@ -1,5 +1,6 @@
 package org.cubingusa.techcubing.services;
 
+import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Message;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -8,6 +9,8 @@ import java.sql.SQLException;
 import org.cubingusa.techcubing.framework.ProtoDb;
 import org.cubingusa.techcubing.framework.ServerState;
 import org.cubingusa.techcubing.proto.DeviceProto.Device;
+import org.cubingusa.techcubing.proto.ScorecardProto;
+import org.cubingusa.techcubing.proto.ScorecardProto.Attempt;
 import org.cubingusa.techcubing.proto.ScorecardProto.Scorecard;
 import org.cubingusa.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardRequest;
 import org.cubingusa.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardResponse;
@@ -41,7 +44,32 @@ class ReleaseScorecardImpl {
                     ReleaseScorecardResponse.Status.SCORECARD_NOT_HELD_BY_DEVICE);
                 return false;
               }
-              // TODO: check if there is any unfinished business on this attempt.
+
+              // Merge data from the request.
+              Attempt.Builder attemptBuilder =
+                  scorecardBuilder.getAttemptsBuilder(request.getAttemptNumber());
+              for (Attempt.AttemptEvent attemptEvent :
+                   request.getAttempt().getEventsList()) {
+                EnumValueDescriptor enumDescriptor =
+                    attemptEvent.getCode().getValueDescriptor();
+                if (enumDescriptor.getOptions().getExtension(
+                      ScorecardProto.permittedDevices)
+                    .contains(device.getType())) {
+                  attemptBuilder.addEvents(attemptEvent);
+                }
+              }
+              // Store other data from the result.
+              switch (device.getType()) {
+                case JUDGE:
+                  attemptBuilder.setResult(request.getAttempt().getResult());
+                  attemptBuilder.setJudgeDeviceId(device.getId());
+                  // TODO: store judge ID.
+                  break;
+                case SCRAMBLER:
+                  attemptBuilder.setScramblerDeviceId(device.getId());
+                  // TODO: store scrambler ID.
+                  break;
+              }
               scorecardBuilder.setActiveDeviceId("");
               return true;
             }

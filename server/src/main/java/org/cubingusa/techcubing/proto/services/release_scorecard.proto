@@ -7,11 +7,16 @@ option java_outer_classname = "ReleaseScorecardProto";
 
 import "src/main/java/org/cubingusa/techcubing/proto/request_context.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/response_context.proto";
+import "src/main/java/org/cubingusa/techcubing/proto/scorecard.proto";
 
 message ReleaseScorecardRequest {
   RequestContext context = 1;
 
   string scorecard_id = 2;
+
+  int32 attempt_number = 3;
+
+  Attempt attempt = 4;
 }
 
 message ReleaseScorecardResponse {

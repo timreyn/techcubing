@@ -81,6 +81,7 @@ proto_library(
     deps = [
         "//src/main/java/org/cubingusa/techcubing/proto:request_context_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:response_context_proto",
+        "//src/main/java/org/cubingusa/techcubing/proto:scorecard_proto",
     ],
 )
 
