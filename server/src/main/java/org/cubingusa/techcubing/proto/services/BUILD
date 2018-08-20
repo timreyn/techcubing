@@ -64,6 +64,7 @@ proto_library(
     name = "acquire_scorecard_proto",
     srcs = ["acquire_scorecard.proto"],
     deps = [
+        "//src/main/java/org/cubingusa/techcubing/proto:options_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:request_context_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:response_context_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:scorecard_proto",
@@ -79,6 +80,7 @@ proto_library(
     name = "release_scorecard_proto",
     srcs = ["release_scorecard.proto"],
     deps = [
+        "//src/main/java/org/cubingusa/techcubing/proto:options_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:request_context_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:response_context_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:scorecard_proto",

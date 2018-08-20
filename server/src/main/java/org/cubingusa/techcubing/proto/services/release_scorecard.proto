@@ -5,6 +5,7 @@ package techcubing;
 option java_package = "org.cubingusa.techcubing.proto.services";
 option java_outer_classname = "ReleaseScorecardProto";
 
+import "src/main/java/org/cubingusa/techcubing/proto/options.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/request_context.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/response_context.proto";
 import "src/main/java/org/cubingusa/techcubing/proto/scorecard.proto";
@@ -12,7 +13,7 @@ import "src/main/java/org/cubingusa/techcubing/proto/scorecard.proto";
 message ReleaseScorecardRequest {
   RequestContext context = 1;
 
-  string scorecard_id = 2;
+  string scorecard_id = 2 [(techcubing.message_type) = "techcubing.Scorecard"];
 
   int32 attempt_number = 3;
 
