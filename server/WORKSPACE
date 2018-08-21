@@ -52,3 +52,10 @@ maven_jar(
     sha1 = "08e201602cc1ddd145c4c74e67d4002d3d4b1796",
     sha1_src = "b1eadbd4489464ace2249c118a8d83539f2409f5",
 )
+
+maven_jar(
+    name = "com_android_tools_ddms_ddmlib",
+    artifact = "com.android.tools.ddms:ddmlib:25.3.0",
+    sha1 = "8768d9b5888157737306935d477092e12bc6e57a",
+    sha1_src = "d1d131be60104381cb5d8f6715c7e3e032185f95",
+)
