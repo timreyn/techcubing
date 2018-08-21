@@ -59,3 +59,11 @@ maven_jar(
     sha1 = "8768d9b5888157737306935d477092e12bc6e57a",
     sha1_src = "d1d131be60104381cb5d8f6715c7e3e032185f95",
 )
+
+# Android rules
+
+android_sdk_repository(
+    name = "androidsdk",
+    api_level = 27,
+    build_tools_version = '27.0.3',
+)

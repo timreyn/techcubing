@@ -5,3 +5,6 @@ bazel-server
 bazel-testlogs
 *.swp
 *.swo
+local.properties
+.idea
+.project
