@@ -12,8 +12,8 @@ java_library(
     name = "OAuth",
     srcs = ["OAuth.java"],
     deps = [
-        "@javax_javaee_web_api//jar",
         "//src/main/java/com/techcubing/server/framework:ServerState",
+        "@javax_javaee_web_api//jar",
     ],
 )
 
@@ -26,7 +26,7 @@ java_library(
     name = "ProtoUtil",
     srcs = ["ProtoUtil.java"],
     deps = [
-        "@com_google_protobuf//:protobuf_java",
         "//src/main/java/com/techcubing/proto:options_java_proto",
+        "@com_google_protobuf//:protobuf_java",
     ],
 )

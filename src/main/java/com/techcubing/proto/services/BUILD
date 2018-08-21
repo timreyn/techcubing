@@ -25,8 +25,8 @@ java_grpc_library(
         ":acquire_scorecard_java_proto",
         ":get_by_id_java_proto",
         ":list_persons_java_proto",
-        ":techcubing_service_java_proto",
         ":release_scorecard_java_proto",
+        ":techcubing_service_java_proto",
     ],
 )
 
@@ -49,9 +49,9 @@ proto_library(
     name = "get_by_id_proto",
     srcs = ["get_by_id.proto"],
     deps = [
-        "@com_google_protobuf//:any_proto",
         "//src/main/java/com/techcubing/proto:request_context_proto",
         "//src/main/java/com/techcubing/proto:response_context_proto",
+        "@com_google_protobuf//:any_proto",
     ],
 )
 

@@ -2,10 +2,11 @@ java_binary(
     name = "main",
     srcs = ["Main.java"],
     main_class = "com.techcubing.server.Main",
+    runtime_deps = [
+        "@io_grpc_grpc_java//netty",
+        "@org_glassfish_jersey_core_jersey_common//jar",
+    ],
     deps = [
-        "@io_grpc_grpc_java//core",
-        "@io_grpc_grpc_java//protobuf",
-        "@io_grpc_grpc_services//jar",
         "//src/main/java/com/techcubing/server/framework:ServerState",
         "//src/main/java/com/techcubing/server/framework:ServerStateInitializer",
         "//src/main/java/com/techcubing/server/handlers:AddDeviceHandler",
@@ -16,9 +17,8 @@ java_binary(
         "//src/main/java/com/techcubing/server/handlers:OAuthRedirectHandler",
         "//src/main/java/com/techcubing/server/handlers:SetCompetitionHandler",
         "//src/main/java/com/techcubing/server/services:TechCubingServiceImpl",
-    ],
-    runtime_deps = [
-        "@io_grpc_grpc_java//netty",
-        "@org_glassfish_jersey_core_jersey_common//jar",
+        "@io_grpc_grpc_java//core",
+        "@io_grpc_grpc_java//protobuf",
+        "@io_grpc_grpc_services//jar",
     ],
 )

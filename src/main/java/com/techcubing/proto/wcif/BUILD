@@ -18,8 +18,8 @@ proto_library(
     srcs = ["competition.proto"],
     deps = [
         "//src/main/java/com/techcubing/proto:options_proto",
-        "//src/main/java/com/techcubing/proto/wcif:person_proto",
         "//src/main/java/com/techcubing/proto/wcif:event_proto",
+        "//src/main/java/com/techcubing/proto/wcif:person_proto",
     ],
 )
 

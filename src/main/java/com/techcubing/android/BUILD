@@ -1,20 +1,20 @@
 android_binary(
     name = "app",
-    manifest = "AndroidManifest.xml",
     custom_package = "com.techcubing.android",
+    manifest = "AndroidManifest.xml",
+    resource_files = glob(["res/**"]),
     deps = [
         ":activities",
     ],
-    resource_files = glob(["res/**"]),
 )
 
 android_library(
     name = "activities",
     srcs = glob(["activities/*.java"]),
-    manifest = "AndroidManifest.xml",
     custom_package = "com.techcubing.android.activities",
+    manifest = "AndroidManifest.xml",
+    resource_files = glob(["res/**"]),
     deps = [
         "@androidsdk//com.android.support:appcompat-v7-25.3.1",
     ],
-    resource_files = glob(["res/**"]),
 )

@@ -20,7 +20,7 @@ proto_library(
         ":device_type_proto",
         ":options_proto",
         "@com_google_protobuf//:timestamp_proto",
-    ]
+    ],
 )
 
 java_proto_library(
