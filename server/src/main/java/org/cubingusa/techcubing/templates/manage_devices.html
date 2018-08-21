@@ -24,22 +24,36 @@
     </ul>
   </#list>
   <h2>Create a new device</h2>
-  <form action="/add_device" method="POST">
-    <p>
-      <div>Type of device:</div>
-      <select name="deviceType">
-        <#list devicesByType as deviceType, devices>
-          <option>${deviceType}</option>
-        </#list>
-      </select>
-    </p>
-    <p>
-      <div>Name of device:</div>
-      <input type="text" name="deviceName" width="50">
-    </p>
-    <p>
-      <button type="submit" value="Submit">Submit</button>
-    </p>
-  </form>
+  <#if attachedDevices?size == 0 >
+    <p>No attached devices found.</p>
+  <#else>
+    <form action="/add_device" method="POST">
+      <p>
+        <div>Type of device:</div>
+        <select name="deviceType">
+          <#list devicesByType as deviceType, devices>
+            <option>${deviceType}</option>
+          </#list>
+        </select>
+      </p>
+      <p>
+        <div>Name of device:</div>
+        <input type="text" name="deviceName" width="50">
+      </p>
+      <p>
+        <div>Device:</div>
+        <select name="deviceSerialNumber">
+          <#list attachedDevices as device>
+            <option value="${device.serialNumber}">
+              ${device.deviceString} ${device.deviceId} (${device.serialNumber})
+            </option>
+          </#list>
+        </select>
+      </p>
+      <p>
+        <button type="submit" value="Submit">Submit</button>
+      </p>
+    </form>
+  </#if>
 </body>
 </html>

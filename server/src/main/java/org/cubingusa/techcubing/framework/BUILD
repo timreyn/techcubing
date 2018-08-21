@@ -8,6 +8,7 @@ java_library(
     deps = [
         ":MysqlConnection",
         ":ProtoRegistry",
+        "@com_android_tools_ddms_ddmlib//jar",
         "@org_freemarker_freemarker//jar",
     ],
 )
@@ -19,6 +20,7 @@ java_library(
         ":MysqlConnection",
         ":ProtoRegistry",
         ":ServerState",
+        "@com_android_tools_ddms_ddmlib//jar",
         "@org_freemarker_freemarker//jar",
         "//src/main/java/org/cubingusa/techcubing/proto:device_java_proto",
         "//src/main/java/org/cubingusa/techcubing/proto:scorecard_java_proto",

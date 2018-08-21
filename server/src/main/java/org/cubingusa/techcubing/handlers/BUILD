@@ -62,6 +62,7 @@ java_library(
     srcs = ["ManageDevicesHandler.java"],
     deps = [
         ":BaseHandler",
+        "@com_android_tools_ddms_ddmlib//jar",
         "@com_google_protobuf//:protobuf_java",
         "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",
@@ -75,6 +76,7 @@ java_library(
     srcs = ["AddDeviceHandler.java"],
     deps = [
         ":BaseHandler",
+        "@com_android_tools_ddms_ddmlib//jar",
         "@com_google_protobuf//:protobuf_java",
         "//src/main/java/org/cubingusa/techcubing/framework:ProtoDb",
         "//src/main/java/org/cubingusa/techcubing/framework:ServerState",

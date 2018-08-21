@@ -30,6 +30,7 @@ public class AddDeviceHandler extends BaseHandler {
         deviceBuilder.setType(DeviceType.valueOf(enumValue));
       }
     }
+    deviceBuilder.setSerialNumber(queryParams.get("deviceSerialNumber"));
 
     ProtoDb.write(deviceBuilder.build(), serverState);
     redirectTo(URI.create("/manage_devices"), t);

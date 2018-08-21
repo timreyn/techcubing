@@ -1,5 +1,6 @@
 package org.cubingusa.techcubing.framework;
 
+import com.android.ddmlib.AndroidDebugBridge;
 import freemarker.template.Configuration;
 import java.net.URI;
 
@@ -13,6 +14,7 @@ public class ServerState {
   private WcaEnvironment wcaEnvironment = WcaEnvironment.PROD;
   private ProtoRegistry protoRegistry;
   private String competitionId;
+  private AndroidDebugBridge androidDebugBridge;
 
   public ServerState setTemplateConfig(Configuration templateConfig) {
     this.templateConfig = templateConfig;
@@ -114,5 +116,14 @@ public class ServerState {
 
   public String getCompetitionId() {
     return competitionId;
+  }
+
+  public ServerState setAndroidDebugBridge(AndroidDebugBridge androidDebugBridge) {
+    this.androidDebugBridge = androidDebugBridge;
+    return this;
+  }
+
+  public AndroidDebugBridge getAndroidDebugBridge() {
+    return androidDebugBridge;
   }
 }

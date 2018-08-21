@@ -18,6 +18,8 @@ message Device {
 
   string visible_name = 3;
 
+  string serial_number = 6 [(techcubing.mysql_column_name) = "serial_number"];
+
   google.protobuf.Timestamp activated = 4;
   google.protobuf.Timestamp deactivated = 5;
 }

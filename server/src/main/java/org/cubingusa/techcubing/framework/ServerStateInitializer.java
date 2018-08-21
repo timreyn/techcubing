@@ -1,5 +1,6 @@
 package org.cubingusa.techcubing.framework;
 
+import com.android.ddmlib.AndroidDebugBridge;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
@@ -14,13 +15,16 @@ import org.cubingusa.techcubing.proto.wcif.WcifRound;
 
 public class ServerStateInitializer {
   public static ServerState createServerState() throws IOException, SQLException {
+    AndroidDebugBridge.init(false);
+
     return new ServerState()
       .setWcaEnvironment(ServerState.WcaEnvironment.PROD)
       .setTemplateConfig(getTemplateConfig())
       .setMysqlConnection(new MysqlConnection())
       .setPort(8118)
       .setGrpcPort(8119)
-      .setProtoRegistry(getProtoRegistry());
+      .setProtoRegistry(getProtoRegistry())
+      .setAndroidDebugBridge(AndroidDebugBridge.createBridge());
   }
 
   static Configuration getTemplateConfig() throws IOException {
