@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 import com.techcubing.proto.ScorecardProto.Scorecard;
 import com.techcubing.proto.wcif.WcifEvent;
 import com.techcubing.proto.wcif.WcifPerson;

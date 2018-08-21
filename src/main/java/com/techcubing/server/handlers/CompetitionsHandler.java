@@ -4,8 +4,9 @@ import com.sun.net.httpserver.HttpExchange;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import com.techcubing.server.framework.ServerState;
 import org.json.simple.JSONArray;
+
+import com.techcubing.server.framework.ServerState;
 
 public class CompetitionsHandler extends BaseHandler {
   public CompetitionsHandler(ServerState serverState) {

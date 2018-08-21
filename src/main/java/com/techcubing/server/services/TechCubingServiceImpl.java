@@ -1,6 +1,7 @@
 package com.techcubing.server.services;
 
 import io.grpc.stub.StreamObserver;
+
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardRequest;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardResponse;

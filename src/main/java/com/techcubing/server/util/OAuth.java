@@ -3,6 +3,7 @@ package com.techcubing.server.util;
 import java.io.IOException;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
+
 import com.techcubing.server.framework.ServerState;
 
 public class OAuth {

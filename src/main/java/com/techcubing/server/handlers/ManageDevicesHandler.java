@@ -5,14 +5,15 @@ import com.android.ddmlib.IDevice;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Message;
 import com.sun.net.httpserver.HttpExchange;
-import com.techcubing.server.framework.ServerState;
-import com.techcubing.server.framework.ProtoDb;
-import com.techcubing.proto.DeviceProto.Device;
-import com.techcubing.proto.DeviceTypeProto.DeviceType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.techcubing.server.framework.ServerState;
+import com.techcubing.server.framework.ProtoDb;
+import com.techcubing.proto.DeviceProto.Device;
+import com.techcubing.proto.DeviceTypeProto.DeviceType;
 
 public class ManageDevicesHandler extends BaseHandler {
   public ManageDevicesHandler(ServerState serverState) {

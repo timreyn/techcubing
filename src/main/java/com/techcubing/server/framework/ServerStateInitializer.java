@@ -6,6 +6,7 @@ import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+
 import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.ScorecardProto.Scorecard;
 import com.techcubing.proto.wcif.WcifCompetition;

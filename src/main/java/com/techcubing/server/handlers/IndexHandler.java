@@ -3,6 +3,7 @@ package com.techcubing.server.handlers;
 import com.sun.net.httpserver.HttpExchange;
 import java.util.HashMap;
 import java.util.Map;
+
 import com.techcubing.server.framework.ServerState;
 
 public class IndexHandler extends BaseHandler {

@@ -3,6 +3,7 @@ package com.techcubing.server.services;
 import com.google.protobuf.Message;
 import java.io.IOException;
 import java.sql.SQLException;
+
 import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.proto.wcif.WcifPerson;

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.proto.DeviceProto.Device;

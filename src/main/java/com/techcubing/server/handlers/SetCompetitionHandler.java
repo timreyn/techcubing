@@ -3,12 +3,13 @@ package com.techcubing.server.handlers;
 import com.google.protobuf.util.JsonFormat;
 import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.techcubing.server.framework.ScorecardGenerator;
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.proto.wcif.WcifCompetition;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 public class SetCompetitionHandler extends BaseHandler {
   public SetCompetitionHandler(ServerState serverState) {

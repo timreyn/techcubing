@@ -17,11 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.UriBuilder;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.server.util.OAuth;
 import com.techcubing.server.util.QueryParser;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 public abstract class BaseHandler implements HttpHandler {
   protected ServerState serverState;
