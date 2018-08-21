@@ -1,6 +1,6 @@
-[submodule "server/third_party/grpc-java"]
-	path = server/third_party/grpc-java
+[submodule "third_party/grpc-java"]
+	path = third_party/grpc-java
 	url = https://github.com/grpc/grpc-java
-[submodule "server/third_party/bazel-skylib"]
-	path = server/third_party/bazel-skylib
-	url = https://github.com/bazelbuild/bazel-skylib.git
+[submodule "third_party/bazel-skylib"]
+	path = third_party/bazel-skylib
+	url = https://github.com/bazelbuild/bazel-skylib

@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto.services";
+option java_outer_classname = "AcquireScorecardProto";
+
+import "src/main/java/com/techcubing/proto/options.proto";
+import "src/main/java/com/techcubing/proto/request_context.proto";
+import "src/main/java/com/techcubing/proto/response_context.proto";
+import "src/main/java/com/techcubing/proto/scorecard.proto";
+
+message AcquireScorecardRequest {
+  RequestContext context = 1;
+
+  string scorecard_id = 2 [(techcubing.message_type) = "techcubing.Scorecard"];
+}
+
+message AcquireScorecardResponse {
+  ResponseContext context = 1;
+
+  enum Status {
+    OK = 0;
+    SCORECARD_NOT_FOUND = 1;
+    OUT_OF_ORDER_REQUEST = 2;
+    SCORECARD_NOT_AVAILABLE = 3;
+    ROUND_COMPLETED = 4;
+    INTERNAL_ERROR = 5;
+    ALREADY_HAVE_A_SCORECARD = 6;
+    MISSED_CUTOFF = 7;
+    CUMULATIVE_TIME_LIMIT = 8;
+  }
+  Status status = 2;
+
+  Scorecard scorecard = 3;
+
+  int32 attempt_number = 4;
+}

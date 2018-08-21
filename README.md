@@ -27,8 +27,8 @@ $ sudo apt install openjdk-8-jdk
 5. Build and run the server:
 
 ```sh
-$ bazel build src/main/java/org/cubingusa/techcubing:main
-$ bazel-bin/src/main/java/org/cubingusa/techcubing/main
+$ bazel build src/main/java/com/techcubing/server:main
+$ bazel-bin/src/main/java/com/techcubing/server/main
 ```
 
 6. Visit https://localhost:8118/ in your browser, and select a competition.
@@ -38,7 +38,7 @@ Note that only competitions starting one month in the past, and delegated or org
 If you do not have any competitions that you've organized or delegated, you can switch to the Staging WCA website by editing
 
 ```
-src/main/java/org/cubingusa/techcubing/framework/ServerStateInitializer.java
+src/main/java/com/techcubing/server/framework/ServerStateInitializer.java
 ```
 
 and changing `WcaEnvironment.PROD` to `WcaEnvironment.STAGING`.
@@ -58,7 +58,7 @@ TechCubing uses [gRPC](https://grpc.io) to communicate between the app and the s
 The service protocol is defined in
 
 ```
-src/main/java/org/cubingusa/techcubing/proto/service/techcubing_service.proto
+src/main/java/com/techcubing/proto/service/techcubing_service.proto
 ```
 
 Sample command (note that you must set the competition ID before running this command):

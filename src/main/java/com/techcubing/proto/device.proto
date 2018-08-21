@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto";
+option java_outer_classname = "DeviceProto";
+
+import "google/protobuf/timestamp.proto";
+import "src/main/java/com/techcubing/proto/device_type.proto";
+import "src/main/java/com/techcubing/proto/options.proto";
+
+message Device {
+  option (techcubing.mysql_table_name) = "Device";
+
+  string id = 1 [(techcubing.primary_key) = true];
+
+  DeviceType type = 2;
+
+  string visible_name = 3;
+
+  string serial_number = 6 [(techcubing.mysql_column_name) = "serial_number"];
+
+  google.protobuf.Timestamp activated = 4;
+  google.protobuf.Timestamp deactivated = 5;
+}

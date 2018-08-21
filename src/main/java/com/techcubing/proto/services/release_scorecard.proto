@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto.services";
+option java_outer_classname = "ReleaseScorecardProto";
+
+import "src/main/java/com/techcubing/proto/options.proto";
+import "src/main/java/com/techcubing/proto/request_context.proto";
+import "src/main/java/com/techcubing/proto/response_context.proto";
+import "src/main/java/com/techcubing/proto/scorecard.proto";
+
+message ReleaseScorecardRequest {
+  RequestContext context = 1;
+
+  string scorecard_id = 2 [(techcubing.message_type) = "techcubing.Scorecard"];
+
+  int32 attempt_number = 3;
+
+  Attempt attempt = 4;
+}
+
+message ReleaseScorecardResponse {
+  ResponseContext context = 1;
+
+  enum Status {
+    OK = 0;
+    SCORECARD_NOT_FOUND = 1;
+    SCORECARD_NOT_HELD_BY_DEVICE = 2;
+    INTERNAL_ERROR = 3;
+    TIME_NOT_SET = 4;
+  }
+  Status status = 2;
+}

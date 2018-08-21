@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package techcubing.wcif;
+
+option java_package = "com.techcubing.proto.wcif";
+option java_multiple_files = true;
+
+import "src/main/java/com/techcubing/proto/options.proto";
+
+message WcifTimeLimit {
+  uint32 centiseconds = 1;
+  repeated string cumulative_round_ids = 2 [
+    (techcubing.message_type) = "techcubing.wcif.WcifRound"
+  ];
+}
+
+message WcifCutoff {
+  uint32 number_of_attempts = 1;
+  uint32 attempt_result = 2;
+}
+
+message WcifAdvancementCondition {
+  enum Type {
+    unknown_advancement_type = 0;
+    ranking = 1;
+    percent = 2;
+    attemptResult = 3;
+  }
+  Type type = 1;
+  uint32 level = 2;
+}
+
+message WcifRound {
+  option (techcubing.mysql_table_name) = "Round";
+
+  string id = 1 [(techcubing.primary_key) = true];
+
+  // Valid values of format are "1", "2", "3", "a", "m".
+  string format = 2;
+  WcifTimeLimit time_limit = 3;
+  WcifCutoff cutoff = 4;
+  WcifAdvancementCondition advancement_condition = 5;
+
+  // Omitted: results
+  // Omitted: scrambleSetCount
+  // Omitted: scrambleSets
+
+  string event_id = 6 [
+    (techcubing.parent_ref) = true,
+    (techcubing.message_type) = "techcubing.wcif.WcifEvent"
+  ];
+}

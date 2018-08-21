@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto.services";
+option java_outer_classname = "ListPersonsProto";
+
+import "src/main/java/com/techcubing/proto/request_context.proto";
+import "src/main/java/com/techcubing/proto/response_context.proto";
+import "src/main/java/com/techcubing/proto/wcif/person.proto";
+
+message ListPersonsRequest {
+  RequestContext context = 1;
+}
+
+message ListPersonsResponse {
+  ResponseContext context = 1;
+
+  repeated wcif.WcifPerson persons = 2;
+}
