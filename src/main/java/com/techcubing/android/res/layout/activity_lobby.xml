@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.techcubing.android.activities.SetupActivity">
+
+    <Button
+        android:id="@+id/scan_scorecard_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10px"
+        android:textAlignment="center"
+        android:text="Scan a scorecard" />
+
+</LinearLayout>

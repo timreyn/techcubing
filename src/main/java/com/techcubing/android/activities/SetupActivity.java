@@ -52,5 +52,10 @@ public class SetupActivity extends AppCompatActivity {
                 Log.e(TAG, "Failed to parse DeviceConfig proto!", e);
             }
         }
+
+        if (PreferenceManager.getDefaultSharedPreferences(this)
+                .contains(SharedPreferenceKeys.DEVICE_ID)) {
+            startActivity(new Intent(this, LobbyActivity.class));
+        }
     }
 }
