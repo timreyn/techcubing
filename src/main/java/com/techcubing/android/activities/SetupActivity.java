@@ -1,13 +1,56 @@
 package com.techcubing.android.activities;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+import java.util.Base64;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.techcubing.android.util.SharedPreferenceKeys;
+import com.techcubing.proto.DeviceConfigProto.DeviceConfig;
 
 public class SetupActivity extends AppCompatActivity {
+
+    private static final String SETUP_DETAILS = "com.techcubing.SETUP_DETAILS";
+    private static final String TAG = "SetupActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
+        Intent intent = getIntent();
+
+        if (intent != null && intent.getAction().equals("com.techcubing.SETUP_APP")) {
+            Log.i(TAG, intent.getStringExtra(SETUP_DETAILS));
+            try {
+                DeviceConfig deviceConfig =
+                        DeviceConfig.parseFrom(
+                                Base64.getDecoder().decode(intent.getStringExtra(SETUP_DETAILS)));
+                SharedPreferences.Editor sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(this).edit();
+                sharedPreferences.putString(
+                        SharedPreferenceKeys.DEVICE_ID,
+                        deviceConfig.getDevice().getId());
+                sharedPreferences.putInt(
+                        SharedPreferenceKeys.DEVICE_TYPE,
+                        deviceConfig.getDevice().getTypeValue());
+                sharedPreferences.putString(
+                        SharedPreferenceKeys.SERVER_HOST,
+                        deviceConfig.getServerHost());
+                sharedPreferences.putInt(
+                        SharedPreferenceKeys.SERVER_PORT,
+                        deviceConfig.getServerPort());
+                sharedPreferences.commit();
+
+                TextView textView = (TextView) findViewById(R.id.setup_activity_content);
+                textView.setText(deviceConfig.getDevice().getVisibleName());
+            } catch (InvalidProtocolBufferException e) {
+                Log.e(TAG, "Failed to parse DeviceConfig proto!", e);
+            }
+        }
     }
 }

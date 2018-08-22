@@ -15,6 +15,15 @@ android_library(
     manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
     deps = [
+        "//src/main/java/com/techcubing/android:util",
+        "//src/main/java/com/techcubing/proto:device_config_java_lite_proto",
         "@androidsdk//com.android.support:appcompat-v7-25.3.1",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
     ],
+)
+
+android_library(
+    name = "util",
+    srcs = glob(["util/*.java"]),
+    custom_package = "com.techcubing.android.activities",
 )
