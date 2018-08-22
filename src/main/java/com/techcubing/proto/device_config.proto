@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto";
+option java_outer_classname = "DeviceConfigProto";
+
+import "src/main/java/com/techcubing/proto/device.proto";
+import "src/main/java/com/techcubing/proto/wcif/competition.proto";
+
+message DeviceConfig {
+  Device device = 1;
+
+  wcif.WcifCompetition competition = 2;
+
+  string serverHost = 3;
+
+  int32 serverPort = 4;
+}

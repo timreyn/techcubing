@@ -39,6 +39,25 @@ java_proto_library(
 )
 
 proto_library(
+    name = "device_config_proto",
+    srcs = ["device_config.proto"],
+    deps = [
+        ":device_proto",
+        "//src/main/java/com/techcubing/proto/wcif:competition_proto",
+    ],
+)
+
+java_proto_library(
+    name = "device_config_java_proto",
+    deps = [":device_config_proto"],
+)
+
+java_lite_proto_library(
+    name = "device_config_java_lite_proto",
+    deps = [":device_config_proto"],
+)
+
+proto_library(
     name = "request_context_proto",
     srcs = ["request_context.proto"],
     deps = [":options_proto"],
