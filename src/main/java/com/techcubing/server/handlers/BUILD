@@ -76,6 +76,7 @@ java_library(
     srcs = ["AddDeviceHandler.java"],
     deps = [
         ":BaseHandler",
+        "//src/main/java/com/techcubing/proto:device_config_java_proto",
         "//src/main/java/com/techcubing/proto:device_java_proto",
         "//src/main/java/com/techcubing/proto:device_type_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
