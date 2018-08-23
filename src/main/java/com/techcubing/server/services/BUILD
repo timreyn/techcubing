@@ -46,6 +46,7 @@ java_library(
     srcs = ["AcquireScorecardImpl.java"],
     deps = [
         "//src/main/java/com/techcubing/proto:device_java_proto",
+        "//src/main/java/com/techcubing/proto:device_type_java_proto",
         "//src/main/java/com/techcubing/proto:scorecard_java_proto",
         "//src/main/java/com/techcubing/proto/services:acquire_scorecard_java_proto",
         "//src/main/java/com/techcubing/proto/wcif:round_java_proto",

@@ -9,7 +9,10 @@ import java.sql.SQLException;
 import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.proto.DeviceProto.Device;
+import com.techcubing.proto.DeviceTypeProto.DeviceType;
 import com.techcubing.proto.ScorecardProto.Attempt;
+import com.techcubing.proto.ScorecardProto.AttemptPart;
+import com.techcubing.proto.ScorecardProto.AttemptPartOutcome;
 import com.techcubing.proto.ScorecardProto.Scorecard;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardRequest;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardResponse;
@@ -126,29 +129,29 @@ class AcquireScorecardImpl {
               // Check whether everything is in the right order.
               Attempt.Builder attemptBuilder =
                 scorecardBuilder.getAttemptsBuilder(nextAttemptNumber - 1);
-              switch (device.getType()) {
-                case SCRAMBLER:
-                  if (!attemptBuilder.getJudgeDeviceId().isEmpty() ||
-                      !attemptBuilder.getScramblerDeviceId().isEmpty()) {
-                    responseBuilder.setStatus(
-                        AcquireScorecardResponse.Status.OUT_OF_ORDER_REQUEST);
-                    return false;
-                  }
-                  attemptBuilder.setScramblerDeviceId(device.getId());
-                  // TODO: store scrambler ID.
-                  break;
-                case JUDGE:
-                  if (attemptBuilder.getScramblerDeviceId().isEmpty()) {
-                    responseBuilder.setStatus(
-                        AcquireScorecardResponse.Status.OUT_OF_ORDER_REQUEST);
-                    return false;
-                  }
-                  attemptBuilder.setJudgeDeviceId(device.getId());
-                  // TODO: store judge ID.
-                  break;
-              }
 
-              // TODO: Check whether this scrambler is allowed to do this scramble.
+              DeviceType lastDeviceType = DeviceType.UNKNOWN_DEVICE;
+              for (AttemptPart part : attemptBuilder.getPartsList()) {
+                if (part.getOutcome() == AttemptPartOutcome.OK &&
+                    part.getDeviceType() != DeviceType.ADMIN) {
+                  lastDeviceType = part.getDeviceType();
+                }
+              }
+              if ((device.getType() == DeviceType.SCRAMBLER &&
+                   lastDeviceType != DeviceType.UNKNOWN_DEVICE) ||
+                  (device.getType() == DeviceType.JUDGE &&
+                   lastDeviceType != DeviceType.SCRAMBLER)) {
+                responseBuilder.setStatus(
+                    AcquireScorecardResponse.Status.OUT_OF_ORDER_REQUEST);
+                return false;
+              }
+              AttemptPart.Builder nextPart = attemptBuilder.addPartsBuilder();
+              nextPart.setDeviceType(device.getType());
+              nextPart.setDeviceId(device.getId());
+              // TODO: store person ID.
+
+              // TODO: Check whether this judge/scrambler is allowed to see
+              // this scramble.
               scorecardBuilder.setActiveDeviceId(device.getId());
               responseBuilder.setAttemptNumber(nextAttemptNumber);
               return true;

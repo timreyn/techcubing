@@ -17,7 +17,11 @@ message ReleaseScorecardRequest {
 
   int32 attempt_number = 3;
 
-  Attempt attempt = 4;
+  repeated AttemptEvent events = 4;
+
+  AttemptResult result = 5;
+
+  AttemptPartOutcome outcome = 6;
 }
 
 message ReleaseScorecardResponse {

@@ -5,26 +5,35 @@ package techcubing;
 option java_package = "com.techcubing.proto";
 option java_outer_classname = "ScorecardProto";
 
-import "google/protobuf/descriptor.proto";
 import "google/protobuf/timestamp.proto";
 import "src/main/java/com/techcubing/proto/device_type.proto";
 import "src/main/java/com/techcubing/proto/options.proto";
 
-extend google.protobuf.EnumValueOptions {
-  repeated DeviceType permitted_devices = 6000;
-}
-
+// Something that happened during an event.
 enum EventCode {
   UNKNOWN_EVENT = 0;
-  SCRAMBLE_ACQUIRED = 1 [(permitted_devices) = SCRAMBLER];
-  SCRAMBLE_RELEASED = 2 [(permitted_devices) = SCRAMBLER];
-  JUDGE_ACQUIRED = 3 [(permitted_devices) = JUDGE];
-  INSPECTION_STARTED = 4 [(permitted_devices) = JUDGE];
-  INSPECTION_ENDED = 5 [(permitted_devices) = JUDGE];
-  SOLVE_ENDED = 6 [(permitted_devices) = JUDGE];
-  JUDGE_RELEASED = 7 [(permitted_devices) = JUDGE];
+  SCRAMBLE_ACQUIRED = 1;
+  SCRAMBLE_RELEASED = 2;
+  JUDGE_ACQUIRED = 3;
+  INSPECTION_STARTED = 4;
+  INSPECTION_ENDED = 5;
+  SOLVE_ENDED = 6;
+  JUDGE_RELEASED = 7;
+}
+message AttemptEvent {
+  EventCode code = 1;
+  google.protobuf.Timestamp timestamp = 2;
 }
 
+// The result of an AttemptPart.  If result is not OK, another device of the
+// same type must acquire this scorecard next.
+enum AttemptPartOutcome {
+  UNKNOWN = 0;
+  OK = 1;
+  MISSCRAMBLE = 2;
+}
+
+// The result of an attempt.
 message AttemptResult {
   uint64 final_time = 1;
   bool is_dnf = 2;
@@ -32,28 +41,26 @@ message AttemptResult {
   // TODO: define schema for penalty information.
 }
 
+// Part of an event, corresponding to one device has acquired the scorecard.
+message AttemptPart {
+  DeviceType device_type = 1;
+
+  string person_id = 2 [
+    (techcubing.message_type) = "techcubing.wcif.WcifPerson"
+  ];
+  string device_id = 3 [
+    (techcubing.message_type) = "techcubing.Device"
+  ];
+
+  repeated AttemptEvent events = 5;
+
+  AttemptPartOutcome outcome = 6;
+}
+
 message Attempt {
   AttemptResult result = 1;
 
-  string judge_id = 2 [
-    (techcubing.message_type) = "techcubing.wcif.WcifPerson"
-  ];
-  string judge_device_id = 3 [
-    (techcubing.message_type) = "techcubing.Device"
-  ];
-
-  string scrambler_id = 4 [
-    (techcubing.message_type) = "techcubing.wcif.WcifPerson"
-  ];
-  string scrambler_device_id = 5 [
-    (techcubing.message_type) = "techcubing.Device"
-  ];
-
-  message AttemptEvent {
-    EventCode code = 1;
-    google.protobuf.Timestamp timestamp = 2;
-  }
-  repeated AttemptEvent events = 6;
+  repeated AttemptPart parts = 2;
 
   // TODO: define schema for extra attempts.
 }

@@ -13,6 +13,7 @@ import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.DeviceTypeProto.DeviceType;
 import com.techcubing.proto.ScorecardProto;
 import com.techcubing.proto.ScorecardProto.Attempt;
+import com.techcubing.proto.ScorecardProto.AttemptPart;
 import com.techcubing.proto.ScorecardProto.Scorecard;
 import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardRequest;
 import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardResponse;
@@ -51,25 +52,27 @@ class ReleaseScorecardImpl {
               Attempt.Builder attemptBuilder =
                   scorecardBuilder.getAttemptsBuilder(
                       request.getAttemptNumber() - 1);
-              for (Attempt.AttemptEvent attemptEvent :
-                   request.getAttempt().getEventsList()) {
-                EnumValueDescriptor enumDescriptor =
-                    attemptEvent.getCode().getValueDescriptor();
-                if (enumDescriptor.getOptions().getExtension(
-                      ScorecardProto.permittedDevices)
-                    .contains(device.getType())) {
-                  attemptBuilder.addEvents(attemptEvent);
-                }
+
+              AttemptPart.Builder lastPartBuilder =
+                attemptBuilder.getPartsBuilder(
+                    attemptBuilder.getPartsList().size() - 1);
+              lastPartBuilder.addAllEvents(request.getEventsList());
+              lastPartBuilder.setOutcome(request.getOutcome());
+              if (!lastPartBuilder.getDeviceId().equals(device.getId())) {
+                responseBuilder.setStatus(
+                    ReleaseScorecardResponse.Status.SCORECARD_NOT_HELD_BY_DEVICE);
+                return false;
               }
+
               // Store the result.
               if (device.getType() == DeviceType.JUDGE) {
-                if (request.getAttempt().getResult().getFinalTime() == 0 &&
-                    !request.getAttempt().getResult().getIsDnf()) {
+                if (request.getResult().getFinalTime() == 0 &&
+                    !request.getResult().getIsDnf()) {
                   responseBuilder.setStatus(
                       ReleaseScorecardResponse.Status.TIME_NOT_SET);
                   return false;
                 }
-                attemptBuilder.setResult(request.getAttempt().getResult());
+                attemptBuilder.setResult(request.getResult());
               }
               scorecardBuilder.setActiveDeviceId("");
               return true;
