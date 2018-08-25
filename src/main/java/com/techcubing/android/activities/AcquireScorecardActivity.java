@@ -21,7 +21,7 @@ public class AcquireScorecardActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Uri uri = Uri.parse(intent.toUri(0));
         String scorecardId = uri.getPathSegments().get(0);
-        Log.i(TAG, scorecardId);
+        Log.i(TAG, "Acquiring " + scorecardId);
 
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
@@ -29,7 +29,6 @@ public class AcquireScorecardActivity extends AppCompatActivity {
 
         DeviceType deviceType = DeviceType.forNumber(
                 sharedPreferences.getInt(SharedPreferenceKeys.DEVICE_TYPE, 0));
-        Log.i(TAG, deviceType.name());
         switch (deviceType) {
             case JUDGE:
                 startActivity(new Intent(this, JudgeActivity.class));
