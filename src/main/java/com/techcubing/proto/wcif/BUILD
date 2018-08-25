@@ -1,5 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
+# person.proto
+
 proto_library(
     name = "person_proto",
     srcs = ["person.proto"],
@@ -7,11 +9,16 @@ proto_library(
         "//src/main/java/com/techcubing/proto:options_proto",
     ],
 )
-
 java_proto_library(
     name = "person_java_proto",
     deps = [":person_proto"],
 )
+java_lite_proto_library(
+    name = "person_java_lite_proto",
+    deps = [":person_proto"],
+)
+
+# competition.proto
 
 proto_library(
     name = "competition_proto",
@@ -22,11 +29,16 @@ proto_library(
         "//src/main/java/com/techcubing/proto/wcif:person_proto",
     ],
 )
-
 java_proto_library(
     name = "competition_java_proto",
     deps = [":competition_proto"],
 )
+java_lite_proto_library(
+    name = "competition_java_lite_proto",
+    deps = [":competition_proto"],
+)
+
+# event.proto
 
 proto_library(
     name = "event_proto",
@@ -36,11 +48,16 @@ proto_library(
         "//src/main/java/com/techcubing/proto/wcif:round_proto",
     ],
 )
-
 java_proto_library(
     name = "event_java_proto",
     deps = [":event_proto"],
 )
+java_lite_proto_library(
+    name = "event_java_lite_proto",
+    deps = [":event_proto"],
+)
+
+# round.proto
 
 proto_library(
     name = "round_proto",
@@ -49,8 +66,11 @@ proto_library(
         "//src/main/java/com/techcubing/proto:options_proto",
     ],
 )
-
 java_proto_library(
     name = "round_java_proto",
+    deps = [":round_proto"],
+)
+java_lite_proto_library(
+    name = "round_java_lite_proto",
     deps = [":round_proto"],
 )
