@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:camerakit="http://schemas.android.com/apk/res-auto"
+    tools:context="com.techcubing.android.activities.SetupActivity">
+
+    <com.wonderkiln.camerakit.CameraView
+        android:id="@+id/barcode_scanner_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        camerakit:ckFlash="off"
+        camerakit:ckDoubleTapToToggleFacing="true"
+        camerakit:ckPermissions="lazy"
+        camerakit:ckMethod="still"/>
+
+</LinearLayout>

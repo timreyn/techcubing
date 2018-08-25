@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="techcubing.com.techcubing">
+    package="com.techcubing.android">
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="15"
         android:targetSdkVersion="27" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -13,18 +16,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.techcubing.android.activities.SetupActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name="com.techcubing.android.activities.SetupActivity">
             <intent-filter>
                 <action android:name="com.techcubing.SETUP_APP" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name="com.techcubing.android.activities.LobbyActivity"></activity>
+        <activity android:name="com.techcubing.android.activities.BarcodeScannerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
+
     </application>
 
 </manifest>

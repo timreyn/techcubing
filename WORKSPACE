@@ -69,6 +69,28 @@ android_sdk_repository(
     build_tools_version = "27.0.3",
 )
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+http_file(
+    name = "camerakit",
+    urls = [
+        "https://camerakit.bintray.com/camerakit-android-prereleases/com/wonderkiln/camerakit/0.13.1/camerakit-0.13.1.aar",
+    ],
+    sha256 = "fce1a3fed6b0e7b52d8b1bc1d573baf3458bdc26d150eef84332f7b6cb6e38e9",
+)
+
+# Google Maven Repository
+GMAVEN_TAG = "20180723-2"
+
+http_archive(
+    name = "gmaven_rules",
+    strip_prefix = "gmaven_rules-%s" % GMAVEN_TAG,
+    url = "https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz" % GMAVEN_TAG,
+)
+
+load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
+
+gmaven_rules()
+
 # Install buildifier.
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")

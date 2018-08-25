@@ -53,6 +53,8 @@ public class SetupActivity extends AppCompatActivity {
             }
         }
 
+        startActivity(new Intent(this, BarcodeScannerActivity.class));
+
         if (PreferenceManager.getDefaultSharedPreferences(this)
                 .contains(SharedPreferenceKeys.DEVICE_ID)) {
             startActivity(new Intent(this, LobbyActivity.class));
