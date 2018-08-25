@@ -15,8 +15,8 @@ import com.techcubing.proto.DeviceConfigProto.DeviceConfig;
 
 public class SetupActivity extends AppCompatActivity {
 
-    private static final String SETUP_DETAILS = "com.techcubing.SETUP_DETAILS";
-    private static final String TAG = "SetupActivity";
+    private static final String EXTRA_SETUP_DETAILS = "com.techcubing.SETUP_DETAILS";
+    private static final String TAG = "TCSetupActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +25,11 @@ public class SetupActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         if (intent != null && intent.getAction().equals("com.techcubing.SETUP_APP")) {
-            Log.i(TAG, intent.getStringExtra(SETUP_DETAILS));
             try {
                 DeviceConfig deviceConfig =
                         DeviceConfig.parseFrom(
-                                Base64.getDecoder().decode(intent.getStringExtra(SETUP_DETAILS)));
+                                Base64.getUrlDecoder().decode(
+                                        intent.getStringExtra(EXTRA_SETUP_DETAILS)));
                 SharedPreferences.Editor sharedPreferences =
                         PreferenceManager.getDefaultSharedPreferences(this).edit();
                 sharedPreferences.putString(
