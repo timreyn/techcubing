@@ -1,4 +1,7 @@
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = [
+    "//src/main/java/com/techcubing/server:__pkg__",
+    "//src/main/java/com/techcubing/server/services:__pkg__",
+])
 
 load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
 
@@ -20,11 +23,6 @@ java_proto_library(
     deps = [":techcubing_service_proto"],
 )
 
-java_lite_proto_library(
-    name = "techcubing_service_java_lite_proto",
-    deps = [":techcubing_service_proto"],
-)
-
 java_grpc_library(
     name = "techcubing_service_java_grpc",
     srcs = [":techcubing_service_proto"],
@@ -42,11 +40,10 @@ java_grpc_library(
     srcs = [":techcubing_service_proto"],
     flavor = "lite",
     deps = [
-        ":acquire_scorecard_java_lite_proto",
-        ":get_by_id_java_lite_proto",
-        ":list_persons_java_lite_proto",
-        ":release_scorecard_java_lite_proto",
-        ":techcubing_service_java_lite_proto",
+        ":lite",
+    ],
+    visibility = [
+        "//src/main/java/com/techcubing/android:__subpackages__",
     ],
 )
 
@@ -65,10 +62,6 @@ java_proto_library(
     name = "list_persons_java_proto",
     deps = [":list_persons_proto"],
 )
-java_lite_proto_library(
-    name = "list_persons_java_lite_proto",
-    deps = [":list_persons_proto"],
-)
 
 # GetById
 
@@ -83,10 +76,6 @@ proto_library(
 )
 java_proto_library(
     name = "get_by_id_java_proto",
-    deps = [":get_by_id_proto"],
-)
-java_lite_proto_library(
-    name = "get_by_id_java_lite_proto",
     deps = [":get_by_id_proto"],
 )
 
@@ -106,10 +95,6 @@ java_proto_library(
     name = "acquire_scorecard_java_proto",
     deps = [":acquire_scorecard_proto"],
 )
-java_lite_proto_library(
-    name = "acquire_scorecard_java_lite_proto",
-    deps = [":acquire_scorecard_proto"],
-)
 
 # ReleaseScorecard
 
@@ -127,7 +112,19 @@ java_proto_library(
     name = "release_scorecard_java_proto",
     deps = [":release_scorecard_proto"],
 )
+
+# lite proto library for android
+
 java_lite_proto_library(
-    name = "release_scorecard_java_lite_proto",
-    deps = [":release_scorecard_proto"],
+    name = "lite",
+    deps = [
+        ":acquire_scorecard_proto",
+        ":get_by_id_proto",
+        ":list_persons_proto",
+        ":release_scorecard_proto",
+        ":techcubing_service_proto",
+    ],
+    visibility = [
+        "//src/main/java/com/techcubing/android:__subpackages__",
+    ],
 )

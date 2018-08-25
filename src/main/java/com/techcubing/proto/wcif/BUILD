@@ -1,4 +1,7 @@
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = [
+    "//src/main/java/com/techcubing/proto:__subpackages__",
+    "//src/main/java/com/techcubing/server:__subpackages__",
+])
 
 # person.proto
 
@@ -11,10 +14,6 @@ proto_library(
 )
 java_proto_library(
     name = "person_java_proto",
-    deps = [":person_proto"],
-)
-java_lite_proto_library(
-    name = "person_java_lite_proto",
     deps = [":person_proto"],
 )
 
@@ -33,10 +32,6 @@ java_proto_library(
     name = "competition_java_proto",
     deps = [":competition_proto"],
 )
-java_lite_proto_library(
-    name = "competition_java_lite_proto",
-    deps = [":competition_proto"],
-)
 
 # event.proto
 
@@ -50,10 +45,6 @@ proto_library(
 )
 java_proto_library(
     name = "event_java_proto",
-    deps = [":event_proto"],
-)
-java_lite_proto_library(
-    name = "event_java_lite_proto",
     deps = [":event_proto"],
 )
 
@@ -70,7 +61,18 @@ java_proto_library(
     name = "round_java_proto",
     deps = [":round_proto"],
 )
+
+# lite proto library for android
+
 java_lite_proto_library(
-    name = "round_java_lite_proto",
-    deps = [":round_proto"],
+    name = "lite",
+    deps = [
+        ":competition_proto",
+        ":event_proto",
+        ":person_proto",
+        ":round_proto",
+    ],
+    visibility = [
+        "//src/main/java/com/techcubing/android:__subpackages__",
+    ],
 )
