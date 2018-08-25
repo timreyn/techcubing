@@ -12,4 +12,7 @@ public class SharedPreferenceKeys {
 
     // Int.
     public static final String SERVER_PORT = "SERVER_PORT";
+
+    // String corresponding to a Scorecard id.
+    public static final String SCORECARD_ID = "SCORECARD_ID";
 }

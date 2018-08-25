@@ -38,6 +38,11 @@ java_proto_library(
     deps = [":device_type_proto"],
 )
 
+java_lite_proto_library(
+    name = "device_type_java_lite_proto",
+    deps = [":device_type_proto"],
+)
+
 proto_library(
     name = "device_config_proto",
     srcs = ["device_config.proto"],

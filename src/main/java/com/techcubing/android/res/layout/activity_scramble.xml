@@ -3,21 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.techcubing.android.activities.SetupActivity">
+    android:orientation="vertical"
+    tools:context="com.techcubing.android.activities.ScrambleActivity">
 
-    <Button
-        android:id="@+id/lobby_scan_scorecard_button"
+    <TextView
+        android:id="@+id/scramble_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:textAlignment="center"
-        android:text="Scan a scorecard" />
+        android:textAlignment="center" />
+
     <Button
         android:id="@+id/scramble_release_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:textAlignment="center"
-        android:text="Finish" />
+        android:text="Finish"
+        android:textAlignment="center" />
 
 </LinearLayout>

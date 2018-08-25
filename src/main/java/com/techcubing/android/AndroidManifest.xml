@@ -17,21 +17,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.techcubing.android.activities.SetupActivity">
+        <activity android:name=".activities.SetupActivity">
             <intent-filter>
                 <action android:name="com.techcubing.SETUP_APP" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.techcubing.android.activities.LobbyActivity"></activity>
-        <activity android:name="com.techcubing.android.activities.BarcodeScannerActivity">
+        <activity android:name=".activities.LobbyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activities.BarcodeScannerActivity"/>
+        <activity android:name=".activities.AcquireScorecardActivity">
+            <intent-filter>
+                <action android:name="com.techcubing.SCAN_BARCODE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="techcubing"
+                      android:host="scorecard"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.ReleaseScorecardActivity"/>
+        <activity android:name=".activities.JudgeActivity"/>
+        <activity android:name=".activities.ScrambleActivity"/>
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />

@@ -34,6 +34,7 @@ android_library(
         gmaven_artifact("com.google.android.gms:play-services-tasks:aar:15.0.1"),
         "//src/main/java/com/techcubing/android:util",
         "//src/main/java/com/techcubing/proto:device_config_java_lite_proto",
+        "//src/main/java/com/techcubing/proto:device_type_java_lite_proto",
         "@androidsdk//com.android.support:appcompat-v7-25.3.1",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
         ":com_wonderkiln_camerakit",
