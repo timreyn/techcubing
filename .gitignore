@@ -8,8 +8,8 @@ bazel-testlogs
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+/.idea/
+/.project/
 .DS_Store
 /build
 /captures
