@@ -6,11 +6,15 @@ bazel-testlogs
 *.swp
 *.swo
 *.iml
+
+# Android studio files
 .gradle
 /local.properties
 /.idea/
 /.project/
+/gradle/
 .DS_Store
 /build
 /captures
 .externalNativeBuild
+/gradlew
