@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.protobuf'
 
 android {
     compileSdkVersion 27
@@ -17,8 +18,49 @@ android {
     }
 }
 
+protobuf {
+    protoc { artifact = 'com.google.protobuf:protoc:3.5.1-1' }
+    plugins {
+        javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
+        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.14.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                javalite {}
+                grpc { // Options added to --grpc_out
+                    option 'lite' }
+            }
+        }
+    }
+}
+
+android {
+    sourceSets {
+        main {
+            proto {
+                srcDir '..'
+                exclude '**/bazel-bin/**'
+                exclude '**/bazel-genfiles/**'
+                exclude '**/bazel-out/**'
+                exclude '**/bazel-server/**'
+                exclude '**/bazel-techcubing/**'
+                exclude '**/extracted-include-protos/**'
+                exclude '**/third_party/**'
+            }
+        }
+        main.java.srcDirs += "${protobuf.generatedFilesBaseDir}/main/javalite"
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+
+    implementation 'com.google.protobuf:protobuf-java:3.5.1'
+    implementation 'io.grpc:grpc-okhttp:1.14.0'
+    implementation 'io.grpc:grpc-protobuf-lite:1.14.0'
+    implementation 'io.grpc:grpc-stub:1.14.0'
 }
