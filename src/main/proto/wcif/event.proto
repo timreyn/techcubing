@@ -5,8 +5,8 @@ package techcubing.wcif;
 option java_package = "com.techcubing.proto.wcif";
 option java_multiple_files = true;
 
-import "src/main/java/com/techcubing/proto/options.proto";
-import "src/main/java/com/techcubing/proto/wcif/round.proto";
+import "src/main/proto/options.proto";
+import "src/main/proto/wcif/round.proto";
 
 message WcifEvent {
   option (techcubing.mysql_table_name) = "Event";

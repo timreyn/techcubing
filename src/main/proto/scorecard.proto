@@ -6,8 +6,8 @@ option java_package = "com.techcubing.proto";
 option java_outer_classname = "ScorecardProto";
 
 import "google/protobuf/timestamp.proto";
-import "src/main/java/com/techcubing/proto/device_type.proto";
-import "src/main/java/com/techcubing/proto/options.proto";
+import "src/main/proto/device_type.proto";
+import "src/main/proto/options.proto";
 
 // Something that happened during an event.
 enum EventCode {

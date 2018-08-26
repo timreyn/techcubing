@@ -5,10 +5,10 @@ package techcubing;
 option java_package = "com.techcubing.proto.services";
 option java_outer_classname = "AcquireScorecardProto";
 
-import "src/main/java/com/techcubing/proto/options.proto";
-import "src/main/java/com/techcubing/proto/request_context.proto";
-import "src/main/java/com/techcubing/proto/response_context.proto";
-import "src/main/java/com/techcubing/proto/scorecard.proto";
+import "src/main/proto/options.proto";
+import "src/main/proto/request_context.proto";
+import "src/main/proto/response_context.proto";
+import "src/main/proto/scorecard.proto";
 
 message AcquireScorecardRequest {
   RequestContext context = 1;

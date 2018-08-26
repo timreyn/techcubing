@@ -4,7 +4,7 @@ java_library(
     name = "WcifUtil",
     srcs = ["WcifUtil.java"],
     deps = [
-        "//src/main/java/com/techcubing/proto/wcif:round_java_proto",
+        "//src/main/proto/wcif:round_java_proto",
     ],
 )
 
@@ -26,7 +26,7 @@ java_library(
     name = "ProtoUtil",
     srcs = ["ProtoUtil.java"],
     deps = [
-        "//src/main/java/com/techcubing/proto:options_java_proto",
+        "//src/main/proto:options_java_proto",
         "@com_google_protobuf//:protobuf_java",
     ],
 )

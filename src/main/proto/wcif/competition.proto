@@ -5,9 +5,9 @@ package techcubing.wcif;
 option java_package = "com.techcubing.proto.wcif";
 option java_multiple_files = true;
 
-import "src/main/java/com/techcubing/proto/options.proto";
-import "src/main/java/com/techcubing/proto/wcif/event.proto";
-import "src/main/java/com/techcubing/proto/wcif/person.proto";
+import "src/main/proto/options.proto";
+import "src/main/proto/wcif/event.proto";
+import "src/main/proto/wcif/person.proto";
 
 message WcifCompetition {
   option (techcubing.mysql_table_name) = "Competition";

@@ -48,7 +48,7 @@ java_library(
     srcs = ["SetCompetitionHandler.java"],
     deps = [
         ":BaseHandler",
-        "//src/main/java/com/techcubing/proto/wcif:competition_java_proto",
+        "//src/main/proto/wcif:competition_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ScorecardGenerator",
         "//src/main/java/com/techcubing/server/framework:ServerState",
@@ -62,8 +62,8 @@ java_library(
     srcs = ["ManageDevicesHandler.java"],
     deps = [
         ":BaseHandler",
-        "//src/main/java/com/techcubing/proto:device_java_proto",
-        "//src/main/java/com/techcubing/proto:device_type_java_proto",
+        "//src/main/proto:device_java_proto",
+        "//src/main/proto:device_type_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ServerState",
         "@com_android_tools_ddms_ddmlib//jar",
@@ -76,9 +76,9 @@ java_library(
     srcs = ["AddDeviceHandler.java"],
     deps = [
         ":BaseHandler",
-        "//src/main/java/com/techcubing/proto:device_config_java_proto",
-        "//src/main/java/com/techcubing/proto:device_java_proto",
-        "//src/main/java/com/techcubing/proto:device_type_java_proto",
+        "//src/main/proto:device_config_java_proto",
+        "//src/main/proto:device_java_proto",
+        "//src/main/proto:device_type_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ServerState",
         "//src/main/java/com/techcubing/server/util:ProtoUtil",
@@ -92,7 +92,7 @@ java_library(
     srcs = ["DeleteDeviceHandler.java"],
     deps = [
         ":BaseHandler",
-        "//src/main/java/com/techcubing/proto:device_java_proto",
+        "//src/main/proto:device_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ServerState",
         "//src/main/java/com/techcubing/server/util:ProtoUtil",

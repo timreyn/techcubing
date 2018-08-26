@@ -53,9 +53,9 @@ proto_library(
     name = "list_persons_proto",
     srcs = ["list_persons.proto"],
     deps = [
-        "//src/main/java/com/techcubing/proto:request_context_proto",
-        "//src/main/java/com/techcubing/proto:response_context_proto",
-        "//src/main/java/com/techcubing/proto/wcif:person_proto",
+        "//src/main/proto:request_context_proto",
+        "//src/main/proto:response_context_proto",
+        "//src/main/proto/wcif:person_proto",
     ],
 )
 java_proto_library(
@@ -69,8 +69,8 @@ proto_library(
     name = "get_by_id_proto",
     srcs = ["get_by_id.proto"],
     deps = [
-        "//src/main/java/com/techcubing/proto:request_context_proto",
-        "//src/main/java/com/techcubing/proto:response_context_proto",
+        "//src/main/proto:request_context_proto",
+        "//src/main/proto:response_context_proto",
         "@com_google_protobuf//:any_proto",
     ],
 )
@@ -85,10 +85,10 @@ proto_library(
     name = "acquire_scorecard_proto",
     srcs = ["acquire_scorecard.proto"],
     deps = [
-        "//src/main/java/com/techcubing/proto:options_proto",
-        "//src/main/java/com/techcubing/proto:request_context_proto",
-        "//src/main/java/com/techcubing/proto:response_context_proto",
-        "//src/main/java/com/techcubing/proto:scorecard_proto",
+        "//src/main/proto:options_proto",
+        "//src/main/proto:request_context_proto",
+        "//src/main/proto:response_context_proto",
+        "//src/main/proto:scorecard_proto",
     ],
 )
 java_proto_library(
@@ -102,10 +102,10 @@ proto_library(
     name = "release_scorecard_proto",
     srcs = ["release_scorecard.proto"],
     deps = [
-        "//src/main/java/com/techcubing/proto:options_proto",
-        "//src/main/java/com/techcubing/proto:request_context_proto",
-        "//src/main/java/com/techcubing/proto:response_context_proto",
-        "//src/main/java/com/techcubing/proto:scorecard_proto",
+        "//src/main/proto:options_proto",
+        "//src/main/proto:request_context_proto",
+        "//src/main/proto:response_context_proto",
+        "//src/main/proto:scorecard_proto",
     ],
 )
 java_proto_library(

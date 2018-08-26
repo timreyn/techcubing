@@ -1,5 +1,5 @@
 package(default_visibility = [
-    "//src/main/java/com/techcubing/proto/services:__subpackages__",
+    "//src/main/proto/services:__subpackages__",
     "//src/main/java/com/techcubing/server:__subpackages__",
 ])
 
@@ -13,7 +13,7 @@ proto_library(
     ],
     # Proto options are allowed to be set in WCIF.
     visibility = [
-        "//src/main/java/com/techcubing/proto:__subpackages__",
+        "//src/main/proto:__subpackages__",
     ],
 )
 java_proto_library(
@@ -55,7 +55,7 @@ proto_library(
     srcs = ["device_config.proto"],
     deps = [
         ":device_proto",
-        "//src/main/java/com/techcubing/proto/wcif:competition_proto",
+        "//src/main/proto/wcif:competition_proto",
     ],
 )
 java_proto_library(
