@@ -3,11 +3,12 @@
     package="com.techcubing.android">
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="23"
         android:targetSdkVersion="27" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"

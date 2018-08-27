@@ -7,19 +7,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.techcubing.android.R;
 import com.techcubing.android.util.Constants;
 import com.wonderkiln.camerakit.CameraKitEventCallback;
 import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
 
 import java.util.concurrent.Semaphore;
-import com.techcubing.android.R;
 
 public class BarcodeScannerActivity extends AppCompatActivity {
     private static final String TAG = "TCBarcodeScanner";
@@ -33,7 +32,8 @@ public class BarcodeScannerActivity extends AppCompatActivity {
 
     private CameraKitEventCallback<CameraKitImage> imageCallback =
             image -> {
-                          // Create a bitmap
+                cameraCloseSemaphore.release();
+
                 FirebaseVisionImage firebaseImage =
                         FirebaseVisionImage.fromBitmap(image.getBitmap());
 
@@ -44,7 +44,6 @@ public class BarcodeScannerActivity extends AppCompatActivity {
                         .getVisionBarcodeDetector(options);
                 detector.detectInImage(firebaseImage)
                         .addOnSuccessListener(firebaseVisionBarcodes -> {
-                            cameraCloseSemaphore.release();
                             if (firebaseVisionBarcodes.size() != 1) {
                                 // We didn't find a barcode here.
                                 acquireLockAndCaptureImage();
@@ -58,8 +57,7 @@ public class BarcodeScannerActivity extends AppCompatActivity {
                                     uri.getScheme().equals("techcubing") &&
                                     uri.getHost().equals(expectedHost)) {
                                 try {
-                                    Intent newIntent = new Intent(Constants.ACTION_SCAN_BARCODE, uri);
-                                    startActivity(newIntent);
+                                    startActivity(new Intent(Constants.ACTION_SCAN_BARCODE, uri));
                                     return;
                                 } catch (ActivityNotFoundException e) {
                                     Log.e(TAG, "Unrecognized URI " + uri.toString());
@@ -73,7 +71,7 @@ public class BarcodeScannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_barcode_scanner);
-        cameraView = (CameraView) findViewById(R.id.barcode_scanner_camera);
+        cameraView = findViewById(R.id.barcode_scanner_camera);
         intent = getIntent();
     }
 
@@ -81,7 +79,7 @@ public class BarcodeScannerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         cameraView.start();
-        new Handler().postDelayed(() -> acquireLockAndCaptureImage(), 100);
+        new Handler().postDelayed(this::acquireLockAndCaptureImage, 100);
     }
 
     @Override
@@ -96,6 +94,8 @@ public class BarcodeScannerActivity extends AppCompatActivity {
         cameraCloseSemaphore.acquireUninterruptibly();
         if (cameraView.isStarted()) {
             cameraView.captureImage(imageCallback);
+        } else {
+            cameraCloseSemaphore.release();
         }
     }
 }

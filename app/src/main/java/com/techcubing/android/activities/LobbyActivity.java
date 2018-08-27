@@ -1,12 +1,12 @@
 package com.techcubing.android.activities;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+
 import com.techcubing.android.R;
 
 public class LobbyActivity extends AppCompatActivity {
@@ -20,7 +20,7 @@ public class LobbyActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
         }
 
-        Button button = (Button) findViewById(R.id.lobby_scan_scorecard_button);
+        Button button = findViewById(R.id.lobby_scan_scorecard_button);
         button.setOnClickListener(view -> {
             Intent barcodeScannerIntent =
                     new Intent(this, BarcodeScannerActivity.class);

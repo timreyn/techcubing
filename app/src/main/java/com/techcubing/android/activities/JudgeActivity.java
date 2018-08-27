@@ -1,15 +1,14 @@
 package com.techcubing.android.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
-import com.techcubing.android.R;
 
-import com.techcubing.android.util.SharedPreferenceKeys;
+import com.techcubing.android.R;
+import com.techcubing.android.util.ActiveState;
+import com.techcubing.proto.ScorecardProto;
 
 public class JudgeActivity extends AppCompatActivity {
 
@@ -18,13 +17,13 @@ public class JudgeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_judge);
 
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(this);
+        TextView textView = findViewById(R.id.judge_text_view);
 
-        TextView textView = (TextView) findViewById(R.id.judge_text_view);
-        textView.setText("Judge " + sharedPreferences.getString(SharedPreferenceKeys.SCORECARD_ID, ""));
+        ScorecardProto.Scorecard scorecard =
+                ActiveState.getActive(ActiveState.SCORECARD, this);
+        textView.setText("Judge " + scorecard.getId());
 
-        Button button = (Button) findViewById(R.id.judge_release_button);
+        Button button = findViewById(R.id.judge_release_button);
         button.setOnClickListener(view -> {
           startActivity(new Intent(this, ReleaseScorecardActivity.class));
         });
