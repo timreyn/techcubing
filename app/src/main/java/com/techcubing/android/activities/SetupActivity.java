@@ -12,6 +12,7 @@ import java.util.Base64;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.techcubing.android.util.SharedPreferenceKeys;
 import com.techcubing.proto.DeviceConfigProto.DeviceConfig;
+import com.techcubing.android.R;
 
 public class SetupActivity extends AppCompatActivity {
 

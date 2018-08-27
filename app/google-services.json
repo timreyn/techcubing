@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "946315877365",
+    "firebase_url": "https://techcubing-214302.firebaseio.com",
+    "project_id": "techcubing-214302",
+    "storage_bucket": "techcubing-214302.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946315877365:android:cede29e0cd3091a6",
+        "android_client_info": {
+          "package_name": "com.techcubing.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946315877365-sd8s4mli6egti1reg86r95lo8uf87j23.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwZAOVqYkOI9nKlTnfRaNwroNQ7NsIpqg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

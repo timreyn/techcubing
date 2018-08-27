@@ -19,6 +19,7 @@ import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
 
 import java.util.concurrent.Semaphore;
+import com.techcubing.android.R;
 
 public class BarcodeScannerActivity extends AppCompatActivity {
     private static final String TAG = "TCBarcodeScanner";

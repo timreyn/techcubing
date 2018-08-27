@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
+import com.techcubing.android.R;
 
 import com.techcubing.android.util.SharedPreferenceKeys;
 
