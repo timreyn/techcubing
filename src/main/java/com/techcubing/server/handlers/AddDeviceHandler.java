@@ -7,9 +7,13 @@ import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Message;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Inet4Address;
+import java.net.NetworkInterface;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Random;
 
@@ -41,12 +45,34 @@ public class AddDeviceHandler extends BaseHandler {
     deviceBuilder.setSerialNumber(queryParams.get("deviceSerialNumber"));
     Device device = deviceBuilder.build();
 
+    String hostAddress = "";
+
+    for (Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
+         networks.hasMoreElements();) {
+      NetworkInterface network = networks.nextElement();
+      if (network.isLoopback()) {
+        continue;
+      }
+      Enumeration<InetAddress> addresses = network.getInetAddresses();
+      while (addresses.hasMoreElements()) {
+        InetAddress address = addresses.nextElement();
+        if (address instanceof Inet4Address) {
+          hostAddress = address.getHostAddress();
+          break;
+        }
+      }
+      if (!hostAddress.isEmpty()) {
+        break;
+      }
+    }
+
+    System.out.println(hostAddress);
+
     // Set up the device.
     DeviceConfig config =
       DeviceConfig.newBuilder()
           .setDevice(device)
-          // TODO: this is hardcoded for emulators.
-          .setServerHost("10.0.2.2")
+          .setServerHost(hostAddress)
           .setServerPort(serverState.getGrpcPort())
           .build();
 
