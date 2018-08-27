@@ -35,18 +35,6 @@ java_grpc_library(
     ],
 )
 
-java_grpc_library(
-    name = "techcubing_service_java_lite_grpc",
-    srcs = [":techcubing_service_proto"],
-    flavor = "lite",
-    deps = [
-        ":lite",
-    ],
-    visibility = [
-        "//src/main/java/com/techcubing/android:__subpackages__",
-    ],
-)
-
 # ListPersons
 
 proto_library(
@@ -111,20 +99,4 @@ proto_library(
 java_proto_library(
     name = "release_scorecard_java_proto",
     deps = [":release_scorecard_proto"],
-)
-
-# lite proto library for android
-
-java_lite_proto_library(
-    name = "lite",
-    deps = [
-        ":acquire_scorecard_proto",
-        ":get_by_id_proto",
-        ":list_persons_proto",
-        ":release_scorecard_proto",
-        ":techcubing_service_proto",
-    ],
-    visibility = [
-        "//src/main/java/com/techcubing/android:__subpackages__",
-    ],
 )

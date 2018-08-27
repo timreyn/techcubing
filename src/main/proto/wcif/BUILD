@@ -61,18 +61,3 @@ java_proto_library(
     name = "round_java_proto",
     deps = [":round_proto"],
 )
-
-# lite proto library for android
-
-java_lite_proto_library(
-    name = "lite",
-    deps = [
-        ":competition_proto",
-        ":event_proto",
-        ":person_proto",
-        ":round_proto",
-    ],
-    visibility = [
-        "//src/main/java/com/techcubing/android:__subpackages__",
-    ],
-)

@@ -101,20 +101,3 @@ java_proto_library(
     name = "scorecard_java_proto",
     deps = [":scorecard_proto"],
 )
-
-# lite proto library for android
-
-java_lite_proto_library(
-    name = "lite",
-    deps = [
-        ":device_config_proto",
-        ":device_proto",
-        ":device_type_proto",
-        ":request_context_proto",
-        ":response_context_proto",
-        ":scorecard_proto",
-    ],
-    visibility = [
-        "//src/main/java/com/techcubing/android:__subpackages__",
-    ],
-)
