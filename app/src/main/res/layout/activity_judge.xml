@@ -4,13 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:keepScreenOn="true"
     tools:context="com.techcubing.android.activities.JudgeActivity">
 
     <TextView
-        android:id="@+id/judge_text_view"
+        android:id="@+id/judge_status_character_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="2dp"
+        android:textSize="12sp"
+        android:fontFamily="serif-monospace"
+        android:textAlignment="center" />
+    <TextView
+        android:id="@+id/judge_time_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:textSize="48sp"
+        android:fontFamily="serif-monospace"
         android:textAlignment="center" />
     <Button
         android:id="@+id/judge_release_button"

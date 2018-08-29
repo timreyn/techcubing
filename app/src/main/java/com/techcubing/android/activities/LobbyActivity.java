@@ -19,6 +19,12 @@ public class LobbyActivity extends AppCompatActivity {
                 PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
         }
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) !=
+                PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 0);
+        }
+
+        startActivity(new Intent(this, JudgeActivity.class));
 
         Button button = findViewById(R.id.lobby_scan_scorecard_button);
         button.setOnClickListener(view -> {
