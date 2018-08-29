@@ -27,7 +27,7 @@ public class BarcodeScannerActivity extends AppCompatActivity {
 
     private Intent intent = null;
 
-    private static CameraView cameraView = null;
+    private CameraView cameraView = null;
     private final Semaphore cameraCloseSemaphore = new Semaphore(1, true);
 
     private CameraKitEventCallback<CameraKitImage> imageCallback =
