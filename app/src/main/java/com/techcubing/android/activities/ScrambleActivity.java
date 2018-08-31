@@ -22,7 +22,7 @@ public class ScrambleActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.scramble_text_view);
         textView.setText("Scramble " + scorecard.getId());
 
-        Button button = findViewById(R.id.scramble_release_button);
+        Button button = findViewById(R.id.scramble_check_button);
         button.setOnClickListener(view -> {
           startActivity(new Intent(this, ReleaseScorecardActivity.class));
         });

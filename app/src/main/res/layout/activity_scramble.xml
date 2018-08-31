@@ -14,11 +14,11 @@
         android:textAlignment="center" />
 
     <Button
-        android:id="@+id/scramble_release_button"
+        android:id="@+id/scramble_check_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:text="Finish"
+        android:text="Check Scramble"
         android:textAlignment="center" />
 
 </LinearLayout>

@@ -23,8 +23,16 @@ public class LobbyActivity extends AppCompatActivity {
                 PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 0);
         }
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+        }
 
-        startActivity(new Intent(this, JudgeActivity.class));
+        startActivity(new Intent(this, ScrambleCheckActivity.class));
 
         Button button = findViewById(R.id.lobby_scan_scorecard_button);
         button.setOnClickListener(view -> {
