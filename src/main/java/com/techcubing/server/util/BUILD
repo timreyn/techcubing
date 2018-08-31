@@ -30,3 +30,11 @@ java_library(
         "@com_google_protobuf//:protobuf_java",
     ],
 )
+
+java_library(
+    name = "Puzzle",
+    srcs = [
+        "CubePuzzle.java",
+        "Puzzle.java",
+    ],
+)
