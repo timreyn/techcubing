@@ -9,6 +9,8 @@ import "src/main/proto/options.proto";
 
 message Scramble {
   option (techcubing.mysql_table_name) = "Scramble";
+  // Scrambles need to be transmitted to devices more securely.
+  option (techcubing.disable_get_by_id) = true;
 
   string id = 1 [(techcubing.primary_key) = true];
 

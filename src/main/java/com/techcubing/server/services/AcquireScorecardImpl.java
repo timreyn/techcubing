@@ -14,6 +14,8 @@ import com.techcubing.proto.ScorecardProto.Attempt;
 import com.techcubing.proto.ScorecardProto.AttemptPart;
 import com.techcubing.proto.ScorecardProto.AttemptPartOutcome;
 import com.techcubing.proto.ScorecardProto.Scorecard;
+import com.techcubing.proto.ScrambleProto.Scramble;
+import com.techcubing.proto.ScrambleProto.ScrambleSet;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardRequest;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardResponse;
 import com.techcubing.proto.wcif.WcifCutoff;
@@ -149,6 +151,16 @@ class AcquireScorecardImpl {
               nextPart.setDeviceType(device.getType());
               nextPart.setDeviceId(device.getId());
               // TODO: store person ID.
+              
+              // Assign scrambles, if this wasn't already assigned.
+              try {
+                maybeAssignScrambles(scorecardBuilder, serverState);
+              } catch (SQLException | IOException e) {
+                responseBuilder.setStatus(
+                    AcquireScorecardResponse.Status.INTERNAL_ERROR);
+                e.printStackTrace();
+                return false;
+              }
 
               // TODO: Check whether this judge/scrambler is allowed to see
               // this scramble.
@@ -178,5 +190,35 @@ class AcquireScorecardImpl {
     }
 
     return responseBuilder.build();
+  }
+
+  private void maybeAssignScrambles(
+      Scorecard.Builder scorecardBuilder, ServerState serverState) 
+      throws IOException, SQLException {
+    ScrambleSet scrambleSet = null;
+    if (scorecardBuilder.getScrambleSetId().isEmpty()) {
+      // TODO: do this more systematically, based on group assignments.
+      String tableName = ProtoDb.getTable(ScrambleSet.getDescriptor(), serverState);
+      PreparedStatement statement = serverState.getMysqlConnection().prepareStatement(
+          "SELECT data FROM " + tableName + " WHERE round_id = ? LIMIT 1");
+      statement.setString(1, scorecardBuilder.getRoundId());
+      ResultSet results = statement.executeQuery();
+      if (results.next()) {
+        scrambleSet = ScrambleSet.parseFrom(results.getBlob("data").getBinaryStream());
+      }
+    }
+    // TODO: assign scrambles for extra attempts.
+    for (int attemptNumber = 0;
+         attemptNumber < scorecardBuilder.getAttemptsList().size();
+         attemptNumber++) {
+      Attempt.Builder attemptBuilder = scorecardBuilder.getAttemptsBuilder(attemptNumber);
+      if (attemptBuilder.getScrambleId().isEmpty()) {
+        if (scrambleSet == null) {
+          scrambleSet = ProtoDb.getIdField(
+              scorecardBuilder, "scramble_set_id", serverState);
+        }
+        attemptBuilder.setScrambleId(scrambleSet.getScrambleId(attemptNumber));
+      }
+    }
   }
 }

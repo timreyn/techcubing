@@ -10,6 +10,9 @@ import "google/protobuf/descriptor.proto";
 extend google.protobuf.MessageOptions {
   // The name of the mysql table in which this message should be stored.
   string mysql_table_name = 5000;
+
+  // If true, this method should not be exposed via GetById.
+  bool disable_get_by_id = 5001;
 }
 
 extend google.protobuf.FieldOptions {

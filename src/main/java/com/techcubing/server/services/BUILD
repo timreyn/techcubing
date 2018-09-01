@@ -34,6 +34,7 @@ java_library(
     name = "GetByIdImpl",
     srcs = ["GetByIdImpl.java"],
     deps = [
+        "//src/main/proto:options_java_proto",
         "//src/main/proto/services:get_by_id_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ServerState",
@@ -48,6 +49,7 @@ java_library(
         "//src/main/proto:device_java_proto",
         "//src/main/proto:device_type_java_proto",
         "//src/main/proto:scorecard_java_proto",
+        "//src/main/proto:scramble_java_proto",
         "//src/main/proto/services:acquire_scorecard_java_proto",
         "//src/main/proto/wcif:round_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
