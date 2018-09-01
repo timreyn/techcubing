@@ -5,10 +5,12 @@ java_library(
     deps = [
         ":AcquireScorecardImpl",
         ":GetByIdImpl",
+        ":GetScrambleImpl",
         ":ListPersonsImpl",
         ":ReleaseScorecardImpl",
         "//src/main/proto/services:acquire_scorecard_java_proto",
         "//src/main/proto/services:get_by_id_java_proto",
+        "//src/main/proto/services:get_scramble_java_proto",
         "//src/main/proto/services:list_persons_java_proto",
         "//src/main/proto/services:release_scorecard_java_proto",
         "//src/main/proto/services:techcubing_service_java_grpc",
@@ -39,6 +41,21 @@ java_library(
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ServerState",
         "@com_google_protobuf//:protobuf_java",
+    ],
+)
+
+java_library(
+    name = "GetScrambleImpl",
+    srcs = ["GetScrambleImpl.java"],
+    deps = [
+        "//src/main/proto:device_java_proto",
+        "//src/main/proto:device_type_java_proto",
+        "//src/main/proto:scramble_java_proto",
+        "//src/main/proto/services:get_scramble_java_proto",
+        "//src/main/proto/wcif:round_java_proto",
+        "//src/main/java/com/techcubing/server/framework:ProtoDb",
+        "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/java/com/techcubing/server/util:Puzzle",
     ],
 )
 
