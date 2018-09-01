@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 
 import com.techcubing.android.R;
+import com.techcubing.android.util.ActiveState;
+import com.techcubing.proto.DeviceProto;
+import com.techcubing.proto.ScorecardProto;
 
 public class LobbyActivity extends AppCompatActivity {
     @Override
@@ -32,7 +35,19 @@ public class LobbyActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
         }
 
-        startActivity(new Intent(this, ScrambleCheckActivity.class));
+        ScorecardProto.Scorecard scorecard =
+                ActiveState.getActive(ActiveState.SCORECARD, this);
+        DeviceProto.Device device = ActiveState.getActive(ActiveState.DEVICE, this);
+        if (scorecard != null && device != null) {
+            switch (device.getType()) {
+                case JUDGE:
+                    startActivity(new Intent(this, JudgeActivity.class));
+                    return;
+                case SCRAMBLER:
+                    startActivity(new Intent(this, ScrambleActivity.class));
+                    return;
+            }
+        }
 
         Button button = findViewById(R.id.lobby_scan_scorecard_button);
         button.setOnClickListener(view -> {
