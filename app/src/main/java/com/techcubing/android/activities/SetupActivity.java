@@ -30,6 +30,7 @@ public class SetupActivity extends AppCompatActivity {
                 DeviceConfig deviceConfig =
                         DeviceConfig.parseFrom(Base64.decode(
                                 intent.getStringExtra(EXTRA_SETUP_DETAILS), Base64.URL_SAFE));
+                Log.i(TAG, deviceConfig.toString());
                 ActiveState.setActive(ActiveState.DEVICE, deviceConfig.getDevice(), this);
                 ActiveState.setActive(ActiveState.DEVICE_CONFIG, deviceConfig, this);
                 ActiveState.setActive(
