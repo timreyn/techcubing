@@ -108,3 +108,17 @@ java_library(
         "//src/main/java/com/techcubing/server/framework:ServerState",
     ],
 )
+
+java_library(
+    name = "AddScramblesHandler",
+    srcs = ["AddScramblesHandler.java"],
+    deps = [
+        ":BaseHandler",
+        "//src/main/proto:scramble_java_proto",
+        "//src/main/java/com/techcubing/server/framework:ProtoDb",
+        "//src/main/java/com/techcubing/server/framework:ServerState",
+        "@com_googlecode_json_simple_json_simple//jar",
+        "@commons_fileupload_commons_fileupload//jar",
+        "@commons_io_commons_io//jar",
+    ],
+)

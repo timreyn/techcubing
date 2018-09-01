@@ -61,6 +61,20 @@ maven_jar(
     sha1_src = "d1d131be60104381cb5d8f6715c7e3e032185f95",
 )
 
+maven_jar(
+    name = "commons_fileupload_commons_fileupload",
+    artifact = "commons-fileupload:commons-fileupload:1.3.3",
+    sha1 = "04ff14d809195b711fd6bcc87e6777f886730ca1",
+    sha1_src = "34c8608c461e2c832a364ec1a9e70f360f47d9f7",
+)
+
+maven_jar(
+    name = "commons_io_commons_io",
+    artifact = "commons-io:commons-io:2.6",
+    sha1 = "815893df5f31da2ece4040fe0a12fd44b577afaf",
+    sha1_src = "2566800dc841d9d2c5a0d34d807e45d4107dbbdf",
+)
+
 # Install buildifier.
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")

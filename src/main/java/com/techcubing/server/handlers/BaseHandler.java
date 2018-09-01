@@ -48,6 +48,10 @@ public abstract class BaseHandler implements HttpHandler {
     return true;
   }
 
+  protected boolean shouldParseBody() {
+    return true;
+  }
+
   // Methods to be called by subclasses:
   protected void writeResponse(
       Map<String, Object> model, String template, HttpExchange t)
@@ -120,13 +124,16 @@ public abstract class BaseHandler implements HttpHandler {
       }
 
       // Parse the request body and query params.
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      byte[] buffer = new byte[1024];
-      int length;
-      while ((length = t.getRequestBody().read(buffer)) != -1) {
-        baos.write(buffer, 0, length);
+      String requestBody = "";
+      if (shouldParseBody()) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = t.getRequestBody().read(buffer)) != -1) {
+          baos.write(buffer, 0, length);
+        }
+        requestBody = baos.toString(StandardCharsets.UTF_8.name());
       }
-      String requestBody = baos.toString(StandardCharsets.UTF_8.name());
       queryParams = QueryParser.parseQuery(t.getRequestURI(), requestBody);
 
       handleImpl(t);
