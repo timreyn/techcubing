@@ -19,9 +19,9 @@ message Scramble {
     (techcubing.mysql_column_name) = "scramble_set_id"
   ];
 
-  string scramble_string = 3;
+  string scramble_sequence = 3;
 
-  repeated string multi_scramble_strings = 4;
+  repeated string multi_scramble_sequences = 4;
 }
 
 message ScrambleSet {

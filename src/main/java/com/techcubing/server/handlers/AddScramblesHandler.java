@@ -110,10 +110,10 @@ public class AddScramblesHandler extends BaseHandler {
         .setId(String.valueOf(new Random().nextInt(90000000) + 10000000));
     if (scrambleString.contains("\\n")) {
       for (String scramble : scrambleString.split("\\n")) {
-        scrambleBuilder.addMultiScrambleStrings(scramble);
+        scrambleBuilder.addMultiScrambleSequences(scramble);
       }
     } else {
-      scrambleBuilder.setScrambleString(scrambleString);
+      scrambleBuilder.setScrambleSequence(scrambleString);
     }
     return scrambleBuilder.build();
   }
