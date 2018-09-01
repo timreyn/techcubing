@@ -166,11 +166,9 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                 });
                 handler.postDelayed(() -> {
                     Intent intent = new Intent(ScrambleCheckActivity.this, ReleaseScorecardActivity.class);
-                    // Call it a misscramble.  This is just for testing so that I can keep scanning
-                    // the same scorecard.
                     intent.putExtra(
                             ReleaseScorecardActivity.EXTRA_OUTCOME,
-                            ScorecardProto.AttemptPartOutcome.MISSCRAMBLE_VALUE);
+                            ScorecardProto.AttemptPartOutcome.OK_VALUE);
                     startActivity(intent);
                 }, 750);
             }
