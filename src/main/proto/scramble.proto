@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto";
+option java_outer_classname = "ScrambleProto";
+
+import "src/main/proto/options.proto";
+
+message Scramble {
+  option (techcubing.mysql_table_name) = "Scramble";
+
+  string id = 1 [(techcubing.primary_key) = true];
+
+  string scramble_set_id = 2 [
+    (techcubing.message_type) = "techcubing.ScrambleSet",
+    (techcubing.mysql_column_name) = "scramble_set_id"
+  ];
+
+  string scramble_string = 3;
+
+  repeated string multi_scramble_strings = 4;
+}
+
+message ScrambleSet {
+  option (techcubing.mysql_table_name) = "ScrambleSet";
+
+  string id = 1 [(techcubing.primary_key) = true];
+
+  string round_id = 2 [
+    (techcubing.message_type) = "techcubing.wcif.WcifRound",
+    (techcubing.mysql_column_name) = "round_id"
+  ];
+
+  repeated string scramble_id = 3 [
+    (techcubing.message_type) = "techcubing.Scramble"
+  ];
+
+  repeated string extra_scramble_id = 4 [
+    (techcubing.message_type) = "techcubing.Scramble"
+  ];
+
+  string filename = 5;
+}

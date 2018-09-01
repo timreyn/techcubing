@@ -101,3 +101,17 @@ java_proto_library(
     name = "scorecard_java_proto",
     deps = [":scorecard_proto"],
 )
+
+# scramble.proto
+
+proto_library(
+    name = "scramble_proto",
+    srcs = ["scramble.proto"],
+    deps = [
+        ":options_proto",
+    ],
+)
+java_proto_library(
+    name = "scramble_java_proto",
+    deps = [":scramble_proto"],
+)
