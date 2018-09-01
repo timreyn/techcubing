@@ -18,6 +18,7 @@ import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardRequest;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardResponse;
 import com.techcubing.proto.services.TechCubingServiceGrpc.TechCubingServiceFutureStub;
+import com.techcubing.proto.wcif.WcifRound;
 
 import javax.annotation.Nullable;
 
@@ -67,6 +68,21 @@ public class AcquireScorecardActivity extends AppCompatActivity {
                                         ActiveState.ATTEMPT_NUMBER,
                                         response.getAttemptNumber(),
                                         AcquireScorecardActivity.this);
+                                WcifRound round = ActiveState.setActiveById(
+                                        ActiveState.ROUND, response.getScorecard().getRoundId(),
+                                        AcquireScorecardActivity.this,
+                                        getApplicationContext());
+                                if (round != null) {
+                                    ActiveState.setActiveById(
+                                            ActiveState.EVENT, round.getEventId(),
+                                            AcquireScorecardActivity.this,
+                                            getApplicationContext());
+                                }
+                                ActiveState.setActiveById(
+                                        ActiveState.COMPETITOR,
+                                        response.getScorecard().getPersonId(),
+                                        AcquireScorecardActivity.this,
+                                        getApplicationContext());
 
                                 switch (device.getType()) {
                                     case JUDGE:

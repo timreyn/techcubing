@@ -12,20 +12,41 @@ import com.google.protobuf.Parser;
 import com.techcubing.proto.DeviceConfigProto;
 import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.ScorecardProto;
+import com.techcubing.proto.services.GetByIdProto.GetByIdRequest;
+import com.techcubing.proto.services.GetByIdProto.GetByIdResponse;
+import com.techcubing.proto.services.TechCubingServiceGrpc;
 import com.techcubing.proto.wcif.WcifCompetition;
+import com.techcubing.proto.wcif.WcifEvent;
+import com.techcubing.proto.wcif.WcifPerson;
+import com.techcubing.proto.wcif.WcifRound;
 
 public class ActiveState {
-    public static final StateKey<DeviceProto.Device> DEVICE =
-            new ProtoStateKey<>("DEVICE", DeviceProto.Device.parser());
+    public static final ProtoStateKey<DeviceProto.Device> DEVICE =
+            new ProtoStateKey<>("DEVICE", DeviceProto.Device.parser(), "techcubing.Device");
 
-    public static final StateKey<ScorecardProto.Scorecard> SCORECARD =
-            new ProtoStateKey<>("SCORECARD", ScorecardProto.Scorecard.parser());
+    public static final ProtoStateKey<ScorecardProto.Scorecard> SCORECARD =
+            new ProtoStateKey<>(
+                    "SCORECARD", ScorecardProto.Scorecard.parser(), "techcubing.Scorecard");
 
-    public static final StateKey<DeviceConfigProto.DeviceConfig> DEVICE_CONFIG =
-            new ProtoStateKey<>("DEVICE_CONFIG", DeviceConfigProto.DeviceConfig.parser());
+    public static final ProtoStateKey<DeviceConfigProto.DeviceConfig> DEVICE_CONFIG =
+            new ProtoStateKey<>(
+                    "DEVICE_CONFIG", DeviceConfigProto.DeviceConfig.parser(),
+                    "techcubing.DeviceConfig");
 
-    public static final StateKey<WcifCompetition> COMPETITION =
-            new ProtoStateKey<>("COMPETITION", WcifCompetition.parser());
+    public static final ProtoStateKey<WcifCompetition> COMPETITION =
+            new ProtoStateKey<>(
+                    "COMPETITION", WcifCompetition.parser(), "techcubing.wcif.WcifCompetition");
+
+    public static final ProtoStateKey<WcifRound> ROUND =
+            new ProtoStateKey<>("ROUND", WcifRound.parser(), "techcubing.wcif.WcifRound");
+
+    public static final ProtoStateKey<WcifEvent> EVENT =
+            new ProtoStateKey<>("EVENT", WcifEvent.parser(), "techcubing.wcif.WcifEvent");
+
+    public static final ProtoStateKey<WcifPerson> COMPETITOR =
+            new ProtoStateKey<>(
+                    "COMPETITOR", WcifPerson.parser(), "techcubing.wcif.WcifPerson");
+
 
     public static final StateKey<Integer> ATTEMPT_NUMBER = new IntStateKey("ATTEMPT_NUMBER");
 
@@ -55,6 +76,28 @@ public class ActiveState {
         sharedPreferences.commit();
     }
 
+    @Nullable
+    public static <E extends MessageLite> E setActiveById(
+            ProtoStateKey<E> key, String id, Context context, Context applicationContext) {
+        TechCubingServiceGrpc.TechCubingServiceBlockingStub stub =
+                Stubs.blockingStub(context, applicationContext);
+        GetByIdRequest.Builder requestBuilder =
+                GetByIdRequest.newBuilder()
+                    .setId(id)
+                    .setProtoType(key.name);
+        requestBuilder.setContext(RequestContextBuilder.build(requestBuilder, context));
+
+        GetByIdResponse response = stub.getById(requestBuilder.build());
+
+        try {
+            E e = key.parser.parseFrom(response.getEntity().getValue().toByteArray());
+            setActive(key, e, context);
+            return e;
+        } catch (InvalidProtocolBufferException e) {
+            return null;
+        }
+    }
+
     private static abstract class StateKey<E> {
         String key;
 
@@ -70,10 +113,12 @@ public class ActiveState {
 
     private static class ProtoStateKey<E extends MessageLite> extends StateKey<E> {
         private final Parser<E> parser;
+        private final String name;
 
-        ProtoStateKey(String key, Parser<E> parser) {
+        ProtoStateKey(String key, Parser<E> parser, String name) {
             super(key);
             this.parser = parser;
+            this.name = name;
         }
 
         @Override

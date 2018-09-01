@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.techcubing.android.R;
+import com.techcubing.android.util.ActiveState;
 import com.techcubing.android.util.Puzzle;
 import com.techcubing.proto.ScorecardProto;
+import com.techcubing.proto.wcif.WcifEvent;
 import com.wonderkiln.camerakit.CameraKitEventCallback;
 import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
@@ -251,7 +253,11 @@ public class ScrambleCheckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scramble_check);
 
-        puzzle = Puzzle.getPuzzleForEvent("333");
+        WcifEvent event = ActiveState.getActive(ActiveState.EVENT, this);
+        if (event == null) {
+            throw new RuntimeException("No event");
+        }
+        puzzle = Puzzle.getPuzzleForEvent(event.getId());
         if (puzzle == null) {
             throw new RuntimeException("Invalid puzzle requested.");
         }

@@ -17,6 +17,10 @@ import com.techcubing.proto.ScorecardProto;
 import com.techcubing.proto.services.GetScrambleProto.GetScrambleRequest;
 import com.techcubing.proto.services.GetScrambleProto.GetScrambleResponse;
 import com.techcubing.proto.services.TechCubingServiceGrpc;
+import com.techcubing.proto.wcif.WcifPerson;
+import com.techcubing.proto.wcif.WcifRound;
+
+import java.util.Locale;
 
 import javax.annotation.Nullable;
 
@@ -31,11 +35,25 @@ public class ScrambleActivity extends AppCompatActivity {
         ScorecardProto.Scorecard scorecard =
                 ActiveState.getActive(ActiveState.SCORECARD, this);
         Integer attemptNumber = ActiveState.getActive(ActiveState.ATTEMPT_NUMBER, this);
-        if (scorecard == null || attemptNumber == null) {
-            startActivity(new Intent(this, LobbyActivity.class));
+        WcifPerson competitor = ActiveState.getActive(ActiveState.COMPETITOR, this);
+        WcifRound round = ActiveState.getActive(ActiveState.ROUND, this);
+
+        if (scorecard == null || attemptNumber == null || competitor == null || round == null) {
+            // There's something wrong.  Release our scorecard.
+            Intent intent = new Intent(this, ReleaseScorecardActivity.class);
+            intent.putExtra(
+                    ReleaseScorecardActivity.EXTRA_OUTCOME,
+                    ScorecardProto.AttemptPartOutcome.PROTOCOL_FAILURE_VALUE);
+            startActivity(intent);
             return;
         }
         ScorecardProto.Attempt attempt = scorecard.getAttempts(attemptNumber);
+
+
+        String headerText = String.format(
+                Locale.US, "%s %s attempt %d", competitor.getName(), round.getId(), attemptNumber);
+        TextView header = findViewById(R.id.scramble_header);
+        header.setText(headerText);
 
         // Get the scramble from the server.
         TechCubingServiceGrpc.TechCubingServiceFutureStub stub =

@@ -4,16 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:keepScreenOn="true"
     tools:context="com.techcubing.android.activities.ScrambleActivity">
 
     <TextView
+        android:id="@+id/scramble_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Scramble"
         android:textAlignment="center"
         android:gravity="center"
         android:textSize="20sp"
-        android:layout_weight="0.15"
+        android:layout_weight="0.05"
         android:background="#eeeeee"/>
     <TextView
         android:id="@+id/scramble_text_view"
@@ -21,10 +22,10 @@
         android:layout_height="0dp"
         android:padding="2dp"
         android:textAlignment="center"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:fontFamily="serif-monospace"
         android:textStyle="bold"
-        android:layout_weight="0.7"
+        android:layout_weight="0.85"
         android:gravity="center" />
 
     <Button
@@ -33,7 +34,7 @@
         android:layout_height="0dp"
         android:padding="2dp"
         android:text="Check Scramble"
-        android:layout_weight="0.15"
+        android:layout_weight="0.10"
         android:textAlignment="center" />
 
 </LinearLayout>
