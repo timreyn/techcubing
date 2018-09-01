@@ -13,10 +13,10 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.techcubing.android.R;
 import com.techcubing.android.util.ActiveState;
+import com.techcubing.android.util.RequestContextBuilder;
 import com.techcubing.android.util.Stubs;
 import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.DeviceTypeProto;
-import com.techcubing.proto.RequestContextProto;
 import com.techcubing.proto.ScorecardProto;
 import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardRequest;
 import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardResponse;
@@ -53,15 +53,14 @@ public class ReleaseScorecardActivity extends AppCompatActivity {
 
         ReleaseScorecardRequest.Builder requestBuilder = ReleaseScorecardRequest.newBuilder()
                 .setScorecardId(scorecard.getId())
-                .setContext(RequestContextProto.RequestContext.newBuilder().setDeviceId(
-                        device.getId()))
                 .setAttemptNumber(ActiveState.getActive(ActiveState.ATTEMPT_NUMBER, this))
                 .setOutcome(ScorecardProto.AttemptPartOutcome.OK);
-
+        
         if (device.getType() == DeviceTypeProto.DeviceType.JUDGE) {
             requestBuilder.setResult(
                     ScorecardProto.AttemptResult.newBuilder().setFinalTime(8000));
         }
+        requestBuilder.setContext(RequestContextBuilder.build(requestBuilder, this));
 
         Futures.addCallback(
                 stub.releaseScorecard(requestBuilder.build()),

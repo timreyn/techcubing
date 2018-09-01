@@ -13,9 +13,9 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.techcubing.android.R;
 import com.techcubing.android.util.ActiveState;
+import com.techcubing.android.util.RequestContextBuilder;
 import com.techcubing.android.util.Stubs;
 import com.techcubing.proto.DeviceProto;
-import com.techcubing.proto.RequestContextProto.RequestContext;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardRequest;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardResponse;
 import com.techcubing.proto.services.TechCubingServiceGrpc.TechCubingServiceFutureStub;
@@ -42,13 +42,13 @@ public class AcquireScorecardActivity extends AppCompatActivity {
             return;
         }
 
-        AcquireScorecardRequest request = AcquireScorecardRequest.newBuilder()
-                .setScorecardId(scorecardId)
-                .setContext(RequestContext.newBuilder().setDeviceId(device.getId()))
-                .build();
+        AcquireScorecardRequest.Builder requestBuilder = AcquireScorecardRequest.newBuilder()
+                .setScorecardId(scorecardId);
+
+        requestBuilder.setContext(RequestContextBuilder.build(requestBuilder, this));
 
         Futures.addCallback(
-                stub.acquireScorecard(request),
+                stub.acquireScorecard(requestBuilder.build()),
                 new FutureCallback<AcquireScorecardResponse>() {
                     @Override
                     public void onSuccess(@Nullable AcquireScorecardResponse response) {
