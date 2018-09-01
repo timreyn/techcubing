@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto.services";
+option java_outer_classname = "GetScrambleProto";
+
+import "src/main/proto/request_context.proto";
+import "src/main/proto/response_context.proto";
+
+message GetScrambleRequest {
+  RequestContext context = 1;
+
+  string id = 2;
+
+  // Used for multi blind.  0-indexed.
+  int32 scrambleIndex = 3;
+}
+
+message GetScrambleResponse {
+  ResponseContext context = 1;
+
+  enum Status {
+    OK = 0;
+    NOT_PERMITTED = 1;
+    SCRAMBLE_NOT_FOUND = 2;
+    INTERNAL_ERROR = 3;
+  }
+  Status status = 2;
+
+  string encrypted_scramble_sequence = 3;
+
+  string encrypted_scramble_state = 4;
+}

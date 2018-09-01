@@ -13,6 +13,7 @@ proto_library(
     deps = [
         ":acquire_scorecard_proto",
         ":get_by_id_proto",
+        ":get_scramble_proto",
         ":list_persons_proto",
         ":release_scorecard_proto",
     ],
@@ -29,6 +30,7 @@ java_grpc_library(
     deps = [
         ":acquire_scorecard_java_proto",
         ":get_by_id_java_proto",
+        ":get_scramble_java_proto",
         ":list_persons_java_proto",
         ":release_scorecard_java_proto",
         ":techcubing_service_java_proto",
@@ -99,4 +101,19 @@ proto_library(
 java_proto_library(
     name = "release_scorecard_java_proto",
     deps = [":release_scorecard_proto"],
+)
+
+# AcquireScorecard
+
+proto_library(
+    name = "get_scramble_proto",
+    srcs = ["get_scramble.proto"],
+    deps = [
+        "//src/main/proto:request_context_proto",
+        "//src/main/proto:response_context_proto",
+    ],
+)
+java_proto_library(
+    name = "get_scramble_java_proto",
+    deps = [":get_scramble_proto"],
 )
