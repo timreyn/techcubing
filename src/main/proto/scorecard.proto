@@ -62,6 +62,9 @@ message Attempt {
 
   repeated AttemptPart parts = 2;
 
+  string scramble_id = 3 [
+    (techcubing.message_type) = "techcubing.Scramble"
+  ];
   // TODO: define schema for extra attempts.
 }
 
@@ -88,4 +91,8 @@ message Scorecard {
   repeated Attempt attempts = 4;
 
   bool deleted = 5;
+
+  string scramble_set_id = 7 [
+    (techcubing.message_type) = "techcubing.ScrambleSet"
+  ];
 }
