@@ -99,3 +99,12 @@ java_library(
         "@com_google_protobuf//:protobuf_java",
     ],
 )
+
+java_library(
+    name = "ManageScramblesHandler",
+    srcs = ["ManageScramblesHandler.java"],
+    deps = [
+        ":BaseHandler",
+        "//src/main/java/com/techcubing/server/framework:ServerState",
+    ],
+)

@@ -14,6 +14,7 @@ java_binary(
         "//src/main/java/com/techcubing/server/handlers:DeleteDeviceHandler",
         "//src/main/java/com/techcubing/server/handlers:IndexHandler",
         "//src/main/java/com/techcubing/server/handlers:ManageDevicesHandler",
+        "//src/main/java/com/techcubing/server/handlers:ManageScramblesHandler",
         "//src/main/java/com/techcubing/server/handlers:OAuthRedirectHandler",
         "//src/main/java/com/techcubing/server/handlers:SetCompetitionHandler",
         "//src/main/java/com/techcubing/server/services:TechCubingServiceImpl",
