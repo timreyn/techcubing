@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
@@ -12,8 +13,6 @@ import com.techcubing.proto.DeviceConfigProto;
 import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.ScorecardProto;
 import com.techcubing.proto.wcif.WcifCompetition;
-
-import java.util.Base64;
 
 public class ActiveState {
     public static final StateKey<DeviceProto.Device> DEVICE =
@@ -62,7 +61,7 @@ public class ActiveState {
         StateKey(String key) {
             this.key = "STATE__" + key;
         }
-        public final String key() {
+        final String key() {
             return key;
         }
         abstract @Nullable E getValue(SharedPreferences preferences);
@@ -85,7 +84,7 @@ public class ActiveState {
                 return null;
             }
             try {
-                return parser.parseFrom(Base64.getDecoder().decode(encodedMessage));
+                return parser.parseFrom(Base64.decode(encodedMessage, Base64.URL_SAFE));
             } catch (InvalidProtocolBufferException e) {
                 return null;
             }
@@ -95,7 +94,7 @@ public class ActiveState {
         void setValue(SharedPreferences.Editor preferences, @Nullable E e) {
             preferences.putString(
                     key,
-                    Base64.getEncoder().encodeToString(e.toByteArray()));
+                    Base64.encodeToString(e.toByteArray(), Base64.URL_SAFE));
         }
     }
 
