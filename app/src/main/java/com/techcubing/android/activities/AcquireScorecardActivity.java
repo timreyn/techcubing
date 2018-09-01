@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -97,16 +96,17 @@ public class AcquireScorecardActivity extends AppCompatActivity {
     private void onFailure(String failureReason) {
         Log.e(TAG, failureReason);
         runOnUiThread(() -> {
-            setContentView(R.layout.activity_acquire_scorecard_failure);
-            TextView textView = findViewById(R.id.acquire_scorecard_failure_reason);
-            textView.setText(failureReason);
-            Button button = findViewById(R.id.acquire_scorecard_failure_button);
+            setContentView(R.layout.generic_failure);
+            TextView failureDescription = findViewById(R.id.failure_description);
+            failureDescription.setText("Failed to scan scorecard.");
+            TextView failureReasonView = findViewById(R.id.failure_reason);
+            failureReasonView.setText(failureReason);
+            Button button = findViewById(R.id.failure_button);
             button.setOnClickListener(view -> {
-                startActivity(new Intent(
-                        AcquireScorecardActivity.this,
-                        LobbyActivity.class));
+                Intent intent = new Intent(
+                        AcquireScorecardActivity.this, LobbyActivity.class);
+                startActivity(intent);
             });
-            Toast.makeText(this, failureReason, Toast.LENGTH_LONG).show();
         });
     }
 }

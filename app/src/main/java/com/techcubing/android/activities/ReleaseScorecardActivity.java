@@ -28,6 +28,8 @@ import javax.annotation.Nullable;
 public class ReleaseScorecardActivity extends AppCompatActivity {
     private static final String TAG = "TCReleaseScorecard";
 
+    public static final String EXTRA_OUTCOME = "com.techcubing.OUTCOME";
+
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -53,9 +55,16 @@ public class ReleaseScorecardActivity extends AppCompatActivity {
 
         ReleaseScorecardRequest.Builder requestBuilder = ReleaseScorecardRequest.newBuilder()
                 .setScorecardId(scorecard.getId())
-                .setAttemptNumber(ActiveState.getActive(ActiveState.ATTEMPT_NUMBER, this))
-                .setOutcome(ScorecardProto.AttemptPartOutcome.OK);
-        
+                .setAttemptNumber(ActiveState.getActive(ActiveState.ATTEMPT_NUMBER, this));
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_OUTCOME)) {
+            requestBuilder.setOutcome(ScorecardProto.AttemptPartOutcome.forNumber(
+                    intent.getIntExtra(EXTRA_OUTCOME, -1)));
+        } else {
+            requestBuilder.setOutcome(ScorecardProto.AttemptPartOutcome.OK);
+        }
+
         if (device.getType() == DeviceTypeProto.DeviceType.JUDGE) {
             requestBuilder.setResult(
                     ScorecardProto.AttemptResult.newBuilder().setFinalTime(8000));
@@ -106,14 +115,16 @@ public class ReleaseScorecardActivity extends AppCompatActivity {
     private void onFailure(String failureReason) {
         Log.e(TAG, failureReason);
         runOnUiThread(() -> {
-            setContentView(R.layout.activity_release_scorecard_failure);
-            TextView textView = findViewById(R.id.release_scorecard_failure_reason);
-            textView.setText(failureReason);
-            Button button = findViewById(R.id.release_scorecard_failure_button);
+            setContentView(R.layout.generic_failure);
+            TextView failureDescription = findViewById(R.id.failure_description);
+            failureDescription.setText("Failed to release scorecard.");
+            TextView failureReasonView = findViewById(R.id.failure_reason);
+            failureReasonView.setText(failureReason);
+            Button button = findViewById(R.id.failure_button);
             button.setOnClickListener(view -> {
-                startActivity(new Intent(
-                        ReleaseScorecardActivity.this,
-                        LobbyActivity.class));
+                Intent intent = new Intent(
+                        ReleaseScorecardActivity.this, LobbyActivity.class);
+                startActivity(intent);
             });
         });
     }
