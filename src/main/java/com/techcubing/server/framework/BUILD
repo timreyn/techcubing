@@ -23,6 +23,7 @@ java_library(
         ":ServerState",
         "//src/main/proto:device_java_proto",
         "//src/main/proto:scorecard_java_proto",
+        "//src/main/proto:scramble_java_proto",
         "//src/main/proto/wcif:competition_java_proto",
         "//src/main/proto/wcif:event_java_proto",
         "//src/main/proto/wcif:person_java_proto",

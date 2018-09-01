@@ -9,6 +9,8 @@ import java.sql.SQLException;
 
 import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.ScorecardProto.Scorecard;
+import com.techcubing.proto.ScrambleProto.Scramble;
+import com.techcubing.proto.ScrambleProto.ScrambleSet;
 import com.techcubing.proto.wcif.WcifCompetition;
 import com.techcubing.proto.wcif.WcifEvent;
 import com.techcubing.proto.wcif.WcifPerson;
@@ -41,6 +43,8 @@ public class ServerStateInitializer {
     ProtoRegistry registry = new ProtoRegistry();
     registry.registerProto(Device.newBuilder());
     registry.registerProto(Scorecard.newBuilder());
+    registry.registerProto(Scramble.newBuilder());
+    registry.registerProto(ScrambleSet.newBuilder());
     registry.registerProto(WcifCompetition.newBuilder());
     registry.registerProto(WcifEvent.newBuilder());
     registry.registerProto(WcifPerson.newBuilder());
