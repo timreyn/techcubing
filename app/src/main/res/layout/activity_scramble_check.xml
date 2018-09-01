@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="1:1"
-                android:padding="40dp"
+                android:padding="10dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:src="@drawable/scramble_check_square_guide"/>
