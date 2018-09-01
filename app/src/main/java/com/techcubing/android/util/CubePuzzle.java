@@ -20,9 +20,9 @@ class CubePuzzle extends Puzzle {
     @Override
     public String nextSideInstruction(int sideJustRead) {
         if (sideJustRead == 2) {
-            return "Do an x rotation";
+            return "Do a z rotation";
         }
-        return "Do a z rotation";
+        return "Do an x rotation";
     }
 
     @Override
@@ -36,18 +36,18 @@ class CubePuzzle extends Puzzle {
 
         int squareDimen = imageDimen / dimen;
         int[][][] pixelsToRead = new int[dimen * dimen][pixelsPerSquare * pixelsPerSquare][2];
-        for (int row = 0; row < dimen; row++) {
-            for (int col = 0; col < dimen; col++) {
-                int leftBound = squareDimen * col;
+        for (int col = 0; col < dimen; col++) {
+            for (int row = 0; row < dimen; row++) {
+                int leftBound = squareDimen * (dimen - 1 - col);
                 int topBound = squareDimen * row;
 
                 for (int i = 0; i < pixelsPerSquare; i++) {
                     for (int j = 0; j < pixelsPerSquare; j++) {
-                        pixelsToRead[row * dimen + col][i * pixelsPerSquare + j][0] =
+                        pixelsToRead[col * dimen + row][i * pixelsPerSquare + j][0] =
                                 leftBound +
                                 (int) (squareDimen * (cropAmount + ((1 - 2 * cropAmount) * i) /
                                         (pixelsPerSquare - 1)));
-                        pixelsToRead[row * dimen + col][i * pixelsPerSquare + j][1] =
+                        pixelsToRead[col * dimen + row][i * pixelsPerSquare + j][1] =
                                 topBound +
                                 (int) (squareDimen * (cropAmount + ((1 - 2 * cropAmount) * j) /
                                         (pixelsPerSquare - 1)));
