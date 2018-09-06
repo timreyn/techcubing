@@ -11,11 +11,42 @@ public class PuzzleTest {
     assertEquals(
         puzzle.scramble(""),
         new int[][]{
-          new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1},
-          new int[]{2, 2, 2, 2, 2, 2, 2, 2, 2},
-          new int[]{3, 3, 3, 3, 3, 3, 3, 3, 3},
-          new int[]{4, 4, 4, 4, 4, 4, 4, 4, 4},
-          new int[]{5, 5, 5, 5, 5, 5, 5, 5, 5},
-          new int[]{6, 6, 6, 6, 6, 6, 6, 6, 6}});
+          new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1},  // D
+          new int[]{2, 2, 2, 2, 2, 2, 2, 2, 2},  // B
+          new int[]{3, 3, 3, 3, 3, 3, 3, 3, 3},  // U
+          new int[]{4, 4, 4, 4, 4, 4, 4, 4, 4},  // R
+          new int[]{5, 5, 5, 5, 5, 5, 5, 5, 5},  // F
+          new int[]{6, 6, 6, 6, 6, 6, 6, 6, 6}});  // L
   }
+
+  @Test
+  public void test3x3OneTurnScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("333");
+    assertEquals(
+        puzzle.scramble("R"),
+        new int[][]{
+          new int[]{1, 1, 2, 1, 1, 2, 1, 1, 2},  // D
+          new int[]{2, 2, 3, 2, 2, 3, 2, 2, 3},  // B
+          new int[]{3, 3, 5, 3, 3, 5, 3, 3, 5},  // U
+          new int[]{4, 4, 4, 4, 4, 4, 4, 4, 4},  // R
+          new int[]{1, 1, 1, 5, 5, 5, 5, 5, 5},  // F
+          new int[]{6, 6, 6, 6, 6, 6, 6, 6, 6}});  // L
+  }
+
+  @Test
+  public void test3x3FullScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("333");
+    // Feliks Zemdegs' 4.22 scramble.
+    assertEquals(
+        puzzle.scramble("L U2 D R' F2 R2 L2 U R' F' D2 F2 D2 B U L2 B2"),
+        new int[][]{
+          new int[]{1, 6, 4, 1, 1, 1, 1, 5, 5},  // D
+          new int[]{6, 6, 3, 3, 2, 2, 3, 2, 5},  // B
+          new int[]{6, 6, 1, 3, 3, 4, 4, 3, 4},  // U
+          new int[]{4, 3, 6, 2, 4, 5, 3, 5, 3},  // R
+          new int[]{2, 4, 5, 6, 5, 1, 2, 2, 6},  // F
+          new int[]{1, 1, 2, 4, 6, 4, 2, 5, 5}});  // L
+  }
+
+  // TODO: add more cube tests.
 }
