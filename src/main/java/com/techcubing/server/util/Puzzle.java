@@ -89,7 +89,9 @@ public abstract class Puzzle {
     }
 
     for (String s : scrambleSequence.split(" ")) {
-      getTransformationForMove(s).apply(state);
+      if (!s.isEmpty()) {
+        getTransformationForMove(s).apply(state);
+      }
     }
     return state;
   }
