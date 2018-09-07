@@ -36,5 +36,6 @@ java_library(
     srcs = [
         "CubePuzzle.java",
         "Puzzle.java",
+        "PyraminxPuzzle.java",
     ],
 )

@@ -49,4 +49,29 @@ public class PuzzleTest {
   }
 
   // TODO: add more cube tests.
+
+  @Test
+  public void testPyraminxOneTurnScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("pyram");
+    assertEquals(
+        puzzle.scramble("R"),
+        new int[][]{
+          new int[]{1, 1, 3, 3, 3, 3, 1, 1, 1},  // D
+          new int[]{2, 2, 2, 2, 2, 2, 2, 2, 2},  // L
+          new int[]{3, 3, 3, 3, 3, 4, 4, 4, 4},  // R
+          new int[]{4, 4, 1, 1, 1, 1, 4, 4, 4}});  // F
+  }
+
+  @Test
+  public void testPyraminxFullScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("pyram");
+    // Benjamin Kyle's 1.28 scramble.
+    assertEquals(
+        puzzle.scramble("B' U' B' U' L R B L' U R' L' u' b'"),
+        new int[][]{
+          new int[]{2, 2, 3, 1, 1, 4, 2, 3, 3},  // D
+          new int[]{4, 4, 1, 3, 1, 3, 4, 3, 2},  // L
+          new int[]{2, 4, 4, 1, 2, 2, 3, 3, 1},  // R
+          new int[]{3, 2, 4, 4, 4, 2, 1, 1, 1}});  // F
+  }
 }
