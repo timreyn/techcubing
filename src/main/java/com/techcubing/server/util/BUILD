@@ -37,5 +37,6 @@ java_library(
         "CubePuzzle.java",
         "Puzzle.java",
         "PyraminxPuzzle.java",
+        "SkewbPuzzle.java",
     ],
 )

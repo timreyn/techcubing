@@ -3,6 +3,7 @@ package com.techcubing.server.util;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import java.util.Arrays;
 
 public class PuzzleTest {
   @Test
@@ -73,5 +74,34 @@ public class PuzzleTest {
           new int[]{4, 4, 1, 3, 1, 3, 4, 3, 2},  // L
           new int[]{2, 4, 4, 1, 2, 2, 3, 3, 1},  // R
           new int[]{3, 2, 4, 4, 4, 2, 1, 1, 1}});  // F
+  }
+
+  @Test
+  public void testSkewbOneTurnScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("skewb");
+    assertEquals(
+        puzzle.scramble("R"),
+        new int[][]{
+          new int[]{1, 2, 2, 2, 2},  // D
+          new int[]{4, 4, 4, 2, 4},  // B
+          new int[]{3, 5, 3, 3, 3},  // U
+          new int[]{1, 1, 1, 4, 1},  // R
+          new int[]{5, 6, 5, 5, 5},  // F
+          new int[]{6, 6, 6, 6, 3}});  // L
+  }
+
+  @Test
+  public void testSkewbFullScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("skewb");
+    // Jonatan Kłosko's 1.10 scramble.
+    assertEquals(
+        puzzle.scramble("L R B' R U' R' U L R B R"),
+        new int[][]{
+          new int[]{5, 2, 5, 4, 1},  // D
+          new int[]{1, 2, 6, 6, 1},  // B
+          new int[]{2, 6, 1, 5, 3},  // U
+          new int[]{2, 4, 4, 4, 3},  // R
+          new int[]{5, 4, 2, 6, 6},  // F
+          new int[]{3, 1, 3, 3, 5}});  // L
   }
 }

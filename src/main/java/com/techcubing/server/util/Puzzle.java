@@ -26,6 +26,8 @@ public abstract class Puzzle {
         return new CubePuzzle(7);
       case "pyram":
         return new PyraminxPuzzle();
+      case "skewb":
+        return new SkewbPuzzle();
       default:
         return null;
     }
