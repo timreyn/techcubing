@@ -28,6 +28,8 @@ public abstract class Puzzle {
         return new PyraminxPuzzle();
       case "skewb":
         return new SkewbPuzzle();
+      case "minx":
+        return new MegaminxPuzzle();
       default:
         return null;
     }

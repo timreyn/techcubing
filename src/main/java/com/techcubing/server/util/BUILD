@@ -35,6 +35,7 @@ java_library(
     name = "Puzzle",
     srcs = [
         "CubePuzzle.java",
+        "MegaminxPuzzle.java",
         "Puzzle.java",
         "PyraminxPuzzle.java",
         "SkewbPuzzle.java",
