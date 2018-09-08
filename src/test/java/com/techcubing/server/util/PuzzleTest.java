@@ -154,4 +154,28 @@ public class PuzzleTest {
           new int[]{4, 9, 8, 4, 12, 10, 5, 2, 10, 12, 5},  // UR
           new int[]{4, 1, 6, 12, 9, 3, 1, 1, 8, 5, 11}});  // UF
   }
+
+  @Test
+  public void testClockOneTurnScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("clock");
+    assertEquals(
+        puzzle.scramble("UR2+"),
+        new int[][]{
+          new int[]{10, 12, 12, 12, 12, 12, 12, 12, 12},  // Back
+          new int[]{12, 2, 2, 12, 2, 2, 12, 12, 12}});  // Front
+  }
+
+  @Test
+  public void testClockFullScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("clock");
+    // Nathaniel Berg's 3.73 scramble.
+    assertEquals(
+        puzzle.scramble("UR1+ DR1+ DL5- UL3+ U3- " +
+                        "R6+ D4+ L2+ ALL4+ y2 " +
+                        "U0+ R0+ D2+ L0+ ALL6+ " +
+                        "UR DR DL UL"),
+        new int[][]{
+          new int[]{12, 1, 2, 5, 1, 1, 9, 12, 7},  // Back
+          new int[]{10, 6, 12, 8, 8, 8, 5, 8, 3}});  // Front
+  }
 }

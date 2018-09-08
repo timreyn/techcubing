@@ -30,6 +30,8 @@ public abstract class Puzzle {
         return new SkewbPuzzle();
       case "minx":
         return new MegaminxPuzzle();
+      case "clock":
+        return new ClockPuzzle();
       default:
         return null;
     }
@@ -97,19 +99,20 @@ public abstract class Puzzle {
     }
   }
 
+  protected static Transformation EMPTY_TRANSFORMATION = new Transformation() {
+    @Override
+    public void apply(int[][] state) {}
+  };
+
   abstract int sides();
   abstract int stickersPerSide();
 
   abstract Transformation getTransformationForMove(String move);
 
-  public int[][] scramble(String scrambleSequence) {
+  public final int[][] scramble(String scrambleSequence) {
     // Get the starting state.
     int[][] state = new int[sides()][stickersPerSide()];
-    for (int i = 0; i < sides(); i++) {
-      for (int j = 0; j < stickersPerSide(); j++) {
-        state[i][j] = i + 1;
-      }
-    }
+    fillStartingState(state);
 
     for (String s : scrambleSequence.split(" ")) {
       if (!s.isEmpty()) {
@@ -117,5 +120,13 @@ public abstract class Puzzle {
       }
     }
     return state;
+  }
+
+  protected void fillStartingState(int[][] state) {
+    for (int i = 0; i < sides(); i++) {
+      for (int j = 0; j < stickersPerSide(); j++) {
+        state[i][j] = i + 1;
+      }
+    }
   }
 }
