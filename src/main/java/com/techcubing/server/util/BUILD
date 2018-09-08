@@ -43,3 +43,13 @@ java_library(
         "Sq1Puzzle.java",
     ],
 )
+
+java_binary(
+    name = "Scramble",
+    srcs = ["ScrambleMain.java"],
+    main_class = "com.techcubing.server.util.ScrambleMain",
+    deps = [
+        ":Puzzle",
+    ],
+)
+
