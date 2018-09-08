@@ -130,12 +130,14 @@ class ClockPuzzle extends Puzzle {
   }
 
   @Override
-  protected void fillStartingState(int[][] state) {
+  protected int[][] getStartingState() {
+    int[][] state = new int[2][9];
     for (int face = 0; face < 2; face++) {
       for (int sticker = 0; sticker < 9; sticker++) {
         state[face][sticker] = 12;
       }
     }
+    return state;
   }
 }
 

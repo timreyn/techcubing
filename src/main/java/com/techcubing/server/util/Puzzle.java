@@ -111,8 +111,7 @@ public abstract class Puzzle {
 
   public final int[][] scramble(String scrambleSequence) {
     // Get the starting state.
-    int[][] state = new int[sides()][stickersPerSide()];
-    fillStartingState(state);
+    int[][] state = getStartingState();
 
     for (String s : scrambleSequence.split(" ")) {
       if (!s.isEmpty()) {
@@ -122,11 +121,13 @@ public abstract class Puzzle {
     return state;
   }
 
-  protected void fillStartingState(int[][] state) {
+  protected int[][] getStartingState() {
+    int[][] state = new int[sides()][stickersPerSide()];
     for (int i = 0; i < sides(); i++) {
       for (int j = 0; j < stickersPerSide(); j++) {
         state[i][j] = i + 1;
       }
     }
+    return state;
   }
 }
