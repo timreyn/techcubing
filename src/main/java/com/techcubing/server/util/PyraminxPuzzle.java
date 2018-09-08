@@ -178,10 +178,6 @@ class PyraminxPuzzle extends Puzzle {
           break;
       }
     }
-    List<Transformation> transformations = new ArrayList<>();
-    for (int i = 0; i < moveTimes; i++) {
-      transformations.add(getTransformation(oppositeSide, isDeep));
-    }
-    return new CompoundTransformation(transformations);
+    return new RepeatTransformation(getTransformation(oppositeSide, isDeep), moveTimes);
   }
 }

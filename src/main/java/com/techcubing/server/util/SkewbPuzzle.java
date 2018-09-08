@@ -189,7 +189,7 @@ class SkewbPuzzle extends Puzzle {
     Transformation transformation =
       getTransformationForListOfSides(turns.get(move.charAt(0)));
     if (move.length() == 2 && move.charAt(1) == '\'') {
-      return new CompoundTransformation(transformation, transformation);
+      return new RepeatTransformation(transformation, 2);
     } else {
       return transformation;
     }

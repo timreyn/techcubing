@@ -183,10 +183,6 @@ class CubePuzzle extends Puzzle {
     }
     Transformation transformation = new CompoundTransformation(transformations);
     
-    List<Transformation> repeatedTransformation = new ArrayList<>();
-    for (int i = 0; i < moveTimes; i++) {
-      repeatedTransformation.add(transformation);
-    }
-    return new CompoundTransformation(repeatedTransformation);
+    return new RepeatTransformation(transformation, moveTimes);
   }
 }

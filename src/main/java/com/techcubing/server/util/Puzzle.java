@@ -78,6 +78,23 @@ public abstract class Puzzle {
     }
   }
 
+  protected static class RepeatTransformation implements Transformation {
+    private Transformation transformation;
+    private int times;
+
+    public RepeatTransformation(Transformation transformation, int times) {
+      this.transformation = transformation;
+      this.times = times;
+    }
+
+    @Override
+    public void apply(int[][] state) {
+      for (int i = 0; i < times; i++) {
+        transformation.apply(state);
+      }
+    }
+  }
+
   abstract int sides();
   abstract int stickersPerSide();
 
