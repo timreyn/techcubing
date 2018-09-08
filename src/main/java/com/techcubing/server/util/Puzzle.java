@@ -32,6 +32,8 @@ public abstract class Puzzle {
         return new MegaminxPuzzle();
       case "clock":
         return new ClockPuzzle();
+      case "sq1":
+        return new Sq1Puzzle();
       default:
         return null;
     }

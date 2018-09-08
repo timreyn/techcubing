@@ -3,8 +3,6 @@ package com.techcubing.server.util;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import java.util.Arrays;
-
 public class PuzzleTest {
   @Test
   public void test3x3EmptyScramble() {
@@ -177,5 +175,36 @@ public class PuzzleTest {
         new int[][]{
           new int[]{12, 1, 2, 5, 1, 1, 9, 12, 7},  // Back
           new int[]{10, 6, 12, 8, 8, 8, 5, 8, 3}});  // Front
+  }
+
+  @Test
+  public void testSq1OneTurnScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("sq1");
+    assertEquals(
+        puzzle.scramble("(1,1)"),
+        new int[][]{
+          new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},  // D
+          new int[]{2, 2, 5, 2, 2, 3, 2, 2},  // B
+          new int[]{3, 3, 2, 3, 3, 4, 3, 3},  // R
+          new int[]{4, 4, 3, 4, 4, 5, 4, 4},  // F
+          new int[]{5, 5, 4, 5, 5, 2, 5, 5},  // L
+          new int[]{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}});  // U
+  }
+
+  @Test
+  public void testSq1FullScramble() {
+    Puzzle puzzle = Puzzle.getPuzzleForEvent("sq1");
+    // Daniel Karnaukh's 5.49 scramble.
+    assertEquals(
+        puzzle.scramble("(0,5) / (4,1) / (-3,0) / (-3,0) / " +
+                        "(-1,-4) / (3,0) / (-2,-3) / (3,0) / " +
+                        "(-4,0) / (0,-2) / (-3,0) / (-5,0)"),
+        new int[][]{
+          new int[]{1, 1, 1, 6, 6, 1, 1, 6, 6, 6, 1, 1},  // D
+          new int[]{4, 5, 4, 4, 2, 5, 4, 5},  // B
+          new int[]{2, 4, 5, 3, 3, 5, 2, 3},  // R
+          new int[]{2, 2, 3, 4, 2, 3, 3, 2},  // F
+          new int[]{4, 3, 5, 5, 5, 2, 3, 4},  // L
+          new int[]{6, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6, 6}});  // U
   }
 }
