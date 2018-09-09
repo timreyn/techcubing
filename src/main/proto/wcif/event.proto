@@ -29,4 +29,5 @@ message WcifEvent {
 
   // Not part of WCIF.
   string event_name = 5;
+  int32 event_priority = 6;
 }
