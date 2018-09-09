@@ -13,13 +13,6 @@ public class CommandLineFlags extends OptionsBase {
   )
   public boolean help;
 
-  @Option(
-    name = "dev",
-    help = "Uses templates, CSS, and JS files from local directory.",
-    defaultValue = "false"
-  )
-  public boolean dev;
-
   public static class WcaEnvironmentConverter
       extends EnumConverter<ServerState.WcaEnvironment> {
     public WcaEnvironmentConverter() {

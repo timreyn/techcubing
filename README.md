@@ -28,7 +28,7 @@ $ sudo apt install openjdk-8-jdk
 
 ```sh
 $ bazel build src/main/java/com/techcubing/server:main
-$ bazel-bin/src/main/java/com/techcubing/server/main --dev
+$ bazel-bin/src/main/java/com/techcubing/server/main
 ```
 
 6. Visit https://localhost:8118/ in your browser, and select a competition.
