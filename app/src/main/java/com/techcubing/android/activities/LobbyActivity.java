@@ -55,6 +55,9 @@ public class LobbyActivity extends AppCompatActivity {
                     new Intent(this, BarcodeScannerActivity.class);
             barcodeScannerIntent.putExtra(
                     BarcodeScannerActivity.EXTRA_EXPECTED_HOST, "scorecard");
+            barcodeScannerIntent.putExtra(
+                    BarcodeScannerActivity.EXTRA_EXPECTED_PATH_PREFIX,
+                    ActiveState.getActive(ActiveState.COMPETITION, this).getId());
             this.startActivity(barcodeScannerIntent);
         });
     }

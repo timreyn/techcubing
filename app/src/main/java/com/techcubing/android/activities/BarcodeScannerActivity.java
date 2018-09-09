@@ -24,6 +24,7 @@ public class BarcodeScannerActivity extends AppCompatActivity {
     private static final String TAG = "TCBarcodeScanner";
     // Extras to be added to intents to BarcodeScannerActivity.
     public static final String EXTRA_EXPECTED_HOST = "com.techcubing.EXPECTED_HOST";
+    public static final String EXTRA_EXPECTED_PATH_PREFIX = "com.techcubing.EXPECTED_PATH_PREFIX";
 
     private Intent intent = null;
 
@@ -51,11 +52,16 @@ public class BarcodeScannerActivity extends AppCompatActivity {
                             }
                             Uri uri = Uri.parse(firebaseVisionBarcodes.get(0).getRawValue());
                             Log.i(TAG, uri.toString());
-                            String expectedHost = intent.getStringExtra(
-                                    EXTRA_EXPECTED_HOST);
+                            String expectedHost = intent.getStringExtra(EXTRA_EXPECTED_HOST);
+                            String expectedPathPrefix =
+                                    intent.getStringExtra(EXTRA_EXPECTED_PATH_PREFIX);
+                            if (expectedPathPrefix == null) {
+                                expectedPathPrefix = "";
+                            }
                             if (uri.getHost() != null &&
                                     uri.getScheme().equals("techcubing") &&
-                                    uri.getHost().equals(expectedHost)) {
+                                    uri.getHost().equals(expectedHost) &&
+                                    uri.getPath().startsWith(expectedPathPrefix)) {
                                 try {
                                     startActivity(new Intent(Constants.ACTION_SCAN_BARCODE, uri));
                                     return;

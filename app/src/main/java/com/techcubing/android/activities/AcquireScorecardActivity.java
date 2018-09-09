@@ -31,7 +31,7 @@ public class AcquireScorecardActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Uri uri = Uri.parse(intent.toUri(0));
-        String scorecardId = uri.getPathSegments().get(0);
+        String scorecardId = uri.getPathSegments().get(1);
 
         TechCubingServiceFutureStub stub =
                 Stubs.futureStub(this, getApplicationContext());
