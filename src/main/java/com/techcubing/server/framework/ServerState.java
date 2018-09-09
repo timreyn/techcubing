@@ -61,6 +61,10 @@ public class ServerState {
     return this;
   }
 
+  public WcaEnvironment getWcaEnvironment() {
+    return wcaEnvironment;
+  }
+
   public URI getWcaSite() {
     switch (wcaEnvironment) {
       case PROD:

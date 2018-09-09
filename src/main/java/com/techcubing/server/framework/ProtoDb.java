@@ -25,11 +25,13 @@ public class ProtoDb {
       return null;
     }
 
+    String wcaEnvironment = serverState.getWcaEnvironment().toString();
+
     String tableName = descriptor.getOptions().getExtension(OptionsProto.mysqlTableName);
     if (tableName == null) {
       return null;
     }
-    return competitionId + "__" + tableName;
+    return competitionId + "__" + wcaEnvironment + "__" + tableName;
   }
 
   public static void initializeCompetition(
