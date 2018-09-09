@@ -3,6 +3,7 @@ package com.techcubing.server.handlers;
 import com.google.protobuf.Message;
 import com.sun.net.httpserver.HttpExchange;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,19 +26,32 @@ public class AdminResultsHandler extends BaseHandler {
   protected void handleImpl(HttpExchange t) throws Exception {
     Map<String, Object> model = new HashMap<>();
 
-    Map<String, WcifRound> rounds = new HashMap<>();
-    for (Message roundMessage : ProtoDb.getAll(WcifRound.newBuilder(), serverState)) {
-      WcifRound round = (WcifRound) roundMessage;
-      rounds.put(round.getId(), round);
-    }
-    model.put("rounds", rounds);
-
     Map<String, WcifEvent> events = new HashMap<>();
     for (Message eventMessage : ProtoDb.getAll(WcifEvent.newBuilder(), serverState)) {
       WcifEvent event = (WcifEvent) eventMessage;
       events.put(event.getId(), event);
     }
     model.put("events", events);
+
+    WcifRound activeRound = null;
+    List<WcifRound> rounds = new ArrayList<>();
+    for (Message roundMessage : ProtoDb.getAll(WcifRound.newBuilder(), serverState)) {
+      WcifRound round = (WcifRound) roundMessage;
+      rounds.add(round);
+      if (round.getId().equals(queryParams.get("r"))) {
+        activeRound = round;
+      }
+    }
+    Collections.sort(rounds, (WcifRound roundA, WcifRound roundB) -> {
+      WcifEvent eventA = events.get(roundA.getEventId());
+      WcifEvent eventB = events.get(roundB.getEventId());
+      if (eventA != eventB) {
+        return eventA.getEventPriority() - eventB.getEventPriority();
+      } else {
+        return roundA.getRoundNumber() - roundB.getRoundNumber();
+      }
+    });
+    model.put("rounds", rounds);
 
     Map<String, WcifPerson> people = new HashMap<>();
     for (Message personMessage :
@@ -55,14 +69,13 @@ public class AdminResultsHandler extends BaseHandler {
     }
     model.put("devices", devices);
 
-    WcifRound round = rounds.get(queryParams.get("r"));
-    if (round != null) {
-      model.put("activeRound", round);
-      WcifEvent event = events.get(round.getEventId());
+    if (activeRound != null) {
+      model.put("activeRound", activeRound);
+      WcifEvent event = events.get(activeRound.getEventId());
       model.put("activeEvent", event);
       List<Message> scorecardMessages =
         ProtoDb.getAllMatching(
-            Scorecard.newBuilder(), "round_id", round.getId(), serverState);
+            Scorecard.newBuilder(), "round_id", activeRound.getId(), serverState);
 
       List<Scorecard> scorecards = new ArrayList<>();
       for (Message message : scorecardMessages) {

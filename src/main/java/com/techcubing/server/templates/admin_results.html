@@ -13,18 +13,18 @@
   <div>
     <select id="round_select">
       <option value=""></option>
-      <#list rounds as roundId, round>
-        <option value="${roundId}"
-                <#if activeRound?? && roundId == activeRound.getId()>
+      <#list rounds as round>
+        <option value="${round.id}"
+                <#if activeRound?? && round.id == activeRound.id>
                   selected="true"
                 </#if>>
-          ${roundId}
+          ${events[round.eventId].eventName} Round ${round.roundNumber}
         </option>
       </#list>
     </select>
   </div>
   <#if activeRound??>
-    <h3>${activeEvent.getId()} Round ${activeRound.getId()}</h3>
+    <h3>${activeEvent.id} Round ${activeRound.roundNumber}</h3>
   </#if>
   <script type="application/javascript">
     document.getElementById('round_select').onchange = function() {
