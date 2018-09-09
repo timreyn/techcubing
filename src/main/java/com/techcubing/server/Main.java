@@ -16,6 +16,7 @@ import com.techcubing.server.handlers.IndexHandler;
 import com.techcubing.server.handlers.ManageDevicesHandler;
 import com.techcubing.server.handlers.ManageScramblesHandler;
 import com.techcubing.server.handlers.OAuthRedirectHandler;
+import com.techcubing.server.handlers.AdminResultsHandler;
 import com.techcubing.server.handlers.SetCompetitionHandler;
 import com.techcubing.server.services.TechCubingServiceImpl;
 
@@ -36,6 +37,7 @@ public class Main {
       server.createContext("/delete_device", new DeleteDeviceHandler(serverState));
       server.createContext("/manage_scrambles", new ManageScramblesHandler(serverState));
       server.createContext("/add_scrambles", new AddScramblesHandler(serverState));
+      server.createContext("/admin_results", new AdminResultsHandler(serverState));
       server.start();
       System.out.println("TechCubing is running!");
       System.out.println("Visit http://localhost:8118 in a browser to get started.");

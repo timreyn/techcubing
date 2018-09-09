@@ -11,6 +11,7 @@ java_binary(
         "//src/main/java/com/techcubing/server/framework:ServerStateInitializer",
         "//src/main/java/com/techcubing/server/handlers:AddDeviceHandler",
         "//src/main/java/com/techcubing/server/handlers:AddScramblesHandler",
+        "//src/main/java/com/techcubing/server/handlers:AdminResultsHandler",
         "//src/main/java/com/techcubing/server/handlers:CompetitionsHandler",
         "//src/main/java/com/techcubing/server/handlers:DeleteDeviceHandler",
         "//src/main/java/com/techcubing/server/handlers:IndexHandler",

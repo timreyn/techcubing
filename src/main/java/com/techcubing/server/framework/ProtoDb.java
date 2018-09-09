@@ -268,6 +268,36 @@ public class ProtoDb {
     return values;
   }
 
+  public static List<Message> getAllMatching(
+      Message.Builder tmpl, String fieldName, String fieldValue, ServerState serverState)
+      throws SQLException, IOException {
+    tmpl.clear();
+    List<Message> values = new ArrayList<>();
+    String tableName = getTable(tmpl.getDescriptorForType(), serverState);
+    if (tableName == null) {
+      return values;
+    }
+    FieldDescriptor field = tmpl.getDescriptorForType().findFieldByName(fieldName);
+    if (field == null) {
+      return values;
+    }
+    String filterColumnName =
+      field.getOptions().getExtension(OptionsProto.mysqlColumnName);
+
+    PreparedStatement statement =
+      serverState.getMysqlConnection().prepareStatement(
+        "SELECT data FROM " + tableName + " WHERE " + filterColumnName + " = ?");
+    statement.setString(1, fieldValue);
+
+    ResultSet results = statement.executeQuery();
+    while (results.next()) {
+      Message.Builder value = (Message.Builder) tmpl.clone();
+      value.mergeFrom(results.getBlob("data").getBinaryStream());
+      values.add(value.build());
+    }
+    return values;
+  }
+
   // Used to atomically update a message in the database, and ensure that no
   // intervening updates occur.  Updates can return false to decline to make this
   // update.

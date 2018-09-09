@@ -122,3 +122,20 @@ java_library(
         "@commons_io_commons_io//jar",
     ],
 )
+
+java_library(
+    name = "AdminResultsHandler",
+    srcs = ["AdminResultsHandler.java"],
+    deps = [
+        ":BaseHandler",
+        "//src/main/proto:device_java_proto",
+        "//src/main/proto:scorecard_java_proto",
+        "//src/main/proto/wcif:event_java_proto",
+        "//src/main/proto/wcif:person_java_proto",
+        "//src/main/proto/wcif:round_java_proto",
+        "//src/main/java/com/techcubing/server/framework:ProtoDb",
+        "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/java/com/techcubing/server/util:ProtoUtil",
+        "@com_google_protobuf//:protobuf_java",
+    ],
+)
