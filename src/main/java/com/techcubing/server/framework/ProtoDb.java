@@ -40,6 +40,18 @@ public class ProtoDb {
     MysqlConnection connection = serverState.getMysqlConnection();
     serverState.setCompetitionId(competitionId);
 
+    connection.prepareStatement(
+        "CREATE TABLE IF NOT EXISTS __ActiveCompetition (" +
+        "  env VARCHAR(10) PRIMARY KEY UNIQUE, " +
+        "  competitionId VARCHAR(50))").executeUpdate();
+    PreparedStatement statement = connection.prepareStatement(
+        "INSERT INTO __ActiveCompetition VALUES (?, ?) " +
+        "ON DUPLICATE KEY UPDATE competitionId = ?");
+    statement.setString(1, serverState.getWcaEnvironment().toString());
+    statement.setString(2, competitionId);
+    statement.setString(3, competitionId);
+    statement.executeUpdate();
+
     for (Descriptor descriptor : serverState.getProtoRegistry().allProtos()) {
       String tableName = getTable(descriptor, serverState);
       if (tableName == null) {
