@@ -4,6 +4,8 @@ java_library(
     name = "WcifUtil",
     srcs = ["WcifUtil.java"],
     deps = [
+        "//src/main/proto/wcif:competition_java_proto",
+        "//src/main/proto/wcif:event_java_proto",
         "//src/main/proto/wcif:round_java_proto",
     ],
 )

@@ -49,4 +49,7 @@ message WcifRound {
     (techcubing.parent_ref) = true,
     (techcubing.message_type) = "techcubing.wcif.WcifEvent"
   ];
+
+  // Not part of WCIF.
+  int32 round_number = 7;
 }
