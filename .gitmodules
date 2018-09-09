@@ -4,3 +4,6 @@
 [submodule "third_party/bazel-skylib"]
 	path = third_party/bazel-skylib
 	url = https://github.com/bazelbuild/bazel-skylib
+[submodule "third_party/qrcodejs"]
+	path = third_party/qrcodejs
+	url = https://github.com/davidshimjs/qrcodejs.git

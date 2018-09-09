@@ -20,5 +20,6 @@ java_binary(
     ],
     resources = [
         "//src/main/java/com/techcubing/server/templates",
+        "//:qrcode_js",
     ],
 )
