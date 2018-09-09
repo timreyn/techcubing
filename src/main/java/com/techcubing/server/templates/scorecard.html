@@ -1,0 +1,70 @@
+<html>
+<head>
+  <title>Welcome!</title>
+  <style type="text/css">
+    table {
+      border-collapse: collapse;
+      border: 1px solid black;
+    }
+    td,th {
+      border: 1px solid black;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>${person.name} ${event.eventName} Round ${round.roundNumber}</h1>
+  <table>
+    <tr>
+      <th>#</th>
+      <th>Time</th>
+      <th>Judge</th>
+      <th>Scrambler</th>
+    </tr>
+    <#list scorecard.attemptsList as attempt >
+      <tr>
+        <td>${attempt?index + 1}</td>
+        <td>
+          <#if attempt.result.finalTime != 0>
+            ${attempt.result.finalTime?c}
+          </#if>
+        </td>
+        <td>
+          <#list attempt.partsList as part >
+            <#assign device = devices[part.deviceId]>
+            <#if device.type == "JUDGE">
+              <div>
+                <#if part.outcome == "OK">
+                  <b>${device.visibleName}</b>
+                <#elseif part.outcome == "UNKNOWN">
+                  <b>${device.visibleName} (active)</b>
+                <#else>
+                  <i>${device.visibleName} (${part.outcome})</i>
+                </#if>
+              </div>
+            </#if>
+          </#list>
+        </td>
+        <td>
+          <#list attempt.partsList as part >
+            <#assign device = devices[part.deviceId]>
+            <#if device.type == "SCRAMBLER">
+              <div>
+                <#if part.outcome == "OK">
+                  <b>${device.visibleName}</b>
+                <#else>
+                  <i>${device.visibleName} (${part.outcome})</i>
+                </#if>
+              </div>
+            </#if>
+          </#list>
+        </td>
+      </tr>
+    </#list>
+  </table>
+  <p></p>
+  <div>
+    <a href="/admin_results?r=${round.id}">All results for ${event.eventName} Round ${round.roundNumber}</a>
+  </div>
+</body>
+</html>

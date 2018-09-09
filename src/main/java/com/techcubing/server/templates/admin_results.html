@@ -48,7 +48,7 @@
         <#assign person = persons[scorecard.personId]>
         <tr>
           <td>
-            ${person.name}
+            ${person.name} <a href="/scorecard?id=${scorecard.id}">[Scorecard]</a>
           </td>
           <#list scorecard.attemptsList as attempt>
             <td>
