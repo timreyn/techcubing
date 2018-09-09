@@ -18,4 +18,7 @@ java_binary(
         "@io_grpc_grpc_java//protobuf",
         "@io_grpc_grpc_services//jar",
     ],
+    resources = [
+        "//src/main/java/com/techcubing/server/templates",
+    ],
 )
