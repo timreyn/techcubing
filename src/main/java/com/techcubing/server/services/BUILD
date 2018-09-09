@@ -71,6 +71,7 @@ java_library(
         "//src/main/proto/wcif:round_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/java/com/techcubing/server/util:ProtoUtil",
         "//src/main/java/com/techcubing/server/util:WcifUtil",
         "@com_google_protobuf//:protobuf_java",
     ],
@@ -86,6 +87,7 @@ java_library(
         "//src/main/proto/services:release_scorecard_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/java/com/techcubing/server/util:ProtoUtil",
         "@com_google_protobuf//:protobuf_java",
     ],
 )

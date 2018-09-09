@@ -21,6 +21,7 @@ import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardRespo
 import com.techcubing.proto.wcif.WcifCutoff;
 import com.techcubing.proto.wcif.WcifRound;
 import com.techcubing.proto.wcif.WcifTimeLimit;
+import com.techcubing.server.util.ProtoUtil;
 import com.techcubing.server.util.WcifUtil;
 
 class AcquireScorecardImpl {
@@ -150,6 +151,7 @@ class AcquireScorecardImpl {
               AttemptPart.Builder nextPart = attemptBuilder.addPartsBuilder();
               nextPart.setDeviceType(device.getType());
               nextPart.setDeviceId(device.getId());
+              nextPart.setAcquireTimestamp(ProtoUtil.getCurrentTime());
               // TODO: store person ID.
               
               // Assign scrambles, if this wasn't already assigned.

@@ -56,6 +56,9 @@ message AttemptPart {
   repeated AttemptEvent events = 5;
 
   AttemptPartOutcome outcome = 6;
+
+  google.protobuf.Timestamp acquire_timestamp = 7;
+  google.protobuf.Timestamp release_timestamp = 8;
 }
 
 message Attempt {

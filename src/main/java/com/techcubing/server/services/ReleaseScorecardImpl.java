@@ -17,6 +17,7 @@ import com.techcubing.proto.ScorecardProto.AttemptPart;
 import com.techcubing.proto.ScorecardProto.Scorecard;
 import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardRequest;
 import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardResponse;
+import com.techcubing.server.util.ProtoUtil;
 
 class ReleaseScorecardImpl {
   ServerState serverState;
@@ -63,6 +64,7 @@ class ReleaseScorecardImpl {
                     ReleaseScorecardResponse.Status.SCORECARD_NOT_HELD_BY_DEVICE);
                 return false;
               }
+              lastPartBuilder.setReleaseTimestamp(ProtoUtil.getCurrentTime());
 
               // Store the result.
               if (device.getType() == DeviceType.JUDGE) {
