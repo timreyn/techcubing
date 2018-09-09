@@ -47,8 +47,10 @@ public class ActiveState {
             new ProtoStateKey<>(
                     "COMPETITOR", WcifPerson.parser(), "techcubing.wcif.WcifPerson");
 
-
     public static final StateKey<Integer> ATTEMPT_NUMBER = new IntStateKey("ATTEMPT_NUMBER");
+
+    private static final StateKey[] ALL_KEYS = new StateKey[]{
+            DEVICE, SCORECARD, DEVICE_CONFIG, COMPETITION, ROUND, EVENT, COMPETITOR, ATTEMPT_NUMBER};
 
     @Nullable
     public static <E> E getActive(StateKey<E> key, Context context) {
@@ -95,6 +97,12 @@ public class ActiveState {
             return e;
         } catch (InvalidProtocolBufferException e) {
             return null;
+        }
+    }
+
+    public static void clearState(Context context) {
+        for (StateKey key : ALL_KEYS) {
+            setActive(key, null, context);
         }
     }
 
