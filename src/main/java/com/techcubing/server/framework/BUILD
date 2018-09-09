@@ -18,6 +18,7 @@ java_library(
     srcs = ["ServerStateInitializer.java"],
     visibility = ["//src/main/java/com/techcubing/server:__pkg__"],
     deps = [
+        ":CommandLineFlags",
         ":MysqlConnection",
         ":ProtoRegistry",
         ":ServerState",
@@ -74,5 +75,14 @@ java_library(
         "//src/main/java/com/techcubing/server/util:ProtoUtil",
         "//src/main/java/com/techcubing/server/util:WcifUtil",
         "@com_google_protobuf//:protobuf_java",
+    ],
+)
+
+java_library(
+    name = "CommandLineFlags",
+    srcs = ["CommandLineFlags.java"],
+    deps = [
+        "@com_github_pcj_google_options//jar",
+        ":ServerState",
     ],
 )

@@ -89,6 +89,12 @@ maven_jar(
     sha1_src = "cfdfb9f2777db7f7f148faa9c6b74c87b5c735d5",
 )
 
+maven_jar(
+    name = "com_github_pcj_google_options",
+    artifact = "com.github.pcj:google-options:jar:1.0.0",
+    sha1 = "85d54fe6771e5ff0d54827b0a3315c3e12fdd0c7",
+)
+
 # Install buildifier.
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")

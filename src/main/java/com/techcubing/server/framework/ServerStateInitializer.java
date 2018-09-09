@@ -17,11 +17,12 @@ import com.techcubing.proto.wcif.WcifPerson;
 import com.techcubing.proto.wcif.WcifRound;
 
 public class ServerStateInitializer {
-  public static ServerState createServerState() throws IOException, SQLException {
+  public static ServerState createServerState(CommandLineFlags flags)
+      throws IOException, SQLException {
     AndroidDebugBridge.init(false);
 
     return new ServerState()
-      .setWcaEnvironment(ServerState.WcaEnvironment.PROD)
+      .setWcaEnvironment(flags.wca)
       .setTemplateConfig(getTemplateConfig())
       .setMysqlConnection(new MysqlConnection())
       .setPort(8118)
