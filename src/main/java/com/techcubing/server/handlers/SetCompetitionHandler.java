@@ -6,9 +6,10 @@ import java.net.URI;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.server.framework.ScorecardGenerator;
 import com.techcubing.server.framework.ServerState;
-import com.techcubing.server.framework.ProtoDb;
+import com.techcubing.server.util.WcifUtil;
 import com.techcubing.proto.wcif.WcifCompetition;
 
 public class SetCompetitionHandler extends BaseHandler {
@@ -30,6 +31,9 @@ public class SetCompetitionHandler extends BaseHandler {
 
     WcifCompetition.Builder competitionBuilder = WcifCompetition.newBuilder();
     JsonFormat.parser().ignoringUnknownFields().merge(response.toString(), competitionBuilder);
+    // Add some fields that aren't present in WCIF.
+    WcifUtil.addExtraInfo(competitionBuilder);
+
     ProtoDb.recursivelyWrite(competitionBuilder.build(), serverState);
 
     ScorecardGenerator.generateScorecards(serverState);

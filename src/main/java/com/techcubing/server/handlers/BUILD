@@ -52,6 +52,7 @@ java_library(
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ScorecardGenerator",
         "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/java/com/techcubing/server/util:WcifUtil",
         "@com_google_protobuf//:protobuf_java_util",
         "@com_googlecode_json_simple_json_simple//jar",
     ],
