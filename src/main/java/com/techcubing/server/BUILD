@@ -4,6 +4,7 @@ java_binary(
     main_class = "com.techcubing.server.Main",
     runtime_deps = [
         "@io_grpc_grpc_java//netty",
+        "@org_javassist_javassist//jar",
         "@org_glassfish_jersey_core_jersey_common//jar",
     ],
     deps = [
