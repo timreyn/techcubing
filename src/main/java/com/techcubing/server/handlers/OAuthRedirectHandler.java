@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.techcubing.server.framework.ServerState;
 
+@Handler(path = "/oauth_redirect")
 public class OAuthRedirectHandler extends BaseHandler {
   public OAuthRedirectHandler(ServerState serverState) {
     super(serverState);

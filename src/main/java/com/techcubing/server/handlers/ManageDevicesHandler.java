@@ -15,6 +15,7 @@ import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.DeviceTypeProto.DeviceType;
 
+@Handler(path = "/manage_devices")
 public class ManageDevicesHandler extends BaseHandler {
   public ManageDevicesHandler(ServerState serverState) {
     super(serverState);

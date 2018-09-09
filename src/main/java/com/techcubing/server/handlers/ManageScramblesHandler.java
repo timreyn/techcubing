@@ -5,6 +5,7 @@ import com.techcubing.server.framework.ServerState;
 import java.util.HashMap;
 import java.util.Map;
 
+@Handler(path = "/manage_scrambles")
 public class ManageScramblesHandler extends BaseHandler {
   public ManageScramblesHandler(ServerState serverState) {
     super(serverState);

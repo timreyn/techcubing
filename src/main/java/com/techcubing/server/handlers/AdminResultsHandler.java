@@ -17,6 +17,7 @@ import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.server.util.ProtoUtil;
 
+@Handler(path = "/admin_results")
 public class AdminResultsHandler extends BaseHandler {
   public AdminResultsHandler(ServerState serverState) {
     super(serverState);

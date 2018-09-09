@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.techcubing.server.framework.ServerState;
 
+@Handler(path = "/")
 public class IndexHandler extends BaseHandler {
   public IndexHandler(ServerState serverState) {
     super(serverState);

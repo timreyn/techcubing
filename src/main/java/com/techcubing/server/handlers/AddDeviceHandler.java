@@ -24,6 +24,7 @@ import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.DeviceTypeProto.DeviceType;
 import com.techcubing.server.util.ProtoUtil;
 
+@Handler(path = "/add_device")
 public class AddDeviceHandler extends BaseHandler {
   public AddDeviceHandler(ServerState serverState) {
     super(serverState);

@@ -8,6 +8,7 @@ import org.json.simple.JSONArray;
 
 import com.techcubing.server.framework.ServerState;
 
+@Handler(path = "/competitions")
 public class CompetitionsHandler extends BaseHandler {
   public CompetitionsHandler(ServerState serverState) {
     super(serverState);

@@ -29,6 +29,8 @@ java_library(
         "@commons_fileupload_commons_fileupload//jar",
         "@commons_io_commons_io//jar",
         "@javax_javaee_web_api//jar",
+        "@org_javassist_javassist//jar",
         "@org_freemarker_freemarker//jar",
+        "@org_reflections_reflections//jar",
     ],
 )

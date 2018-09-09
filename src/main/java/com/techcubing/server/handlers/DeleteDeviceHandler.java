@@ -10,6 +10,7 @@ import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.server.util.ProtoUtil;
 
+@Handler(path = "/delete_device")
 public class DeleteDeviceHandler extends BaseHandler {
   public DeleteDeviceHandler(ServerState serverState) {
     super(serverState);

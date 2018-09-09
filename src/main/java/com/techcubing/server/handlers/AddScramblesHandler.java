@@ -25,6 +25,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+@Handler(path = "/add_scrambles")
 public class AddScramblesHandler extends BaseHandler {
   public AddScramblesHandler(ServerState serverState) {
     super(serverState);

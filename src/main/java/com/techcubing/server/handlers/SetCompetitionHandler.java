@@ -12,6 +12,7 @@ import com.techcubing.server.framework.ServerState;
 import com.techcubing.server.util.WcifUtil;
 import com.techcubing.proto.wcif.WcifCompetition;
 
+@Handler(path = "/set_competition")
 public class SetCompetitionHandler extends BaseHandler {
   public SetCompetitionHandler(ServerState serverState) {
     super(serverState);

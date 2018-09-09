@@ -75,6 +75,20 @@ maven_jar(
     sha1_src = "2566800dc841d9d2c5a0d34d807e45d4107dbbdf",
 )
 
+maven_jar(
+    name = "org_reflections_reflections",
+    artifact = "org.reflections:reflections:0.9.10",
+    sha1 = "c7f4ea230aedc757ca1499ebcfb2953c81cf8b67",
+    sha1_src = "606b8587dab0bf1776b896003f2a2fa0470bb105",
+)
+
+maven_jar(
+    name = "org_javassist_javassist",
+    artifact = "org.javassist:javassist:3.23.1-GA",
+    sha1 = "c072c13dcb7f705471c40bafb1536171df850ab2",
+    sha1_src = "cfdfb9f2777db7f7f148faa9c6b74c87b5c735d5",
+)
+
 # Install buildifier.
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
