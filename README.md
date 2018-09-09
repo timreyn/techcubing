@@ -28,20 +28,14 @@ $ sudo apt install openjdk-8-jdk
 
 ```sh
 $ bazel build src/main/java/com/techcubing/server:main
-$ bazel-bin/src/main/java/com/techcubing/server/main
+$ bazel-bin/src/main/java/com/techcubing/server/main --dev
 ```
 
 6. Visit https://localhost:8118/ in your browser, and select a competition.
 
-Note that only competitions starting one month in the past, and delegated or organized by you, will appear.  If you would like to set up another competition, you can visit <https://localhost:8118/set_competition?id=COMPETITION_ID>.
+Note that only competitions starting one month in the past, and delegated or organized by you, will appear.  If you would like to switch competitions, you can visit <https://localhost:8118/set_competition?id=COMPETITION_ID>.
 
-If you do not have any competitions that you've organized or delegated, you can switch to the Staging WCA website by editing
-
-```
-src/main/java/com/techcubing/server/framework/ServerStateInitializer.java
-```
-
-and changing `WcaEnvironment.PROD` to `WcaEnvironment.STAGING`.
+You can also add the flag `--wca=staging` to use the Staging WCA website.
 
 ## Instructions to run the app
 
