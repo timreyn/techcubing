@@ -2,11 +2,9 @@ package com.techcubing.android.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,10 +18,7 @@ import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 public class ScrambleCheckActivity extends AppCompatActivity {
@@ -34,123 +29,19 @@ public class ScrambleCheckActivity extends AppCompatActivity {
     private final Semaphore cameraCloseSemaphore = new Semaphore(1, true);
 
     private Puzzle puzzle;
-    private Map<Character, Integer> colorsRead;
-    private String[] expectedColors;
-    private int facesRead;
     private TextView nextFaceInstructions;
     private Handler handler;
 
-    private int distance(int colorA, int colorB) {
-        int redDifference = Color.red(colorA) - Color.red(colorB);
-        int greenDifference = Color.green(colorA) - Color.green(colorB);
-        int blueDifference = Color.blue(colorA) - Color.blue(colorB);
-
-        return redDifference * redDifference +
-                greenDifference * greenDifference +
-                blueDifference * blueDifference;
-
-    }
-
     // For clustering pixels on the same sticker.
     private boolean colorsMatchStrict(int colorA, int colorB) {
-        return distance(colorA, colorB) < 800;
-    }
-
-    // For clustering pixels on different stickers.
-    private boolean colorsMatchLenient(int colorA, int colorB) {
-        return distance(colorA, colorB) < 1600;
-    }
-
-    private String toString(int color) {
-        if (color == -1) {
-            return "n/a";
-        } else {
-            return String.format("#%06X", (0xFFFFFF & color));
-        }
-    }
-
-    private String toString(int[] colors) {
-        String[] colorHexCodes = new String[colors.length];
-
-        for (int i = 0; i < colors.length; i++) {
-            colorHexCodes[i] = "\"" + toString(colors[i]) + "\"";
-        }
-        return Arrays.toString(colorHexCodes);
-    }
-
-    private String toString(List<Integer> colors) {
-        String[] colorHexCodes = new String[colors.size()];
-
-        for (int i = 0; i < colors.size(); i++) {
-            colorHexCodes[i] = "\"" + toString(colors.get(i)) + "\"";
-        }
-        return Arrays.toString(colorHexCodes);
+        return puzzle.distance(colorA, colorB) < 800;
     }
 
     private void checkFace(int[] colorsOnSide) {
-        boolean success = true;
-        int missedColors = 0;
-        Map<Character, Integer> colorsReadWorking = new HashMap<>(colorsRead);
-        Log.i(TAG, "checkFace:");
-        Log.i(TAG, "actual = " + toString(colorsOnSide));
-        String[] expectedColorsHex = new String[puzzle.stickersPerSide()];
-        for (int i = 0; i < puzzle.stickersPerSide(); i++) {
-            char expectedColorCode = expectedColors[facesRead].charAt(i);
-            if (colorsReadWorking.containsKey(expectedColorCode)) {
-                expectedColorsHex[i] =
-                        String.format("\"#%06X\"", (0xFFFFFF & colorsReadWorking.get(expectedColorCode)));
-            } else {
-                expectedColorsHex[i] = "\"n/a\"";
-            }
-        }
-        Log.i(TAG, "expected = " + Arrays.toString(expectedColorsHex));
-        Log.i(TAG, "colorCodes = \"" + expectedColors[facesRead] + "\"");
-
-        for (int stickerNumber = 0; stickerNumber < colorsOnSide.length; stickerNumber++) {
-            char expectedColorCode = expectedColors[facesRead].charAt(stickerNumber);
-            int colorRead = colorsOnSide[stickerNumber];
-            if (colorRead == -1) {
-                missedColors += 1;
-                continue;
-            }
-
-            if (colorsReadWorking.containsKey(expectedColorCode)) {
-                for (char colorCode : colorsReadWorking.keySet()) {
-                    if (distance(colorsReadWorking.get(colorCode), colorRead) <
-                            distance(colorsReadWorking.get(expectedColorCode), colorRead)) {
-                        success = false;
-                        Log.i(TAG, "Sticker " + stickerNumber + " closer to " + colorCode + " than " + expectedColorCode);
-                        break;
-                    }
-                }
-            } else {
-                for (char colorCode : colorsReadWorking.keySet()) {
-                    int expectedColor = colorsReadWorking.get(colorCode);
-                    if (colorsMatchLenient(expectedColor, colorRead)) {
-                        Log.i(TAG, "Sticker " + stickerNumber + " matched with color " + colorCode + ", distance " + distance(colorRead, expectedColor));
-                        success = false;
-                        break;
-                    }
-                }
-            }
-            if (!success) {
-                break;
-            }
-            colorsReadWorking.put(expectedColorCode, colorRead);
-        }
-        // We allow one missed color per side (i.e. one color that we couldn't clearly tell what
-        // it was) because logos don't have a single color.
-        if (missedColors > 1) {
-            success = false;
-        }
-        if (success) {
-            colorsRead = colorsReadWorking;
-            Log.i(TAG, colorsRead.toString());
-            facesRead++;
-            if (facesRead < puzzle.sides()) {
+        if (puzzle.checkSide(colorsOnSide)) {
+            if (puzzle.hasMoreSides()) {
                 runOnUiThread(() -> {
-                    nextFaceInstructions.setText(
-                            puzzle.nextSideInstruction(facesRead - 1));
+                    nextFaceInstructions.setText(puzzle.nextSideInstruction());
                     nextFaceInstructions.setVisibility(View.VISIBLE);
                 });
                 handler.postDelayed(() -> {
@@ -235,12 +126,6 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                             break;
                         }
                     }
-                    if (colors[sticker] == -1) {
-                        Log.i(TAG, "Failed to cluster sticker " + sticker);
-                        for (List<Integer> cluster : clusteredStickerColors) {
-                            Log.i(TAG, "cluster " + toString(cluster.get(0)) + " size " + cluster.size());
-                        }
-                    }
                 }
 
                 checkFace(colors);
@@ -263,10 +148,8 @@ public class ScrambleCheckActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.scramble_check_camera);
 
         handler = new Handler();
-        colorsRead = new HashMap<>();
-        expectedColors = getIntent().getStringExtra(EXTRA_SCRAMBLE_STATE).split("\\|");
-        Log.i(TAG, Arrays.toString(expectedColors));
-        facesRead = 0;
+        puzzle.setScrambleState(
+                getIntent().getStringExtra(EXTRA_SCRAMBLE_STATE).split("\\|"));
         nextFaceInstructions = findViewById(R.id.scramble_check_next_face_instructions);
     }
 

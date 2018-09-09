@@ -18,8 +18,8 @@ class CubePuzzle extends Puzzle {
     }
 
     @Override
-    public String nextSideInstruction(int sideJustRead) {
-        if (sideJustRead == 2) {
+    public String nextSideInstruction() {
+        if (sidesChecked == 3) {
             return "Do a z rotation";
         }
         return "Do an x rotation";
