@@ -3,140 +3,32 @@ package(
 )
 
 java_library(
-    name = "BaseHandler",
-    srcs = ["BaseHandler.java"],
+    name = "handlers",
+    srcs = glob(["*.java"]),
     deps = [
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-        "//src/main/java/com/techcubing/server/util:OAuth",
-        "//src/main/java/com/techcubing/server/util:QueryParser",
-        "@com_googlecode_json_simple_json_simple//jar",
-        "@javax_javaee_web_api//jar",
-        "@org_freemarker_freemarker//jar",
-    ],
-)
-
-java_library(
-    name = "IndexHandler",
-    srcs = ["IndexHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-    ],
-)
-
-java_library(
-    name = "OAuthRedirectHandler",
-    srcs = ["OAuthRedirectHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-    ],
-)
-
-java_library(
-    name = "CompetitionsHandler",
-    srcs = ["CompetitionsHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-        "@com_googlecode_json_simple_json_simple//jar",
-    ],
-)
-
-java_library(
-    name = "SetCompetitionHandler",
-    srcs = ["SetCompetitionHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/proto/wcif:competition_java_proto",
-        "//src/main/java/com/techcubing/server/framework:ProtoDb",
-        "//src/main/java/com/techcubing/server/framework:ScorecardGenerator",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-        "//src/main/java/com/techcubing/server/util:WcifUtil",
-        "@com_google_protobuf//:protobuf_java_util",
-        "@com_googlecode_json_simple_json_simple//jar",
-    ],
-)
-
-java_library(
-    name = "ManageDevicesHandler",
-    srcs = ["ManageDevicesHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/proto:device_java_proto",
-        "//src/main/proto:device_type_java_proto",
-        "//src/main/java/com/techcubing/server/framework:ProtoDb",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-        "@com_android_tools_ddms_ddmlib//jar",
-        "@com_google_protobuf//:protobuf_java",
-    ],
-)
-
-java_library(
-    name = "AddDeviceHandler",
-    srcs = ["AddDeviceHandler.java"],
-    deps = [
-        ":BaseHandler",
         "//src/main/proto:device_config_java_proto",
         "//src/main/proto:device_java_proto",
         "//src/main/proto:device_type_java_proto",
-        "//src/main/java/com/techcubing/server/framework:ProtoDb",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-        "//src/main/java/com/techcubing/server/util:ProtoUtil",
-        "@com_android_tools_ddms_ddmlib//jar",
-        "@com_google_protobuf//:protobuf_java",
-    ],
-)
-
-java_library(
-    name = "DeleteDeviceHandler",
-    srcs = ["DeleteDeviceHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/proto:device_java_proto",
-        "//src/main/java/com/techcubing/server/framework:ProtoDb",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-        "//src/main/java/com/techcubing/server/util:ProtoUtil",
-        "@com_google_protobuf//:protobuf_java",
-    ],
-)
-
-java_library(
-    name = "ManageScramblesHandler",
-    srcs = ["ManageScramblesHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-    ],
-)
-
-java_library(
-    name = "AddScramblesHandler",
-    srcs = ["AddScramblesHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/proto:scramble_java_proto",
-        "//src/main/java/com/techcubing/server/framework:ProtoDb",
-        "//src/main/java/com/techcubing/server/framework:ServerState",
-        "@com_googlecode_json_simple_json_simple//jar",
-        "@commons_fileupload_commons_fileupload//jar",
-        "@commons_io_commons_io//jar",
-    ],
-)
-
-java_library(
-    name = "AdminResultsHandler",
-    srcs = ["AdminResultsHandler.java"],
-    deps = [
-        ":BaseHandler",
-        "//src/main/proto:device_java_proto",
         "//src/main/proto:scorecard_java_proto",
+        "//src/main/proto:scramble_java_proto",
+        "//src/main/proto/wcif:competition_java_proto",
         "//src/main/proto/wcif:event_java_proto",
         "//src/main/proto/wcif:person_java_proto",
         "//src/main/proto/wcif:round_java_proto",
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
+        "//src/main/java/com/techcubing/server/framework:ScorecardGenerator",
         "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/java/com/techcubing/server/util:OAuth",
         "//src/main/java/com/techcubing/server/util:ProtoUtil",
+        "//src/main/java/com/techcubing/server/util:QueryParser",
+        "//src/main/java/com/techcubing/server/util:WcifUtil",
+        "@com_android_tools_ddms_ddmlib//jar",
+        "@com_googlecode_json_simple_json_simple//jar",
         "@com_google_protobuf//:protobuf_java",
+        "@com_google_protobuf//:protobuf_java_util",
+        "@commons_fileupload_commons_fileupload//jar",
+        "@commons_io_commons_io//jar",
+        "@javax_javaee_web_api//jar",
+        "@org_freemarker_freemarker//jar",
     ],
 )

@@ -8,16 +8,7 @@ import java.net.InetSocketAddress;
 
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.server.framework.ServerStateInitializer;
-import com.techcubing.server.handlers.AddDeviceHandler;
-import com.techcubing.server.handlers.AddScramblesHandler;
-import com.techcubing.server.handlers.CompetitionsHandler;
-import com.techcubing.server.handlers.DeleteDeviceHandler;
-import com.techcubing.server.handlers.IndexHandler;
-import com.techcubing.server.handlers.ManageDevicesHandler;
-import com.techcubing.server.handlers.ManageScramblesHandler;
-import com.techcubing.server.handlers.OAuthRedirectHandler;
-import com.techcubing.server.handlers.AdminResultsHandler;
-import com.techcubing.server.handlers.SetCompetitionHandler;
+import com.techcubing.server.handlers.Handlers;
 import com.techcubing.server.services.TechCubingServiceImpl;
 
 public class Main {
@@ -27,17 +18,7 @@ public class Main {
 
       HttpServer server = HttpServer.create(
           new InetSocketAddress(serverState.getPort()), 50);
-
-      server.createContext("/", new IndexHandler(serverState));
-      server.createContext("/oauth_redirect", new OAuthRedirectHandler(serverState));
-      server.createContext("/competitions", new CompetitionsHandler(serverState));
-      server.createContext("/set_competition", new SetCompetitionHandler(serverState));
-      server.createContext("/manage_devices", new ManageDevicesHandler(serverState));
-      server.createContext("/add_device", new AddDeviceHandler(serverState));
-      server.createContext("/delete_device", new DeleteDeviceHandler(serverState));
-      server.createContext("/manage_scrambles", new ManageScramblesHandler(serverState));
-      server.createContext("/add_scrambles", new AddScramblesHandler(serverState));
-      server.createContext("/admin_results", new AdminResultsHandler(serverState));
+      Handlers.registerHandlers(server, serverState);
       server.start();
       System.out.println("TechCubing is running!");
       System.out.println("Visit http://localhost:8118 in a browser to get started.");
