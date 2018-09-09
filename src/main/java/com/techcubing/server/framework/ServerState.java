@@ -16,7 +16,7 @@ public class ServerState {
   private String competitionId;
   private AndroidDebugBridge androidDebugBridge;
 
-  public ServerState setTemplateConfig(Configuration templateConfig) {
+  ServerState setTemplateConfig(Configuration templateConfig) {
     this.templateConfig = templateConfig;
     return this;
   }
@@ -25,7 +25,7 @@ public class ServerState {
     return templateConfig;
   }
 
-  public ServerState setPort(int port) {
+  ServerState setPort(int port) {
     this.port = port;
     return this;
   }
@@ -34,7 +34,7 @@ public class ServerState {
     return port;
   }
 
-  public ServerState setGrpcPort(int port) {
+  ServerState setGrpcPort(int port) {
     this.grpcPort = port;
     return this;
   }
@@ -43,7 +43,7 @@ public class ServerState {
     return grpcPort;
   }
 
-  public ServerState setMysqlConnection(MysqlConnection connection) {
+  ServerState setMysqlConnection(MysqlConnection connection) {
     this.mysqlConnection = connection;
     return this;
   }
@@ -56,7 +56,7 @@ public class ServerState {
     PROD, STAGING, DEV
   }
 
-  public ServerState setWcaEnvironment(WcaEnvironment wcaEnvironment) {
+  ServerState setWcaEnvironment(WcaEnvironment wcaEnvironment) {
     this.wcaEnvironment = wcaEnvironment;
     return this;
   }
@@ -104,7 +104,7 @@ public class ServerState {
     }
   }
 
-  public ServerState setProtoRegistry(ProtoRegistry protoRegistry) {
+  ServerState setProtoRegistry(ProtoRegistry protoRegistry) {
     this.protoRegistry = protoRegistry;
     return this;
   }
@@ -113,7 +113,7 @@ public class ServerState {
     return protoRegistry;
   }
 
-  public ServerState setCompetitionId(String competitionId) {
+  ServerState setCompetitionId(String competitionId) {
     this.competitionId = competitionId;
     return this;
   }
@@ -122,7 +122,7 @@ public class ServerState {
     return competitionId;
   }
 
-  public ServerState setAndroidDebugBridge(AndroidDebugBridge androidDebugBridge) {
+  ServerState setAndroidDebugBridge(AndroidDebugBridge androidDebugBridge) {
     this.androidDebugBridge = androidDebugBridge;
     return this;
   }
