@@ -11,6 +11,7 @@
       padding: 5px;
     }
   </style>
+  <script type="application/javascript" src="/static/external/qrcodejs/qrcode.min.js"></script>
 </head>
 <body>
   <h1>${person.name} ${event.eventName} Round ${round.roundNumber}</h1>
@@ -62,9 +63,18 @@
       </tr>
     </#list>
   </table>
-  <p></p>
-  <div>
+  <p>
+    <div class="qrcode" data-value="${qrCodeValue}"></div>
+  </p>
+  <p>
     <a href="/admin_results?r=${round.id}">All results for ${event.eventName} Round ${round.roundNumber}</a>
-  </div>
+  </p>
+  <script type="application/javascript">
+    Array.prototype.forEach.call(
+      document.getElementsByClassName("qrcode"),
+      function(elt) {
+        new QRCode(elt, elt.dataset.value);
+      });
+  </script>
 </body>
 </html>
