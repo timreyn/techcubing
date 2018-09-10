@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.techcubing.android.R;
@@ -91,7 +93,7 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                 int[][] pixelsGrid = new int[croppedImageSize][croppedImageSize];
 
                 for (int row = 0; row < croppedImageSize; row++) {
-                    System.arraycopy(pixels, fullImageSize * (row + imagePadding) + imagePadding,
+                    System.arraycopy(pixels, bitmap.getWidth() * (row + imagePadding) + imagePadding,
                             pixelsGrid[row], 0, croppedImageSize);
                 }
 
@@ -119,7 +121,7 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                     }
                     // Check if any of the clusters have more than half of the pixels.  If so,
                     // we'll call that the color for this side.
-                    colors[sticker] = -1;
+                    colors[sticker] = 0;
                     for (List<Integer> cluster : clusteredStickerColors) {
                         if (cluster.size() > pixelsToRead[sticker].length / 2) {
                             colors[sticker] = cluster.get(0);
@@ -135,6 +137,10 @@ public class ScrambleCheckActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scramble_check);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
 
         WcifEvent event = ActiveState.getActive(ActiveState.EVENT, this);
         if (event == null) {
@@ -151,6 +157,20 @@ public class ScrambleCheckActivity extends AppCompatActivity {
         puzzle.setScrambleState(
                 getIntent().getStringExtra(EXTRA_SCRAMBLE_STATE).split("\\|"));
         nextFaceInstructions = findViewById(R.id.scramble_check_next_face_instructions);
+
+        LinearLayout diagramContainer = findViewById(R.id.scramble_check_diagram_container);
+
+        LinearLayout.LayoutParams layoutParams =
+                new LinearLayout.LayoutParams(
+                        0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+
+        View actualView = puzzle.getActualView(this);
+        actualView.setLayoutParams(layoutParams);
+        diagramContainer.addView(actualView);
+
+        View expectedView = puzzle.getExpectedView(this);
+        expectedView.setLayoutParams(layoutParams);
+        diagramContainer.addView(expectedView);
     }
 
     @Override

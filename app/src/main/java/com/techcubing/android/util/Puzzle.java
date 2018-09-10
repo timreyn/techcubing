@@ -1,6 +1,8 @@
 package com.techcubing.android.util;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.view.View;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -75,10 +77,19 @@ public abstract class Puzzle {
         Set<Integer> missedStickers = new HashSet<>();
         Set<Integer> unidentifiedStickers = new HashSet<>();
 
+        int[] expectedColors = new int[stickersPerSide()];
+
         for (int stickerNumber = 0; stickerNumber < colors.length; stickerNumber++) {
             char expectedColorCode = scrambleState[sidesChecked].charAt(stickerNumber);
             int colorRead = colors[stickerNumber];
-            if (colorRead == -1) {
+
+            if (identifiedColors.containsKey(expectedColorCode)) {
+                expectedColors[stickerNumber] = identifiedColors.get(expectedColorCode);
+            } else {
+                expectedColors[stickerNumber] = getDefaultColor(expectedColorCode);
+            }
+
+            if (colorRead == 0) {
                 unidentifiedStickers.add(stickerNumber);
                 continue;
             }
@@ -113,6 +124,7 @@ public abstract class Puzzle {
             sidesChecked++;
             identifiedColors = identifiedColorsWorking;
         }
+        displayColors(expectedColors, colors, missedStickers, unidentifiedStickers);
 
         return success;
     }
@@ -120,4 +132,16 @@ public abstract class Puzzle {
     public void setScrambleState(String[] colorsPerSide) {
         this.scrambleState = colorsPerSide;
     }
+
+    // Diagrams that show the state of the scramble versus what's expected.
+    public abstract View getExpectedView(Context context);
+    public abstract View getActualView(Context context);
+
+    // Update the expected and actual view with newly-read colors.
+    protected abstract void displayColors(
+            int[] expectedColors, int[] actualColors, Set<Integer> missedStickers,
+            Set<Integer> unidentifiedStickers);
+
+    // Get the color that should be shown the first time we see a particular color.
+    protected abstract int getDefaultColor(char colorCode);
 }
