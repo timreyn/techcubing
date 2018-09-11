@@ -159,12 +159,11 @@ class CubePuzzle extends Puzzle {
                 rectangles.add(getBounds(i, squareSize, topOffset, leftOffset));
                 Paint paint = new Paint();
                 paint.setStyle(Paint.Style.FILL);
-                paint.setColor(colors[i]);/*
                 if (colors[i] == Puzzle.UNIDENTIFIED_COLOR) {
                     paint.setAlpha(0);
                 } else {
                     paint.setColor(colors[i]);
-                }*/
+                }
                 paints.add(paint);
             }
             invalidate();
