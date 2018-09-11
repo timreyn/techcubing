@@ -38,6 +38,24 @@
                 android:src="@drawable/scramble_check_square_guide"/>
         </android.support.constraint.ConstraintLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="invisible"
+                android:layout_weight="0.8"/>
+            <LinearLayout
+                android:id="@+id/scramble_check_diagram_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="horizontal"/>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/scramble_check_next_face_instructions"
             android:layout_width="match_parent"
