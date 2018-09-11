@@ -121,7 +121,7 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                     }
                     // Check if any of the clusters have more than half of the pixels.  If so,
                     // we'll call that the color for this side.
-                    colors[sticker] = 0;
+                    colors[sticker] = Puzzle.UNIDENTIFIED_COLOR;
                     for (List<Integer> cluster : clusteredStickerColors) {
                         if (cluster.size() > pixelsToRead[sticker].length / 2) {
                             colors[sticker] = cluster.get(0);

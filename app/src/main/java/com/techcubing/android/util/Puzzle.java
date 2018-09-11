@@ -4,15 +4,19 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class Puzzle {
     protected String[] scrambleState;
-    protected Map<Character, Integer> identifiedColors;
+    protected Map<Character, List<Integer>> identifiedColors;
     protected int sidesChecked;
+
+    public static final int UNIDENTIFIED_COLOR = 0xffffff00;
 
     Puzzle() {
         sidesChecked = 0;
@@ -72,7 +76,7 @@ public abstract class Puzzle {
     }
 
     public boolean checkSide(int[] colors) {
-        Map<Character, Integer> identifiedColorsWorking = new HashMap<>(identifiedColors);
+        Map<Character, List<Integer>> identifiedColorsWorking = new HashMap<>(identifiedColors);
 
         Set<Integer> missedStickers = new HashSet<>();
         Set<Integer> unidentifiedStickers = new HashSet<>();
@@ -84,40 +88,44 @@ public abstract class Puzzle {
             int colorRead = colors[stickerNumber];
 
             if (identifiedColors.containsKey(expectedColorCode)) {
-                expectedColors[stickerNumber] = identifiedColors.get(expectedColorCode);
+                expectedColors[stickerNumber] = identifiedColors.get(expectedColorCode).get(0);
             } else {
                 expectedColors[stickerNumber] = getDefaultColor(expectedColorCode);
             }
 
-            if (colorRead == 0) {
+            if (colorRead == UNIDENTIFIED_COLOR) {
                 unidentifiedStickers.add(stickerNumber);
                 continue;
             }
 
-            if (identifiedColorsWorking.containsKey(expectedColorCode)) {
-                for (char colorCode : identifiedColorsWorking.keySet()) {
-                    if (distance(identifiedColorsWorking.get(colorCode), colorRead) <
-                            distance(identifiedColorsWorking.get(expectedColorCode), colorRead)) {
-                        missedStickers.add(stickerNumber);
-                        break;
-                    }
-                }
-            } else {
-                for (char colorCode : identifiedColorsWorking.keySet()) {
-                    int expectedColor = identifiedColorsWorking.get(colorCode);
-                    if (distance(expectedColor, colorRead) < 1600) {
-                        missedStickers.add(stickerNumber);
-                        break;
+            Integer nearestDistance = null;
+            Character nearestColorCode = 0;
+            for (char colorCode : identifiedColorsWorking.keySet()) {
+                for (int color : identifiedColorsWorking.get(colorCode)) {
+                    int distance = distance(color, colorRead);
+                    if (nearestDistance == null || distance < nearestDistance) {
+                        nearestColorCode = colorCode;
+                        nearestDistance = distance;
                     }
                 }
             }
-            if (!missedStickers.contains(stickerNumber)) {
-                identifiedColorsWorking.put(expectedColorCode, colorRead);
+            if (identifiedColorsWorking.containsKey(expectedColorCode)) {
+                if (nearestColorCode != expectedColorCode) {
+                    missedStickers.add(stickerNumber);
+                } else {
+                    identifiedColorsWorking.get(expectedColorCode).add(colorRead);
+                }
+            } else {
+                if (nearestDistance != null && nearestDistance < 1600) {
+                    missedStickers.add(stickerNumber);
+                } else {
+                    identifiedColorsWorking.put(expectedColorCode, new ArrayList<>());
+                    identifiedColorsWorking.get(expectedColorCode).add(colorRead);
+                }
             }
         }
 
-        // We allow one missed color per side (i.e. one color that we couldn't clearly tell what
-        // it was) because logos don't have a single color.
+        // We allow one unidentified color per side because logos don't have a single color.
         boolean success = missedStickers.isEmpty() && unidentifiedStickers.size() <= 1;
 
         if (success) {

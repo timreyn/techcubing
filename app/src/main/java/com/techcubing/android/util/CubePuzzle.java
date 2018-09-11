@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,9 +58,9 @@ class CubePuzzle extends Puzzle {
         // We check a 5x5 square of pixels within each sticker.
         final int pixelsPerSquare = 5;
 
-        // We crop each sticker by 35% on each side to make sure we're reading the middle of the
+        // We crop each sticker by 25% on each side to make sure we're reading the middle of the
         // sticker.
-        final double cropAmount = 0.35;
+        final double cropAmount = 0.25;
         final int cropPixels = (int) ((imageDimen / dimen) * cropAmount);
 
         int[][][] pixelsToRead = new int[dimen * dimen][pixelsPerSquare * pixelsPerSquare][2];
@@ -122,26 +123,32 @@ class CubePuzzle extends Puzzle {
     protected void displayColors(
             int[] expectedColors, int[] actualColors, Set<Integer> missedStickers,
             Set<Integer> unidentifiedStickers) {
-        expectedView.setColors(expectedColors, missedStickers, unidentifiedStickers);
-        actualView.setColors(actualColors, missedStickers, unidentifiedStickers);
+        Set<Integer> allMissedStickers = new HashSet<>(missedStickers);
+        for (int sticker : unidentifiedStickers) {
+            allMissedStickers.add(sticker);
+        }
+        expectedView.setColors(expectedColors, allMissedStickers);
+        actualView.setColors(actualColors, allMissedStickers);
     }
 
     private class CubePuzzleView extends View {
         private List<Rect> rectangles;
         private List<Paint> paints;
         private Paint edgePaint;
+        private Set<Integer> missedStickers;
 
         CubePuzzleView(Context context) {
             super(context);
             edgePaint = new Paint();
             edgePaint.setStyle(Paint.Style.STROKE);
             edgePaint.setColor(Color.BLACK);
+            edgePaint.setStrokeWidth(5);
         }
 
-        void setColors(
-                int[] colors, Set<Integer> missedStickers, Set<Integer> unidentifiedStickers) {
+        void setColors(int[] colors, Set<Integer> missedStickers) {
             rectangles = new ArrayList<>();
             paints = new ArrayList<>();
+            this.missedStickers = missedStickers;
             int height = getMeasuredHeight();
             int width = getMeasuredWidth();
 
@@ -152,11 +159,12 @@ class CubePuzzle extends Puzzle {
                 rectangles.add(getBounds(i, squareSize, topOffset, leftOffset));
                 Paint paint = new Paint();
                 paint.setStyle(Paint.Style.FILL);
-                if (colors[i] == 0) {
+                paint.setColor(colors[i]);/*
+                if (colors[i] == Puzzle.UNIDENTIFIED_COLOR) {
                     paint.setAlpha(0);
                 } else {
                     paint.setColor(colors[i]);
-                }
+                }*/
                 paints.add(paint);
             }
             invalidate();
@@ -172,6 +180,11 @@ class CubePuzzle extends Puzzle {
                 Paint paint = paints.get(i);
                 canvas.drawRect(rectangle, paint);
                 canvas.drawRect(rectangle, edgePaint);
+            }
+            for (int missedSticker : missedStickers) {
+                Rect missed = rectangles.get(missedSticker);
+                canvas.drawLine(missed.left, missed.top, missed.right, missed.bottom, edgePaint);
+                canvas.drawLine(missed.right, missed.top, missed.left, missed.bottom, edgePaint);
             }
         }
     }
