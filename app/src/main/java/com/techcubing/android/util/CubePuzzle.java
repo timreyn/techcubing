@@ -3,8 +3,6 @@ package com.techcubing.android.util;
 import android.graphics.Color;
 import android.graphics.Point;
 
-import com.techcubing.android.R;
-
 class CubePuzzle extends Puzzle {
     private static final String TAG = "TCCubePuzzle";
     private final int dimen;
@@ -33,14 +31,14 @@ class CubePuzzle extends Puzzle {
 
     @Override
     protected Point[] getBoundsForSticker(
-            int stickerNum, int imageDimen, int leftOffset, int topOffset) {
+            int stickerNum, int imageWidth, int leftOffset, int topOffset) {
         int col = stickerNum % dimen;
         int row = stickerNum / dimen;
 
-        int topBound = imageDimen / dimen * (dimen - row - 1) + topOffset;
-        int leftBound = imageDimen / dimen * col + leftOffset;
-        int rightBound = leftBound + imageDimen / dimen;
-        int bottomBound = topBound + imageDimen / dimen;
+        int topBound = imageWidth / dimen * (dimen - row - 1) + topOffset;
+        int leftBound = imageWidth / dimen * col + leftOffset;
+        int rightBound = leftBound + imageWidth / dimen;
+        int bottomBound = topBound + imageWidth / dimen;
 
         return new Point[]{
                 new Point(leftBound, topBound),

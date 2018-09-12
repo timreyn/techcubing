@@ -92,22 +92,27 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                 int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
                 bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
-                int guideSizePixels = guideView.getMeasuredWidth();
+                int guideWidthPixels = guideView.getMeasuredWidth();
+                int guideHeightPixels = guideView.getMeasuredWidth();
                 int guideMargin =
                         ((LinearLayout.LayoutParams) guideView.getLayoutParams()).topMargin;
 
                 int cameraHeight = cameraView.getMeasuredHeight();
+                int cameraWidth = cameraView.getMeasuredWidth();
 
                 // Transform the location and size of the guide square from preview space to image space.
-                int imagePadding = (guideMargin * bitmap.getHeight()) / cameraHeight;
-                int fullImageSize = (guideSizePixels * bitmap.getHeight()) / cameraHeight;
-                int croppedImageSize = fullImageSize - 2 * imagePadding;
+                int imagePadding = (guideMargin * bitmap.getWidth()) / cameraWidth;
+                int fullImageWidth = (guideWidthPixels * bitmap.getWidth()) / cameraWidth;
+                int fullImageHeight = (guideHeightPixels * bitmap.getHeight()) / cameraHeight;
+                int croppedImageWidth = fullImageWidth - 2 * imagePadding;
+                int croppedImageHeight = fullImageHeight - 2 * imagePadding;
 
-                int[][] pixelsGrid = new int[croppedImageSize][croppedImageSize];
+                int[][] pixelsGrid = new int[croppedImageHeight][croppedImageWidth];
 
-                for (int row = 0; row < croppedImageSize; row++) {
-                    System.arraycopy(pixels, bitmap.getWidth() * (row + imagePadding) + imagePadding,
-                            pixelsGrid[row], 0, croppedImageSize);
+                for (int row = 0; row < croppedImageHeight; row++) {
+                    System.arraycopy(
+                            pixels, bitmap.getWidth() * (row + imagePadding) + imagePadding,
+                            pixelsGrid[row], 0, croppedImageWidth);
                 }
 
                 if (saveImages()) {
@@ -115,7 +120,7 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                 }
 
                 int[] colors = new int[puzzle.stickersPerSide()];
-                int[][][] pixelsToRead = puzzle.pixelsToRead(croppedImageSize);
+                int[][][] pixelsToRead = puzzle.pixelsToRead(croppedImageWidth);
 
                 for (int sticker = 0; sticker < puzzle.stickersPerSide(); sticker++) {
                     // Cluster the colors on this sticker.

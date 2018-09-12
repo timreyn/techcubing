@@ -41,7 +41,7 @@ public abstract class Puzzle {
 
     // Get the bounds of a particular sticker.
     protected abstract Point[] getBoundsForSticker(
-            int stickerNumber, int imageDimen, int leftOffset, int topOffset);
+            int stickerNumber, int imageWidth, int leftOffset, int topOffset);
 
     public abstract int sides();
     public abstract int stickersPerSide();
@@ -161,11 +161,11 @@ public abstract class Puzzle {
     // First dimension: the sticker number.  Must have length equal to stickersPerSide().
     // Second dimension: the pixel number.
     // Third dimension: 0 (x value) or 1 (y value).
-    public int[][][] pixelsToRead(int imageDimen) {
+    public int[][][] pixelsToRead(int imageWidth) {
         int[][][] out = new int[stickersPerSide()][][];
         for (int i = 0; i < stickersPerSide(); i++) {
             List<int[]> pixelsToRead = new ArrayList<>();
-            Point[] boundaryPoints = getBoundsForSticker(i, imageDimen, 0, 0);
+            Point[] boundaryPoints = getBoundsForSticker(i, imageWidth, 0, 0);
             for (int triangleNum = 1; triangleNum < boundaryPoints.length - 1; triangleNum++) {
                 Point pointA = boundaryPoints[0];
                 Point pointB = boundaryPoints[triangleNum];
@@ -278,24 +278,24 @@ public abstract class Puzzle {
 
             int height = getHeight();
             int width = getWidth();
-            int imageDimen = 0;
+            int imageWidth = 0;
             int topOffset = 0;
             int leftOffset = 0;
 
             switch (centerMode) {
                 case CENTER:
-                    imageDimen = (int) (0.8 * min(height, width));
-                    topOffset = (height - imageDimen) / 2;
-                    leftOffset = (width - imageDimen) / 2;
+                    imageWidth = (int) (0.8 * min(height, width));
+                    topOffset = (height - imageWidth) / 2;
+                    leftOffset = (width - imageWidth) / 2;
                     break;
                 case ALIGN_TOP_LEFT:
-                    imageDimen = min(height, width);
+                    imageWidth = min(height, width);
                     topOffset = 0;
                     leftOffset = 0;
                     break;
             }
             for (int i = 0; i < stickersPerSide(); i++) {
-                Point[] points = getBoundsForSticker(i, imageDimen, leftOffset, topOffset);
+                Point[] points = getBoundsForSticker(i, imageWidth, leftOffset, topOffset);
                 if (centerMode == CenterMode.ALIGN_TOP_LEFT) {
                     Log.i(TAG, Arrays.deepToString(points));
                 }

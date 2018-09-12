@@ -3,8 +3,6 @@ package com.techcubing.android.util;
 import android.graphics.Color;
 import android.graphics.Point;
 
-import com.techcubing.android.R;
-
 class SkewbPuzzle extends Puzzle {
     @Override
     public int stickersPerSide() {
@@ -26,13 +24,13 @@ class SkewbPuzzle extends Puzzle {
 
     @Override
     protected Point[] getBoundsForSticker(
-            int stickerNum, int imageDimen, int leftOffset, int topOffset) {
+            int stickerNum, int imageWidth, int leftOffset, int topOffset) {
         int xLeft = leftOffset;
-        int xCenter = leftOffset + imageDimen / 2;
-        int xRight = leftOffset + imageDimen;
+        int xCenter = leftOffset + imageWidth / 2;
+        int xRight = leftOffset + imageWidth;
         int yTop = topOffset;
-        int yCenter = topOffset + imageDimen / 2;
-        int yBottom = topOffset + imageDimen;
+        int yCenter = topOffset + imageWidth / 2;
+        int yBottom = topOffset + imageWidth;
 
         switch (stickerNum) {
             case 0:  // Top-left corner
