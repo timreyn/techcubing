@@ -104,7 +104,7 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                     // Cluster the colors on this sticker.
                     List<List<Integer>> clusteredStickerColors = new ArrayList<>();
                     for (int[] coords : pixelsToRead[sticker]) {
-                        int nextColor = pixelsGrid[coords[0]][coords[1]];
+                        int nextColor = pixelsGrid[coords[1]][coords[0]];
                         boolean added = false;
                         for (List<Integer> cluster : clusteredStickerColors) {
                             if (colorsMatchStrict(nextColor, cluster.get(0))) {

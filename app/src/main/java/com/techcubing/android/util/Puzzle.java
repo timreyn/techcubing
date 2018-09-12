@@ -1,7 +1,11 @@
 package com.techcubing.android.util;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -11,17 +15,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.lang.Math.min;
+
 public abstract class Puzzle {
     protected String[] scrambleState;
     protected Map<Character, List<Integer>> identifiedColors;
     protected int sidesChecked;
+    protected PuzzleView expectedView;
+    protected PuzzleView actualView;
 
-    public static final int UNIDENTIFIED_COLOR = 0xffffff00;
+    private static final String TAG = "TCPuzzle";
+
+    public static final int UNIDENTIFIED_COLOR = 0xdddddd00;
 
     Puzzle() {
         sidesChecked = 0;
         identifiedColors = new HashMap<>();
     }
+
+    // Get the color that should be shown the first time we see a particular color.
+    protected abstract int getDefaultColor(char colorCode);
+
+    // Get the bounds of a particular sticker.
+    protected abstract Point[] getBoundsForSticker(
+            int stickerNumber, int imageDimen, int leftOffset, int topOffset);
+
+    public abstract int sides();
+    public abstract int stickersPerSide();
 
     public boolean hasMoreSides() {
         return sidesChecked < sides();
@@ -51,15 +71,6 @@ public abstract class Puzzle {
                 return null;
         }
     }
-
-    public abstract int sides();
-    public abstract int stickersPerSide();
-
-    // Returns a 3D array.
-    // First dimension: the sticker number.  Must have length equal to stickersPerSide().
-    // Second dimension: the pixel number.
-    // Third dimension: 0 (x value) or 1 (y value).
-    public abstract int[][][] pixelsToRead(int imageDimen);
 
     // Returns the string instructing the user how to rotate the puzzle for the next side.
     // TODO: consider switching this to a resource ID.
@@ -137,19 +148,157 @@ public abstract class Puzzle {
         return success;
     }
 
+
+    // Returns a 3D array.
+    // First dimension: the sticker number.  Must have length equal to stickersPerSide().
+    // Second dimension: the pixel number.
+    // Third dimension: 0 (x value) or 1 (y value).
+    public int[][][] pixelsToRead(int imageDimen) {
+        int[][][] out = new int[stickersPerSide()][][];
+        for (int i = 0; i < stickersPerSide(); i++) {
+            List<int[]> pixelsToRead = new ArrayList<>();
+            Point[] boundaryPoints = getBoundsForSticker(i, imageDimen, 0, 0);
+            for (int triangleNum = 1; triangleNum < boundaryPoints.length - 1; triangleNum++) {
+                Point pointA = boundaryPoints[0];
+                Point pointB = boundaryPoints[triangleNum];
+                Point pointC = boundaryPoints[triangleNum + 1];
+
+                // We select points of the form X_B * (B - A) + X_C * (C - A), where:
+                // 0.2 <= X_B if (B-A) is an external edge; 0 otherwise
+                // 0.8 >= X_B + X_C
+
+                for (int factorB = 0; factorB <= 8; factorB++) {
+                    if (triangleNum != 1 && factorB < 2) {
+                        continue;
+                    }
+                    for (int factorC = 0; factorC <= 8 - factorB; factorC++) {
+                        if (triangleNum != boundaryPoints.length - 2 && factorC < 2) {
+                            continue;
+                        }
+                        pixelsToRead.add(new int[]{
+                                pointA.x + (int) ((factorB / 10.0) * (pointB.x - pointA.x)) +
+                                        (int) ((factorC / 10.0) * (pointC.x - pointA.x)),
+                                pointA.y + (int) ((factorB / 10.0) * (pointB.y - pointA.y)) +
+                                        (int) ((factorC / 10.0) * (pointC.y - pointA.y))});
+                    }
+                }
+            }
+            out[i] = new int[pixelsToRead.size()][];
+            pixelsToRead.toArray(out[i]);
+        }
+        return out;
+    }
+
     public void setScrambleState(String[] colorsPerSide) {
         this.scrambleState = colorsPerSide;
     }
 
-    // Diagrams that show the state of the scramble versus what's expected.
-    public abstract View getExpectedView(Context context);
-    public abstract View getActualView(Context context);
+    public View getExpectedView(Context context) {
+        if (expectedView == null) {
+            expectedView = new PuzzleView(context);
+        }
+        return expectedView;
+    }
+
+    public View getActualView(Context context) {
+        if (actualView == null) {
+            actualView = new PuzzleView(context);
+        }
+        return actualView;
+    }
 
     // Update the expected and actual view with newly-read colors.
-    protected abstract void displayColors(
+    protected void displayColors(
             int[] expectedColors, int[] actualColors, Set<Integer> missedStickers,
-            Set<Integer> unidentifiedStickers);
+            Set<Integer> unidentifiedStickers) {
+        Set<Integer> allMissedStickers = new HashSet<>(missedStickers);
+        for (int sticker : unidentifiedStickers) {
+            allMissedStickers.add(sticker);
+        }
+        expectedView.setColors(expectedColors, allMissedStickers);
+        actualView.setColors(actualColors, allMissedStickers);
+    }
 
-    // Get the color that should be shown the first time we see a particular color.
-    protected abstract int getDefaultColor(char colorCode);
+    // A view to display the state of a scrambled puzzle on the screen.
+    private class PuzzleView extends View {
+        private List<Path> paths;
+        private List<Paint> paints;
+        private List<Point[]> xsToDraw;
+        private Paint edgePaint;
+
+        PuzzleView(Context context) {
+            super(context);
+            edgePaint = new Paint();
+            edgePaint.setStyle(Paint.Style.STROKE);
+            edgePaint.setColor(Color.BLACK);
+            edgePaint.setStrokeWidth(5);
+        }
+
+        void setColors(int[] colors, Set<Integer> missedStickers) {
+            paths = new ArrayList<>();
+            paints = new ArrayList<>();
+            xsToDraw = new ArrayList<>();
+            int height = getMeasuredHeight();
+            int width = getMeasuredWidth();
+
+            int imageDimen = (int) (0.8 * min(height, width));
+            int topOffset = (height - imageDimen) / 2;
+            int leftOffset = (width - imageDimen) / 2;
+            for (int i = 0; i < stickersPerSide(); i++) {
+                Point[] points = getBoundsForSticker(i, imageDimen, leftOffset, topOffset);
+                Path path = new Path();
+                path.moveTo(points[points.length - 1].x, points[points.length - 1].y);
+                for (Point point : points) {
+                    path.lineTo(point.x, point.y);
+                }
+                paths.add(path);
+
+                Paint paint = new Paint();
+                paint.setStyle(Paint.Style.FILL);
+                if (colors[i] == Puzzle.UNIDENTIFIED_COLOR) {
+                    paint.setAlpha(0);
+                } else {
+                    paint.setColor(colors[i]);
+                }
+                paints.add(paint);
+
+                if (missedStickers.contains(i)) {
+                    Point[] xPoints;
+                    if (points.length == 3) {
+                        xPoints = new Point[4];
+                        xPoints[0] = points[0];
+                        xPoints[1] = new Point(
+                                (points[1].x + points[2].x) / 2,
+                                (points[1].y + points[2].y) / 2);
+                        xPoints[2] = new Point(
+                                (points[0].x + points[2].x) / 2,
+                                (points[0].y + points[2].y) / 2);
+                        xPoints[3] = new Point(
+                                (points[1].x + points[2].x) / 2,
+                                (points[1].y + points[2].y) / 2);
+                    } else {
+                        xPoints = new Point[]{points[0], points[2], points[1], points[3]};
+                    }
+                    xsToDraw.add(xPoints);
+                }
+            }
+            invalidate();
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            if (paths == null || paints == null) {
+                return;
+            }
+            for (int i = 0; i < stickersPerSide(); i++) {
+                canvas.drawPath(paths.get(i), paints.get(i));
+                canvas.drawPath(paths.get(i), edgePaint);
+            }
+            for (Point[] x : xsToDraw) {
+                canvas.drawLine(x[0].x, x[0].y, x[1].x, x[1].y, edgePaint);
+                canvas.drawLine(x[2].x, x[2].y, x[3].x, x[3].y, edgePaint);
+            }
+        }
+    }
+
 }
