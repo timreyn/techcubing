@@ -43,6 +43,8 @@ public abstract class Puzzle {
     public abstract int sides();
     public abstract int stickersPerSide();
 
+    public abstract int getGuideDrawable();
+
     public boolean hasMoreSides() {
         return sidesChecked < sides();
     }

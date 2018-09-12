@@ -3,6 +3,8 @@ package com.techcubing.android.util;
 import android.graphics.Color;
 import android.graphics.Point;
 
+import com.techcubing.android.R;
+
 class SkewbPuzzle extends Puzzle {
     @Override
     public int stickersPerSide() {
@@ -82,5 +84,10 @@ class SkewbPuzzle extends Puzzle {
             default:
                 return Color.BLACK;
         }
+    }
+
+    @Override
+    public int getGuideDrawable() {
+        return R.drawable.scramble_check_square_guide;
     }
 }

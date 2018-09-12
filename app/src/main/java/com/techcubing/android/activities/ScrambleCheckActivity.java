@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class ScrambleCheckActivity extends AppCompatActivity {
 
     private Puzzle puzzle;
     private TextView nextFaceInstructions;
+    private ImageView guideView;
     private Handler handler;
 
     // For clustering pixels on the same sticker.
@@ -79,7 +81,6 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                 int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
                 bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
-                View guideView = findViewById(R.id.scramble_check_guide);
                 int guideSizePixels = guideView.getMeasuredHeight();
                 int guidePadding = guideView.getPaddingTop();
 
@@ -151,6 +152,9 @@ public class ScrambleCheckActivity extends AppCompatActivity {
             throw new RuntimeException("Invalid puzzle requested.");
         }
 
+        guideView = findViewById(R.id.scramble_check_guide);
+        guideView.setImageDrawable(
+                getResources().getDrawable(puzzle.getGuideDrawable(), getTheme()));
         cameraView = findViewById(R.id.scramble_check_camera);
 
         handler = new Handler();

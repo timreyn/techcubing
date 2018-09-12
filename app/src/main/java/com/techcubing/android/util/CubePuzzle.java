@@ -3,6 +3,8 @@ package com.techcubing.android.util;
 import android.graphics.Color;
 import android.graphics.Point;
 
+import com.techcubing.android.R;
+
 class CubePuzzle extends Puzzle {
     private static final String TAG = "TCCubePuzzle";
     private final int dimen;
@@ -65,5 +67,10 @@ class CubePuzzle extends Puzzle {
             default:
                 return Color.BLACK;
         }
+    }
+
+    @Override
+    public int getGuideDrawable() {
+        return R.drawable.scramble_check_square_guide;
     }
 }
