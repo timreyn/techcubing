@@ -67,6 +67,8 @@ public abstract class Puzzle {
                 return new CubePuzzle(6);
             case "777":
                 return new CubePuzzle(7);
+            case "skewb":
+                return new SkewbPuzzle();
             default:
                 return null;
         }
