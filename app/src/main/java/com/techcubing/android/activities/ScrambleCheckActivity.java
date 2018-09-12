@@ -3,11 +3,12 @@ package com.techcubing.android.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,7 +21,10 @@ import com.wonderkiln.camerakit.CameraKitEventCallback;
 import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -33,8 +37,15 @@ public class ScrambleCheckActivity extends AppCompatActivity {
 
     private Puzzle puzzle;
     private TextView nextFaceInstructions;
-    private ImageView guideView;
+    private View guideView;
     private Handler handler;
+
+    // For debugging.  Set this to true to inspect the images that are read by this activity.
+    // You can then fetch the image with
+    // $ adb pull /storage/emulated/0/Documents/techcubing/img
+    private boolean saveImages() {
+        return false;
+    }
 
     // For clustering pixels on the same sticker.
     private boolean colorsMatchStrict(int colorA, int colorB) {
@@ -81,13 +92,14 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                 int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
                 bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
-                int guideSizePixels = guideView.getMeasuredHeight();
-                int guidePadding = guideView.getPaddingTop();
+                int guideSizePixels = guideView.getMeasuredWidth();
+                int guideMargin =
+                        ((LinearLayout.LayoutParams) guideView.getLayoutParams()).topMargin;
 
                 int cameraHeight = cameraView.getMeasuredHeight();
 
                 // Transform the location and size of the guide square from preview space to image space.
-                int imagePadding = (guidePadding * bitmap.getHeight()) / cameraHeight;
+                int imagePadding = (guideMargin * bitmap.getHeight()) / cameraHeight;
                 int fullImageSize = (guideSizePixels * bitmap.getHeight()) / cameraHeight;
                 int croppedImageSize = fullImageSize - 2 * imagePadding;
 
@@ -96,6 +108,10 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                 for (int row = 0; row < croppedImageSize; row++) {
                     System.arraycopy(pixels, bitmap.getWidth() * (row + imagePadding) + imagePadding,
                             pixelsGrid[row], 0, croppedImageSize);
+                }
+
+                if (saveImages()) {
+                    writeImageDataToDisk(pixelsGrid);
                 }
 
                 int[] colors = new int[puzzle.stickersPerSide()];
@@ -134,6 +150,21 @@ public class ScrambleCheckActivity extends AppCompatActivity {
                 checkFace(colors);
             };
 
+    private void writeImageDataToDisk(int[][] pixelsGrid) {
+        File directory = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS), "techcubing");
+        directory.mkdirs();
+        File file = new File(directory.getPath(), "img");
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream.write(Arrays.deepToString(pixelsGrid).getBytes());
+            outputStream.close();
+            Log.i(TAG, "Wrote image to " + file.getAbsolutePath());
+        } catch (Exception e) {
+            Log.e(TAG, "Error saving image to disk", e);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,9 +183,6 @@ public class ScrambleCheckActivity extends AppCompatActivity {
             throw new RuntimeException("Invalid puzzle requested.");
         }
 
-        guideView = findViewById(R.id.scramble_check_guide);
-        guideView.setImageDrawable(
-                getResources().getDrawable(puzzle.getGuideDrawable(), getTheme()));
         cameraView = findViewById(R.id.scramble_check_camera);
 
         handler = new Handler();
@@ -175,6 +203,18 @@ public class ScrambleCheckActivity extends AppCompatActivity {
         View expectedView = puzzle.getExpectedView(this);
         expectedView.setLayoutParams(layoutParams);
         diagramContainer.addView(expectedView);
+
+        LinearLayout.LayoutParams guideLayoutParams =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT, 0);
+        guideLayoutParams.setMargins(50, 50, 50, 50);
+        guideView = puzzle.getGuideView(this);
+        guideView.setLayoutParams(guideLayoutParams);
+
+        LinearLayout guideContainer = findViewById(R.id.scramble_check_guide_container);
+        guideContainer.addView(guideView);
+        puzzle.displayGuideView();
     }
 
     @Override

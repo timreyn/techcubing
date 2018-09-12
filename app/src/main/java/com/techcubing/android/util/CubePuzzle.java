@@ -68,9 +68,4 @@ class CubePuzzle extends Puzzle {
                 return Color.BLACK;
         }
     }
-
-    @Override
-    public int getGuideDrawable() {
-        return R.drawable.scramble_check_square_guide;
-    }
 }

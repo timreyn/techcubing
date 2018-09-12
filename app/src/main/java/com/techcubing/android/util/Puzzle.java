@@ -6,9 +6,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +25,7 @@ public abstract class Puzzle {
     protected int sidesChecked;
     protected PuzzleView expectedView;
     protected PuzzleView actualView;
+    protected PuzzleView guideView;
 
     private static final String TAG = "TCPuzzle";
 
@@ -42,8 +45,6 @@ public abstract class Puzzle {
 
     public abstract int sides();
     public abstract int stickersPerSide();
-
-    public abstract int getGuideDrawable();
 
     public boolean hasMoreSides() {
         return sidesChecked < sides();
@@ -202,16 +203,37 @@ public abstract class Puzzle {
 
     public View getExpectedView(Context context) {
         if (expectedView == null) {
-            expectedView = new PuzzleView(context);
+            Paint edgePaint = new Paint();
+            edgePaint.setStyle(Paint.Style.STROKE);
+            edgePaint.setColor(Color.BLACK);
+            edgePaint.setStrokeWidth(5);
+
+            expectedView = new PuzzleView(context, edgePaint, CenterMode.CENTER);
         }
         return expectedView;
     }
 
     public View getActualView(Context context) {
         if (actualView == null) {
-            actualView = new PuzzleView(context);
+            Paint edgePaint = new Paint();
+            edgePaint.setStyle(Paint.Style.STROKE);
+            edgePaint.setColor(Color.BLACK);
+            edgePaint.setStrokeWidth(5);
+
+            actualView = new PuzzleView(context, edgePaint, CenterMode.CENTER);
         }
         return actualView;
+    }
+
+    public View getGuideView(Context context) {
+        if (guideView == null) {
+            Paint edgePaint = new Paint();
+            edgePaint.setStyle(Paint.Style.STROKE);
+            edgePaint.setColor(Color.RED);
+            edgePaint.setStrokeWidth(10);
+            guideView = new PuzzleView(context, edgePaint, CenterMode.ALIGN_TOP_LEFT);
+        }
+        return guideView;
     }
 
     // Update the expected and actual view with newly-read colors.
@@ -224,7 +246,16 @@ public abstract class Puzzle {
         }
         expectedView.setColors(expectedColors, allMissedStickers);
         actualView.setColors(actualColors, allMissedStickers);
+        displayGuideView();
     }
+
+    public void displayGuideView() {
+        int[] colors = new int[stickersPerSide()];
+        Arrays.fill(colors, UNIDENTIFIED_COLOR);
+        guideView.setColors(colors, new HashSet<>());
+    }
+
+    enum CenterMode { CENTER, ALIGN_TOP_LEFT }
 
     // A view to display the state of a scrambled puzzle on the screen.
     private class PuzzleView extends View {
@@ -232,27 +263,42 @@ public abstract class Puzzle {
         private List<Paint> paints;
         private List<Point[]> xsToDraw;
         private Paint edgePaint;
+        private CenterMode centerMode;
 
-        PuzzleView(Context context) {
+        PuzzleView(Context context, Paint edgePaint, CenterMode centerMode) {
             super(context);
-            edgePaint = new Paint();
-            edgePaint.setStyle(Paint.Style.STROKE);
-            edgePaint.setColor(Color.BLACK);
-            edgePaint.setStrokeWidth(5);
+            this.edgePaint = edgePaint;
+            this.centerMode = centerMode;
         }
 
         void setColors(int[] colors, Set<Integer> missedStickers) {
             paths = new ArrayList<>();
             paints = new ArrayList<>();
             xsToDraw = new ArrayList<>();
-            int height = getMeasuredHeight();
-            int width = getMeasuredWidth();
 
-            int imageDimen = (int) (0.8 * min(height, width));
-            int topOffset = (height - imageDimen) / 2;
-            int leftOffset = (width - imageDimen) / 2;
+            int height = getHeight();
+            int width = getWidth();
+            int imageDimen = 0;
+            int topOffset = 0;
+            int leftOffset = 0;
+
+            switch (centerMode) {
+                case CENTER:
+                    imageDimen = (int) (0.8 * min(height, width));
+                    topOffset = (height - imageDimen) / 2;
+                    leftOffset = (width - imageDimen) / 2;
+                    break;
+                case ALIGN_TOP_LEFT:
+                    imageDimen = min(height, width);
+                    topOffset = 0;
+                    leftOffset = 0;
+                    break;
+            }
             for (int i = 0; i < stickersPerSide(); i++) {
                 Point[] points = getBoundsForSticker(i, imageDimen, leftOffset, topOffset);
+                if (centerMode == CenterMode.ALIGN_TOP_LEFT) {
+                    Log.i(TAG, Arrays.deepToString(points));
+                }
                 Path path = new Path();
                 path.moveTo(points[points.length - 1].x, points[points.length - 1].y);
                 for (Point point : points) {
