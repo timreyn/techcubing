@@ -83,9 +83,12 @@ public abstract class Puzzle {
         int greenDifference = Color.green(colorA) - Color.green(colorB);
         int blueDifference = Color.blue(colorA) - Color.blue(colorB);
 
-        return redDifference * redDifference +
-                greenDifference * greenDifference +
-                blueDifference * blueDifference;
+        // This should be an improved distance metric over just using R^2 + G^2 + B^2, as it
+        // correlates better with human perception and separates similar colors like orange and red.
+        // Further reading: https://en.wikipedia.org/wiki/Color_difference
+        return 2 * redDifference * redDifference +
+                4 * greenDifference * greenDifference +
+                3 * blueDifference * blueDifference;
     }
 
     public boolean checkSide(int[] colors) {
@@ -129,7 +132,7 @@ public abstract class Puzzle {
                     identifiedColorsWorking.get(expectedColorCode).add(colorRead);
                 }
             } else {
-                if (nearestDistance != null && nearestDistance < 1600) {
+                if (nearestDistance != null && nearestDistance < 3200) {
                     missedStickers.add(stickerNumber);
                 } else {
                     identifiedColorsWorking.put(expectedColorCode, new ArrayList<>());

@@ -36,7 +36,7 @@ public class ScrambleCheckActivity extends AppCompatActivity {
 
     // For clustering pixels on the same sticker.
     private boolean colorsMatchStrict(int colorA, int colorB) {
-        return puzzle.distance(colorA, colorB) < 800;
+        return puzzle.distance(colorA, colorB) < 1600;
     }
 
     private void checkFace(int[] colorsOnSide) {
