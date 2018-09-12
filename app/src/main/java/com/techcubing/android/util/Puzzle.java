@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public abstract class Puzzle {
 
     // Set to true to display the pixels that we're reading in the guide.
     private boolean showPixelsRead() {
-        return true;
+        return false;
     }
 
     // Get the color that should be shown the first time we see a particular color.
@@ -77,6 +76,8 @@ public abstract class Puzzle {
                 return new CubePuzzle(7);
             case "skewb":
                 return new SkewbPuzzle();
+            case "pyram":
+                return new PyraminxPuzzle();
             default:
                 return null;
         }
@@ -181,11 +182,11 @@ public abstract class Puzzle {
                 // 0.8 >= X_B + X_C
 
                 for (int factorB = 0; factorB <= 8; factorB++) {
-                    if (triangleNum != 1 && factorB < 2) {
+                    if (triangleNum == boundaryPoints.length - 2 && factorB < 2) {
                         continue;
                     }
                     for (int factorC = 0; factorC <= 8 - factorB; factorC++) {
-                        if (triangleNum != boundaryPoints.length - 2 && factorC < 2) {
+                        if (triangleNum == 1 && factorC < 2) {
                             continue;
                         }
                         pixelsToRead.add(new int[]{
@@ -318,9 +319,6 @@ public abstract class Puzzle {
             }
             for (int i = 0; i < stickersPerSide(); i++) {
                 Point[] points = getBoundsForSticker(i, imageWidth, leftOffset, topOffset);
-                if (centerMode == CenterMode.ALIGN_TOP_LEFT) {
-                    Log.i(TAG, Arrays.deepToString(points));
-                }
                 Path path = new Path();
                 path.moveTo(points[points.length - 1].x, points[points.length - 1].y);
                 for (Point point : points) {
