@@ -36,6 +36,11 @@ public abstract class Puzzle {
         identifiedColors = new HashMap<>();
     }
 
+    // Set to true to display the pixels that we're reading in the guide.
+    private boolean showPixelsRead() {
+        return true;
+    }
+
     // Get the color that should be shown the first time we see a particular color.
     protected abstract int getDefaultColor(char colorCode);
 
@@ -253,6 +258,9 @@ public abstract class Puzzle {
         int[] colors = new int[stickersPerSide()];
         Arrays.fill(colors, UNIDENTIFIED_COLOR);
         guideView.setColors(colors, new HashSet<>());
+        if (showPixelsRead()) {
+            guideView.showPixelsRead();
+        }
     }
 
     enum CenterMode { CENTER, ALIGN_TOP_LEFT }
@@ -269,6 +277,20 @@ public abstract class Puzzle {
             super(context);
             this.edgePaint = edgePaint;
             this.centerMode = centerMode;
+        }
+
+        void showPixelsRead() {
+            int[][][] pixels = pixelsToRead(getMeasuredWidth());
+            for (int[][] pixelList : pixels) {
+                for (int[] pixel : pixelList) {
+                    xsToDraw.add(
+                            new Point[]{
+                                    new Point(pixel[0] + 2, pixel[1] + 2),
+                                    new Point(pixel[0] - 2, pixel[1] - 2),
+                                    new Point(pixel[0] + 2, pixel[1] - 2),
+                                    new Point(pixel[0] - 2, pixel[1] + 2)});
+                }
+            }
         }
 
         void setColors(int[] colors, Set<Integer> missedStickers) {
@@ -327,8 +349,8 @@ public abstract class Puzzle {
                                 (points[0].x + points[2].x) / 2,
                                 (points[0].y + points[2].y) / 2);
                         xPoints[3] = new Point(
-                                (points[1].x + points[2].x) / 2,
-                                (points[1].y + points[2].y) / 2);
+                                (points[0].x + points[1].x) / 2,
+                                (points[0].y + points[1].y) / 2);
                     } else {
                         xPoints = new Point[]{points[0], points[2], points[1], points[3]};
                     }
