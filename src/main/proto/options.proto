@@ -30,4 +30,7 @@ extend google.protobuf.FieldOptions {
 
   // If set, the name of the mysql column that should store this field.
   string mysql_column_name = 5004;
+
+  // If set, clear this field when fetching via GetById.
+  bool clear_for_get_by_id = 5005;
 }
