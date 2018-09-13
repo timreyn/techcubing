@@ -32,7 +32,7 @@
         <div>Type of device:</div>
         <select name="deviceType">
           <#list devicesByType as deviceType, devices>
-            <option>${deviceType}</option>
+            <option value="${deviceType.number}">${deviceType}</option>
           </#list>
         </select>
       </p>

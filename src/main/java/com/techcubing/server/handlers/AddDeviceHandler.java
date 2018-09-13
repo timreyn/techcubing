@@ -3,7 +3,6 @@ package com.techcubing.server.handlers;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.IShellOutputReceiver;
-import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Message;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
@@ -32,19 +31,14 @@ public class AddDeviceHandler extends BaseHandler {
 
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
-    Device.Builder deviceBuilder =
+    Device device =
       Device.newBuilder()
           .setId(String.valueOf(new Random().nextInt(90000000) + 10000000))
           .setVisibleName(queryParams.get("deviceName"))
-          .setActivated(ProtoUtil.getCurrentTime());
-
-    for (EnumValueDescriptor enumValue : DeviceType.getDescriptor().getValues()) {
-      if (enumValue.getName().equals(queryParams.get("deviceType"))) {
-        deviceBuilder.setType(DeviceType.valueOf(enumValue));
-      }
-    }
-    deviceBuilder.setSerialNumber(queryParams.get("deviceSerialNumber"));
-    Device device = deviceBuilder.build();
+          .setActivated(ProtoUtil.getCurrentTime())
+          .setType(DeviceType.valueOf(Integer.valueOf(queryParams.get("deviceType"))))
+          .setSerialNumber(queryParams.get("deviceSerialNumber"))
+          .build();
 
     String hostAddress = "";
 
@@ -66,8 +60,6 @@ public class AddDeviceHandler extends BaseHandler {
         break;
       }
     }
-
-    System.out.println(hostAddress);
 
     // Set up the device.
     DeviceConfig config =
