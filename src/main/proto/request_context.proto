@@ -9,4 +9,6 @@ import "src/main/proto/options.proto";
 
 message RequestContext {
   string device_id = 1 [(techcubing.message_type) = "techcubing.Device"];
+
+  bytes signed_request = 2;
 }
