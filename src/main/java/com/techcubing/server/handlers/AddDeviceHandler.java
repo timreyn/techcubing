@@ -3,6 +3,7 @@ package com.techcubing.server.handlers;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.IShellOutputReceiver;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.net.InetAddress;
 import java.net.Inet4Address;
 import java.net.NetworkInterface;
 import java.net.URI;
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Enumeration;
@@ -31,6 +33,10 @@ public class AddDeviceHandler extends BaseHandler {
 
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
+    SecureRandom rnd = new SecureRandom();
+    byte[] secretKey = new byte[16];
+    rnd.nextBytes(secretKey);
+
     Device device =
       Device.newBuilder()
           .setId(String.valueOf(new Random().nextInt(90000000) + 10000000))
@@ -38,6 +44,7 @@ public class AddDeviceHandler extends BaseHandler {
           .setActivated(ProtoUtil.getCurrentTime())
           .setType(DeviceType.valueOf(Integer.valueOf(queryParams.get("deviceType"))))
           .setSerialNumber(queryParams.get("deviceSerialNumber"))
+          .setSecretKey(ByteString.copyFrom(secretKey))
           .build();
 
     String hostAddress = "";
