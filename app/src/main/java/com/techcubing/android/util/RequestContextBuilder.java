@@ -1,20 +1,34 @@
 package com.techcubing.android.util;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.RequestContextProto.RequestContext;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 public class RequestContextBuilder {
-    public static RequestContext build(
-            MessageLite.Builder messageBuilder,
-            Context context) {
+    private static final String TAG = "TCRequestContext";
+
+    public static RequestContext signRequest(MessageLite.Builder request, Context context) {
         DeviceProto.Device device = ActiveState.getActive(ActiveState.DEVICE, context);
-        RequestContext.Builder builder = RequestContext.newBuilder();
-        if (device != null) {
-            builder.setDeviceId(device.getId());
+        try {
+            RequestContext.Builder builder =
+                    RequestContext.newBuilder().setDeviceId(device.getId());
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(
+                    Cipher.ENCRYPT_MODE,
+                    new SecretKeySpec(device.getSecretKey().toByteArray(), "AES"));
+            builder.setSignedRequest(
+                    ByteString.copyFrom(cipher.doFinal(request.build().toByteArray())));
+            return builder.build();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to sign request", e);
+            return null;
         }
-        return builder.build();
     }
 }

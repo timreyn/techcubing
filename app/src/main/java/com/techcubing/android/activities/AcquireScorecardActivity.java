@@ -45,7 +45,7 @@ public class AcquireScorecardActivity extends AppCompatActivity {
         AcquireScorecardRequest.Builder requestBuilder = AcquireScorecardRequest.newBuilder()
                 .setScorecardId(scorecardId);
 
-        requestBuilder.setContext(RequestContextBuilder.build(requestBuilder, this));
+        requestBuilder.setContext(RequestContextBuilder.signRequest(requestBuilder, this));
 
         Futures.addCallback(
                 stub.acquireScorecard(requestBuilder.build()),

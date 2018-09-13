@@ -87,7 +87,7 @@ public class ActiveState {
                 GetByIdRequest.newBuilder()
                     .setId(id)
                     .setProtoType(key.name);
-        requestBuilder.setContext(RequestContextBuilder.build(requestBuilder, context));
+        requestBuilder.setContext(RequestContextBuilder.signRequest(requestBuilder, context));
 
         GetByIdResponse response = stub.getById(requestBuilder.build());
 

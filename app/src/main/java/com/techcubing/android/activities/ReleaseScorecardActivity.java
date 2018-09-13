@@ -69,7 +69,7 @@ public class ReleaseScorecardActivity extends AppCompatActivity {
             requestBuilder.setResult(
                     ScorecardProto.AttemptResult.newBuilder().setFinalTime(8000));
         }
-        requestBuilder.setContext(RequestContextBuilder.build(requestBuilder, this));
+        requestBuilder.setContext(RequestContextBuilder.signRequest(requestBuilder, this));
 
         Futures.addCallback(
                 stub.releaseScorecard(requestBuilder.build()),

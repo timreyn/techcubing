@@ -60,7 +60,7 @@ public class ScrambleActivity extends AppCompatActivity {
                 Stubs.futureStub(this, getApplicationContext());
         GetScrambleRequest.Builder requestBuilder =
                 GetScrambleRequest.newBuilder().setId(attempt.getScrambleId());
-        requestBuilder.setContext(RequestContextBuilder.build(requestBuilder, this));
+        requestBuilder.setContext(RequestContextBuilder.signRequest(requestBuilder, this));
 
         Futures.addCallback(
                 stub.getScramble(requestBuilder.build()),
