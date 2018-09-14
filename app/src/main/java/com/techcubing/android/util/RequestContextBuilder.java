@@ -9,6 +9,7 @@ import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.RequestContextProto.RequestContext;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class RequestContextBuilder {
@@ -19,10 +20,11 @@ public class RequestContextBuilder {
         try {
             RequestContext.Builder builder =
                     RequestContext.newBuilder().setDeviceId(device.getId());
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(
                     Cipher.ENCRYPT_MODE,
-                    new SecretKeySpec(device.getSecretKey().toByteArray(), "AES"));
+                    new SecretKeySpec(device.getSecretKey().toByteArray(), "AES"),
+                    new IvParameterSpec(device.getIv().toByteArray()));
             builder.setSignedRequest(
                     ByteString.copyFrom(cipher.doFinal(request.build().toByteArray())));
             return builder.build();
