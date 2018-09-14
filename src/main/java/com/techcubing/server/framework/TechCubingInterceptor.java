@@ -30,14 +30,11 @@ public class TechCubingInterceptor implements ServerInterceptor {
     final Metadata requestHeaders,
     ServerCallHandler<ReqT, RespT> next) {
 
-    System.out.println("interceptCall()");
-
     return new SimpleForwardingServerCallListener<ReqT>(
         next.startCall(call, requestHeaders)) {
       @Override
       public void onMessage(ReqT messageT) {
         try {
-          System.out.println("onMessage()");
           Message message = (Message) messageT;
           FieldDescriptor fieldDescriptor =
             message.getDescriptorForType().findFieldByName("context");
