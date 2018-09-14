@@ -24,4 +24,5 @@ message Device {
   google.protobuf.Timestamp deactivated = 5;
 
   bytes secret_key = 7 [(techcubing.clear_for_get_by_id) = true];
+  bytes iv = 8 [(techcubing.clear_for_get_by_id) = true];
 }
