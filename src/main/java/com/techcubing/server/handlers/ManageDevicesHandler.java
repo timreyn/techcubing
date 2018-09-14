@@ -25,18 +25,18 @@ public class ManageDevicesHandler extends BaseHandler {
   protected void handleImpl(HttpExchange t) throws Exception {
     List<Message> deviceMessages =
       ProtoDb.getAll(Device.newBuilder(), serverState);
-    Map<String, List<Device>> devicesByType = new HashMap<>();
+    Map<DeviceType, List<Device>> devicesByType = new HashMap<>();
 
     for (EnumValueDescriptor enumValue : DeviceType.getDescriptor().getValues()) {
-      devicesByType.put(enumValue.getName(), new ArrayList<Device>());
+      DeviceType type = DeviceType.valueOf(enumValue);
+      devicesByType.put(type, new ArrayList<Device>());
     }
 
     Map<String, Device> devicesBySerialNumber = new HashMap<>();
 
     for (Message deviceMessage : deviceMessages) {
       Device device = (Device) deviceMessage;
-      String deviceTypeName = device.getType().getValueDescriptor().getName();
-      devicesByType.get(deviceTypeName).add(device);
+      devicesByType.get(device.getType()).add(device);
       devicesBySerialNumber.put(device.getSerialNumber(), device);
     }
 
