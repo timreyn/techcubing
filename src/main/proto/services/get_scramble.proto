@@ -28,7 +28,7 @@ message GetScrambleResponse {
   }
   Status status = 2;
 
-  string encrypted_scramble_sequence = 3;
+  bytes encrypted_scramble_sequence = 3;
 
-  string encrypted_scramble_state = 4;
+  bytes encrypted_scramble_state = 4;
 }
