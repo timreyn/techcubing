@@ -8,10 +8,6 @@ import com.google.protobuf.MessageLite;
 import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.RequestContextProto.RequestContext;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
 public class RequestContextBuilder {
     private static final String TAG = "TCRequestContext";
 
@@ -20,13 +16,9 @@ public class RequestContextBuilder {
         try {
             RequestContext.Builder builder =
                     RequestContext.newBuilder().setDeviceId(device.getId());
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(
-                    Cipher.ENCRYPT_MODE,
-                    new SecretKeySpec(device.getSecretKey().toByteArray(), "AES"),
-                    new IvParameterSpec(device.getIv().toByteArray()));
             builder.setSignedRequest(
-                    ByteString.copyFrom(cipher.doFinal(request.build().toByteArray())));
+                    ByteString.copyFrom(
+                            EncodingUtil.encode(request.build().toByteArray(), device)));
             return builder.build();
         } catch (Exception e) {
             Log.e(TAG, "Failed to sign request", e);

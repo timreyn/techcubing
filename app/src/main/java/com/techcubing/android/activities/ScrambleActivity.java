@@ -11,8 +11,10 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.techcubing.android.R;
 import com.techcubing.android.util.ActiveState;
+import com.techcubing.android.util.EncodingUtil;
 import com.techcubing.android.util.RequestContextBuilder;
 import com.techcubing.android.util.Stubs;
+import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.ScorecardProto;
 import com.techcubing.proto.services.GetScrambleProto.GetScrambleRequest;
 import com.techcubing.proto.services.GetScrambleProto.GetScrambleResponse;
@@ -37,6 +39,7 @@ public class ScrambleActivity extends AppCompatActivity {
         Integer attemptNumber = ActiveState.getActive(ActiveState.ATTEMPT_NUMBER, this);
         WcifPerson competitor = ActiveState.getActive(ActiveState.COMPETITOR, this);
         WcifRound round = ActiveState.getActive(ActiveState.ROUND, this);
+        Device device = ActiveState.getActive(ActiveState.DEVICE, this);
 
         if (scorecard == null || attemptNumber == null || competitor == null || round == null) {
             // There's something wrong.  Release our scorecard.
@@ -72,16 +75,32 @@ public class ScrambleActivity extends AppCompatActivity {
                                     "No response from the server");
                             return;
                         }
+
+                        String scramble;
+                        String scrambleState;
+
+                        try {
+                            scramble = new String(EncodingUtil.decode(
+                                    response.getEncryptedScrambleSequence().toByteArray(), device));
+                            scrambleState = new String(EncodingUtil.decode(
+                                    response.getEncryptedScrambleState().toByteArray(), device));
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error decoding scramble", e);
+                            ScrambleActivity.this.onFailure(
+                                    "Failed to read scramble from server");
+                            return;
+                        }
+
                         ScrambleActivity.this.runOnUiThread(() -> {
                             TextView textView = findViewById(R.id.scramble_text_view);
-                            textView.setText(response.getEncryptedScrambleSequence());
+                            textView.setText(scramble);
                             Button button = findViewById(R.id.scramble_check_button);
                             button.setOnClickListener(view -> {
                                 Intent intent = new Intent(
                                         ScrambleActivity.this,
                                         ScrambleCheckActivity.class);
-                                intent.putExtra(ScrambleCheckActivity.EXTRA_SCRAMBLE_STATE,
-                                        response.getEncryptedScrambleState());
+                                intent.putExtra(
+                                        ScrambleCheckActivity.EXTRA_SCRAMBLE_STATE, scrambleState);
                                 startActivity(intent);
                             });
                         });
