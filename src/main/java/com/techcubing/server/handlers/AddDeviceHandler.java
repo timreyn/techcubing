@@ -17,6 +17,7 @@ import java.util.Base64;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Random;
+import javax.crypto.KeyGenerator;
 
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.server.framework.ProtoDb;
@@ -33,8 +34,12 @@ public class AddDeviceHandler extends BaseHandler {
 
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
+    KeyGenerator keygen = KeyGenerator.getInstance("AES");
+    keygen.init(256);
+    byte[] secretKey = keygen.generateKey().getEncoded();
+
     SecureRandom rnd = new SecureRandom();
-    byte[] secretKey = new byte[16];
+    byte[] iv = new byte[16];
     rnd.nextBytes(secretKey);
 
     Device device =
@@ -45,6 +50,7 @@ public class AddDeviceHandler extends BaseHandler {
           .setType(DeviceType.valueOf(Integer.valueOf(queryParams.get("deviceType"))))
           .setSerialNumber(queryParams.get("deviceSerialNumber"))
           .setSecretKey(ByteString.copyFrom(secretKey))
+          .setIv(ByteString.copyFrom(iv))
           .build();
 
     String hostAddress = "";
