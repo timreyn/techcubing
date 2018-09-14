@@ -1,7 +1,9 @@
 package com.techcubing.server.services;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import com.google.protobuf.ByteString;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.DeviceTypeProto.DeviceType;
@@ -42,8 +44,14 @@ class GetScrambleImpl {
       if (scramble.getMultiScrambleSequencesList().size() > 0) {
         scrambleSequence = scramble.getMultiScrambleSequences(request.getScrambleIndex());
       }
-      // TODO: encrypt scrambles over RPC.
-      responseBuilder.setEncryptedScrambleSequence(scrambleSequence);
+      Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+      cipher.init(
+          Cipher.ENCRYPT_MODE,
+          new SecretKeySpec(device.getSecretKey().toByteArray(), "AES"),
+          new IvParameterSpec(device.getIv().toByteArray()));
+
+      responseBuilder.setEncryptedScrambleSequence(ByteString.copyFrom(
+          cipher.doFinal(scrambleSequence.getBytes())));
 
       ScrambleSet scrambleSet = ProtoDb.getIdField(
           scramble, "scramble_set_id", serverState);
@@ -62,10 +70,10 @@ class GetScrambleImpl {
           }
           stateBuilder.append("|");
         }
-        // TODO: encrypt scramble state over RPC.
-        responseBuilder.setEncryptedScrambleState(stateBuilder.toString());
+        responseBuilder.setEncryptedScrambleState(ByteString.copyFrom(
+            cipher.doFinal(stateBuilder.toString().getBytes())));
       }
-    } catch (IOException | SQLException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       responseBuilder.setStatus(GetScrambleResponse.Status.INTERNAL_ERROR);
     }

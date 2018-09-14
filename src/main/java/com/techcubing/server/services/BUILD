@@ -56,6 +56,7 @@ java_library(
         "//src/main/java/com/techcubing/server/framework:ProtoDb",
         "//src/main/java/com/techcubing/server/framework:ServerState",
         "//src/main/java/com/techcubing/server/util:Puzzle",
+        "@com_google_protobuf//:protobuf_java",
     ],
 )
 
