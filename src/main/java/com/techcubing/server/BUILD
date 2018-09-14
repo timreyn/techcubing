@@ -11,6 +11,7 @@ java_binary(
         "//src/main/java/com/techcubing/server/framework:CommandLineFlags",
         "//src/main/java/com/techcubing/server/framework:ServerState",
         "//src/main/java/com/techcubing/server/framework:ServerStateInitializer",
+        "//src/main/java/com/techcubing/server/framework:TechCubingInterceptor",
         "//src/main/java/com/techcubing/server/handlers",
         "//src/main/java/com/techcubing/server/services:TechCubingServiceImpl",
         "@com_github_pcj_google_options//jar",
