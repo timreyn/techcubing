@@ -4,6 +4,7 @@ import com.google.devtools.common.options.OptionsParser;
 import com.sun.net.httpserver.HttpServer;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.ServerInterceptors;
 import io.grpc.protobuf.services.ProtoReflectionService;
 import java.net.InetSocketAddress;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import com.techcubing.server.framework.CommandLineFlags;
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.server.framework.ServerStateInitializer;
+import com.techcubing.server.framework.TechCubingInterceptor;
 import com.techcubing.server.handlers.Handlers;
 import com.techcubing.server.services.TechCubingServiceImpl;
 
@@ -37,7 +39,9 @@ public class Main {
       TechCubingServiceImpl grpcImpl = new TechCubingServiceImpl(serverState);
       Server grpcServer = ServerBuilder
         .forPort(serverState.getGrpcPort())
-        .addService(grpcImpl)
+        .addService(
+            ServerInterceptors.intercept(
+              grpcImpl, new TechCubingInterceptor(serverState)))
         .addService(ProtoReflectionService.newInstance())
         .build();
       grpcServer.start();

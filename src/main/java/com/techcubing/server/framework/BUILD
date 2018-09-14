@@ -86,3 +86,17 @@ java_library(
         ":ServerState",
     ],
 )
+
+java_library(
+    name = "TechCubingInterceptor",
+    srcs = ["TechCubingInterceptor.java"],
+    visibility = ["//src/main/java/com/techcubing/server:__pkg__"],
+    deps = [
+        ":ProtoDb",
+        ":ServerState",
+        "//src/main/proto:device_java_proto",
+        "//src/main/proto:request_context_java_proto",
+        "@com_google_protobuf//:protobuf_java",
+        "@io_grpc_grpc_java//core",
+    ],
+)
