@@ -6,6 +6,7 @@ skip_files:
   - ^(.*/)?.*~$
   - ^(.*/)?.*\.py[co]$
   - ^(.*/)?\..*$
+  - ^.local_storage/
 
 libraries:
   - name: webapp2
