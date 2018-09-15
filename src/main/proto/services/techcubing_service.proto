@@ -10,6 +10,7 @@ import "src/main/proto/services/acquire_scorecard.proto";
 import "src/main/proto/services/get_by_id.proto";
 import "src/main/proto/services/get_scramble.proto";
 import "src/main/proto/services/list_persons.proto";
+import "src/main/proto/services/release_device.proto";
 import "src/main/proto/services/release_scorecard.proto";
 
 service TechCubingService {
@@ -18,5 +19,6 @@ service TechCubingService {
   rpc GetById (GetByIdRequest) returns (GetByIdResponse);
   rpc GetScramble (GetScrambleRequest) returns (GetScrambleResponse);
   rpc ListPersons (ListPersonsRequest) returns (ListPersonsResponse);
+  rpc ReleaseDevice (ReleaseDeviceRequest) returns (ReleaseDeviceResponse);
   rpc ReleaseScorecard (ReleaseScorecardRequest) returns (ReleaseScorecardResponse);
 }

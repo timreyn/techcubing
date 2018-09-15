@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto.services";
+option java_outer_classname = "ReleaseDeviceProto";
+
+import "src/main/proto/request_context.proto";
+import "src/main/proto/response_context.proto";
+
+message ReleaseDeviceRequest {
+  RequestContext context = 1;
+}
+
+message ReleaseDeviceResponse {
+  ResponseContext context = 1;
+
+  enum Status {
+    OK = 0;
+  }
+}

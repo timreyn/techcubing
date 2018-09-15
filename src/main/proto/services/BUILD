@@ -16,6 +16,7 @@ proto_library(
         ":get_by_id_proto",
         ":get_scramble_proto",
         ":list_persons_proto",
+        ":release_device_proto",
         ":release_scorecard_proto",
     ],
 )
@@ -34,6 +35,7 @@ java_grpc_library(
         ":get_by_id_java_proto",
         ":get_scramble_java_proto",
         ":list_persons_java_proto",
+        ":release_device_java_proto",
         ":release_scorecard_java_proto",
         ":techcubing_service_java_proto",
     ],
@@ -134,4 +136,19 @@ proto_library(
 java_proto_library(
     name = "acquire_device_java_proto",
     deps = [":acquire_device_proto"],
+)
+
+# ReleaseDevice
+
+proto_library(
+    name = "release_device_proto",
+    srcs = ["release_device.proto"],
+    deps = [
+        "//src/main/proto:request_context_proto",
+        "//src/main/proto:response_context_proto",
+    ],
+)
+java_proto_library(
+    name = "release_device_java_proto",
+    deps = [":release_device_proto"],
 )
