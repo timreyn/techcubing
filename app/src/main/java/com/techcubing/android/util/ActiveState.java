@@ -17,6 +17,7 @@ import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.ScorecardProto;
 import com.techcubing.proto.services.GetByIdProto.GetByIdRequest;
 import com.techcubing.proto.services.GetByIdProto.GetByIdResponse;
+import com.techcubing.proto.services.GetScrambleProto.GetScrambleResponse;
 import com.techcubing.proto.services.TechCubingServiceGrpc;
 import com.techcubing.proto.wcif.WcifCompetition;
 import com.techcubing.proto.wcif.WcifEvent;
@@ -54,6 +55,11 @@ public class ActiveState {
     public static final ProtoStateKey<WcifPerson> COMPETITOR =
             new ProtoStateKey<>(
                     "COMPETITOR", WcifPerson.parser(), "techcubing.wcif.WcifPerson");
+
+    public static final ProtoStateKey<GetScrambleResponse> SCRAMBLE =
+            new ProtoStateKey<>(
+                    "SCRAMBLE", GetScrambleResponse.parser(),
+                    "techcubing.GetScrambleResponse");
 
     public static final StateKey<Integer> ATTEMPT_NUMBER = new IntStateKey("ATTEMPT_NUMBER");
 
@@ -111,12 +117,7 @@ public class ActiveState {
         } catch (InvalidProtocolBufferException ex) {
             return null;
         }
-
-        try {
-            writeToCache(key, id, e, context);
-        } catch (IOException ex) {
-            Log.e(TAG, "Error writing to cache.", ex);
-        }
+        writeToCache(key, id, e, context);
         return e;
     }
 
@@ -194,31 +195,77 @@ public class ActiveState {
     }
 
     public static synchronized <E extends MessageLite> void writeToCache(
-            ProtoStateKey<E> protoKey, String key, E e, Context context) throws IOException {
-        DiskLruCache cache = getCache(context);
+            ProtoStateKey<E> protoKey, String key, E e, Context context) {
+        DiskLruCache cache = null;
         String fullKey = (protoKey.key + "__" + key).toLowerCase();
-        DiskLruCache.Editor editor = cache.edit(fullKey);
-        editor.set(0, new String(e.toByteArray()));
-        editor.commit();
-        cache.close();
+        try {
+            cache = getCache(context);
+            DiskLruCache.Editor editor = cache.edit(fullKey);
+            editor.set(0, Base64.encodeToString(e.toByteArray(), Base64.URL_SAFE));
+            editor.commit();
+        } catch (IOException ex) {
+            Log.e(TAG, "Failed to write to cache for key " + fullKey, ex);
+        } finally {
+            if (cache != null) {
+                try {
+                    cache.close();
+                } catch (IOException ex) {
+                    Log.e(TAG, "Failed to close cache.", ex);
+                }
+            }
+        }
     }
 
     @Nullable
     public static synchronized <E extends MessageLite> E readFromCache(
             ProtoStateKey<E> protoKey, String key, Context context) {
+        DiskLruCache cache = null;
+        String fullKey = (protoKey.key + "__" + key).toLowerCase();
         try {
-            DiskLruCache cache = getCache(context);
-            String fullKey = (protoKey.key + "__" + key).toLowerCase();
+            cache = getCache(context);
             DiskLruCache.Snapshot snapshot = cache.get(fullKey);
             if (snapshot == null) {
                 cache.close();
+                Log.i(TAG, "Cache miss for " + fullKey);
                 return null;
             }
-            E e = protoKey.parser.parseFrom(snapshot.getString(0).getBytes());
+            E e = protoKey.parser.parseFrom(
+                    Base64.decode(snapshot.getString(0), Base64.URL_SAFE));
             cache.close();
+            Log.i(TAG, "Cache hit for " + fullKey);
             return e;
-        } catch (IOException e) {
+        } catch (IOException ex) {
+            Log.e(TAG, "Failed to read cache for key " + fullKey, ex);
+            tryDeleteFromCache(protoKey, key, context);
             return null;
+        } finally {
+            if (cache != null) {
+                try {
+                    cache.close();
+                } catch (IOException ex) {
+                    Log.e(TAG, "Failed to close cache.", ex);
+                }
+            }
+        }
+    }
+
+    public static synchronized <E extends MessageLite> void tryDeleteFromCache(
+            ProtoStateKey<E> protoKey, String key, Context context) {
+        DiskLruCache cache = null;
+        String fullKey = (protoKey.key + "__" + key).toLowerCase();
+        try {
+            cache = getCache(context);
+            cache.remove(fullKey);
+        } catch (IOException ex) {
+            Log.e(TAG, "Failed to delete from cache " + fullKey, ex);
+        } finally {
+            if (cache != null) {
+                try {
+                    cache.close();
+                } catch (IOException ex) {
+                    Log.e(TAG, "Failed to close cache.", ex);
+                }
+            }
         }
     }
 }
