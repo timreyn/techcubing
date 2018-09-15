@@ -1,8 +1,6 @@
 package com.techcubing.android.activities;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
@@ -11,6 +9,7 @@ import com.techcubing.android.R;
 import com.techcubing.android.util.ActiveState;
 import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.ScorecardProto;
+import com.techcubing.proto.wcif.WcifPerson;
 
 public class LobbyActivity extends AppCompatActivity {
     @Override
@@ -18,21 +17,10 @@ public class LobbyActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_lobby);
 
-        if (checkSelfPermission(Manifest.permission.CAMERA) !=
-                PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
-        }
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) !=
-                PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 0);
-        }
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED ||
-                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+        WcifPerson staff =
+                ActiveState.getActive(ActiveState.STAFF, this);
+        if (staff == null) {
+            startActivity(new Intent(this, LoggedOutActivity.class));
         }
 
         ScorecardProto.Scorecard scorecard =

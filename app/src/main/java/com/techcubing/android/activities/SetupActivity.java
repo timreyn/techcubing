@@ -46,7 +46,7 @@ public class SetupActivity extends AppCompatActivity {
 
         DeviceProto.Device device = ActiveState.getActive(ActiveState.DEVICE, this);
         if (device != null) {
-            startActivity(new Intent(this, LobbyActivity.class));
+            startActivity(new Intent(this, LoggedOutActivity.class));
         }
     }
 }

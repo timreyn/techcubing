@@ -56,6 +56,10 @@ public class ActiveState {
             new ProtoStateKey<>(
                     "COMPETITOR", WcifPerson.parser(), "techcubing.wcif.WcifPerson");
 
+    public static final ProtoStateKey<WcifPerson> STAFF =
+            new ProtoStateKey<>(
+                    "STAFF", WcifPerson.parser(), "techcubing.wcif.WcifPerson");
+
     public static final ProtoStateKey<GetScrambleResponse> SCRAMBLE =
             new ProtoStateKey<>(
                     "SCRAMBLE", GetScrambleResponse.parser(),

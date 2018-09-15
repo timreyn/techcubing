@@ -47,6 +47,7 @@
         <activity android:name=".activities.JudgeActivity"/>
         <activity android:name=".activities.ScrambleActivity"/>
         <activity android:name=".activities.ScrambleCheckActivity"/>
+        <activity android:name=".activities.LoggedOutActivity"/>
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
