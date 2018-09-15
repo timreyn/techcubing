@@ -4,10 +4,9 @@ from src.models import OAuthConfig
 
 class ConfigHandler(webapp2.RequestHandler):
   def get(self, env):
-    client_id = self.request.get('id')
-    client_secret = self.request.get('secret')
     config = OAuthConfig.get_by_id(env) or OAuthConfig(id = env)
-    config.client_id = client_id
-    config.client_secret = client_secret
+    config.client_id = self.request.get('id')
+    config.client_secret = self.request.get('secret')
+    config.wca_site = self.request.get('wca')
     config.put()
     self.response.write('ok')
