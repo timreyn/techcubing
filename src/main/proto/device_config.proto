@@ -6,6 +6,7 @@ option java_package = "com.techcubing.proto";
 option java_outer_classname = "DeviceConfigProto";
 
 import "src/main/proto/device.proto";
+import "src/main/proto/wca_environment.proto";
 import "src/main/proto/wcif/competition.proto";
 
 message DeviceConfig {
@@ -16,4 +17,6 @@ message DeviceConfig {
   string serverHost = 3;
 
   int32 serverPort = 4;
+
+  WcaEnvironment wca_environment = 5;
 }

@@ -55,6 +55,7 @@ proto_library(
     srcs = ["device_config.proto"],
     deps = [
         ":device_proto",
+        ":wca_environment_proto",
         "//src/main/proto/wcif:competition_proto",
     ],
 )
