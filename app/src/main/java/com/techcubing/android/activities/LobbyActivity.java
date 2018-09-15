@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.techcubing.android.R;
 import com.techcubing.android.util.ActiveState;
@@ -21,6 +22,7 @@ public class LobbyActivity extends AppCompatActivity {
                 ActiveState.getActive(ActiveState.STAFF, this);
         if (staff == null) {
             startActivity(new Intent(this, LoggedOutActivity.class));
+            return;
         }
 
         ScorecardProto.Scorecard scorecard =
@@ -37,8 +39,8 @@ public class LobbyActivity extends AppCompatActivity {
             }
         }
 
-        Button button = findViewById(R.id.lobby_scan_scorecard_button);
-        button.setOnClickListener(view -> {
+        Button scanScorecardButton = findViewById(R.id.lobby_scan_scorecard_button);
+        scanScorecardButton.setOnClickListener(view -> {
             Intent barcodeScannerIntent =
                     new Intent(this, BarcodeScannerActivity.class);
             barcodeScannerIntent.putExtra(
@@ -46,7 +48,15 @@ public class LobbyActivity extends AppCompatActivity {
             barcodeScannerIntent.putExtra(
                     BarcodeScannerActivity.EXTRA_EXPECTED_PATH_PREFIX,
                     ActiveState.getActive(ActiveState.COMPETITION, this).getId());
-            this.startActivity(barcodeScannerIntent);
+            startActivity(barcodeScannerIntent);
         });
+
+        Button logOutButton = findViewById(R.id.lobby_log_out_button);
+        logOutButton.setOnClickListener(view -> {
+            startActivity(new Intent(this, ReleaseDeviceActivity.class));
+        });
+
+        TextView staffNameTextView = findViewById(R.id.lobby_staff_name);
+        staffNameTextView.setText("You're signed in as " + staff.getName());
     }
 }
