@@ -8,6 +8,7 @@ java_library(
     deps = [
         ":MysqlConnection",
         ":ProtoRegistry",
+        "//src/main/proto:wca_environment_java_proto",
         "@com_android_tools_ddms_ddmlib//jar",
         "@org_freemarker_freemarker//jar",
     ],
@@ -82,8 +83,9 @@ java_library(
     name = "CommandLineFlags",
     srcs = ["CommandLineFlags.java"],
     deps = [
-        "@com_github_pcj_google_options//jar",
+        "//src/main/proto:wca_environment_java_proto",
         ":ServerState",
+        "@com_github_pcj_google_options//jar",
     ],
 )
 

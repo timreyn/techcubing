@@ -4,6 +4,8 @@ import com.google.devtools.common.options.EnumConverter;
 import com.google.devtools.common.options.Option;
 import com.google.devtools.common.options.OptionsBase;
 
+import com.techcubing.proto.WcaEnvironmentProto.WcaEnvironment;
+
 public class CommandLineFlags extends OptionsBase {
   @Option(
     name = "help",
@@ -14,9 +16,9 @@ public class CommandLineFlags extends OptionsBase {
   public boolean help;
 
   public static class WcaEnvironmentConverter
-      extends EnumConverter<ServerState.WcaEnvironment> {
+      extends EnumConverter<WcaEnvironment> {
     public WcaEnvironmentConverter() {
-      super(ServerState.WcaEnvironment.class, "WcaEnvironment");
+      super(WcaEnvironment.class, "WcaEnvironment");
     }
   }
 
@@ -26,5 +28,5 @@ public class CommandLineFlags extends OptionsBase {
     defaultValue = "PROD",
     converter = WcaEnvironmentConverter.class
   )
-  public ServerState.WcaEnvironment wca;
+  public WcaEnvironment wca;
 }

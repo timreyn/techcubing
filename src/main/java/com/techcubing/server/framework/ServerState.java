@@ -4,6 +4,8 @@ import com.android.ddmlib.AndroidDebugBridge;
 import freemarker.template.Configuration;
 import java.net.URI;
 
+import com.techcubing.proto.WcaEnvironmentProto.WcaEnvironment;
+
 public class ServerState {
   private Configuration templateConfig;
   private String accessToken = null;
@@ -50,10 +52,6 @@ public class ServerState {
 
   public MysqlConnection getMysqlConnection() {
     return mysqlConnection;
-  }
-
-  public enum WcaEnvironment {
-    PROD, STAGING, DEV
   }
 
   ServerState setWcaEnvironment(WcaEnvironment wcaEnvironment) {
