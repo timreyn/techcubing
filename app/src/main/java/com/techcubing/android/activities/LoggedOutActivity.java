@@ -56,7 +56,7 @@ public class LoggedOutActivity extends AppCompatActivity {
                     BarcodeScannerActivity.EXTRA_EXPECTED_HOST, "acquire_device");
             barcodeScannerIntent.putExtra(
                     BarcodeScannerActivity.EXTRA_EXPECTED_PATH_PREFIX,
-                    deviceConfig.getWcaEnvironment().toString().toLowerCase());
+                    "/" + deviceConfig.getWcaEnvironment().toString().toLowerCase());
             this.startActivity(barcodeScannerIntent);
         });
     }

@@ -53,8 +53,7 @@ public class ReleaseDeviceActivity extends AppCompatActivity {
                         }
                         switch (response.getStatus()) {
                             case OK:
-                                Log.i(TAG, "Successfully released scorecard " +
-                                        scorecard.getId());
+                                Log.i(TAG, "Successfully signed out.");
                                 ActiveState.setActive(
                                         ActiveState.STAFF, null,
                                         ReleaseDeviceActivity.this);
@@ -76,7 +75,7 @@ public class ReleaseDeviceActivity extends AppCompatActivity {
         );
 
         ActiveState.setActive(ActiveState.SCORECARD, null, this);
-        startActivity(new Intent(this, LobbyActivity.class));
+        startActivity(new Intent(this, LoggedOutActivity.class));
     }
 
     private void onFailure(String failureReason) {

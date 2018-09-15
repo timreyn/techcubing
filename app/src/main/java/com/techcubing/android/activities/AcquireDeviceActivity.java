@@ -46,7 +46,7 @@ public class AcquireDeviceActivity extends AppCompatActivity {
                     public void onSuccess(@Nullable AcquireDeviceResponse response) {
                         if (response == null) {
                             AcquireDeviceActivity.this.onFailure(
-                                    "Null response from acquireScorecard");
+                                    "Null response from acquireDevice");
                             return;
                         }
                         switch (response.getStatus()) {
@@ -78,7 +78,7 @@ public class AcquireDeviceActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             setContentView(R.layout.generic_failure);
             TextView failureDescription = findViewById(R.id.failure_description);
-            failureDescription.setText("Failed to acquire scorecard.");
+            failureDescription.setText("Failed to acquire device.");
             TextView failureReasonView = findViewById(R.id.failure_reason);
             failureReasonView.setText(failureReason);
             Button button = findViewById(R.id.failure_button);
