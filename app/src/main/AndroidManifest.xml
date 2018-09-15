@@ -48,6 +48,14 @@
         <activity android:name=".activities.ScrambleActivity"/>
         <activity android:name=".activities.ScrambleCheckActivity"/>
         <activity android:name=".activities.LoggedOutActivity"/>
+        <activity android:name=".activities.AcquireDeviceActivity">
+            <intent-filter>
+                <action android:name="com.techcubing.SCAN_BARCODE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="techcubing"
+                    android:host="acquire_device"/>
+            </intent-filter>
+        </activity>
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
