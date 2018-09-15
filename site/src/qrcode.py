@@ -28,7 +28,7 @@ class QRCodeHandler(webapp2.RequestHandler):
       response = conn.getresponse()
       response_json = json.loads(response.read())
 
-      uri = 'techcubing://acquire_device/' + response_json['access_token']
+      uri = ('techcubing://acquire_device/%s/%s') % (env, response_json['access_token'])
       template = JINJA_ENVIRONMENT.get_template('qr.html')
       self.response.write(template.render({
         'qrcode': uri,
