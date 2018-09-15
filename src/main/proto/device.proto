@@ -25,4 +25,10 @@ message Device {
 
   bytes secret_key = 7 [(techcubing.clear_for_get_by_id) = true];
   bytes iv = 8 [(techcubing.clear_for_get_by_id) = true];
+
+  string person_id = 9 [
+    (techcubing.message_type) = "techcubing.wcif.WcifPerson",
+    (techcubing.mysql_column_name) = "person_id"
+  ];
+  google.protobuf.Timestamp acquired = 10;
 }
