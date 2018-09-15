@@ -3,14 +3,13 @@
 <html>
 <head>
   <script src="/static/external/qrcodejs/qrcode.min.js"></script>
-  <meta http-equiv="refresh" content="30" />
   <style>
     body {
       text-align: center;
       font-size: 48pt;
       font-family: sans-serif;
     }
-    .container {
+    #container {
       margin: auto;
       position: absolute;
       top: 0;
@@ -27,7 +26,8 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div id="container"
+       data-cleanurl="{{ clean_url }}">
     <div class="qrcode"
          data-value="{{ qrcode }}"></div>
     <p>
@@ -35,7 +35,11 @@
     </p>
   </div>
   <script type="application/javascript">
-    window.history.replaceState("", "", "/qr");
+    elt = document.getElementById("container");
+    window.history.replaceState("", "", elt.dataset.cleanurl);
+    setTimeout(function(){
+      window.location.reload(1);
+    }, 30000);
 
     Array.prototype.forEach.call(
       document.getElementsByClassName("qrcode"),
