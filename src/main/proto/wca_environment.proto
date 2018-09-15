@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto";
+option java_outer_classname = "WcaEnvironmentProto";
+
+enum WcaEnvironment {
+  UNKNOWN = 0;
+  PROD = 1;
+  STAGING = 2;
+  DEV = 3;
+}

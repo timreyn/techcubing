@@ -115,3 +115,14 @@ java_proto_library(
     name = "scramble_java_proto",
     deps = [":scramble_proto"],
 )
+
+# wca_environment.proto
+
+proto_library(
+    name = "wca_environment_proto",
+    srcs = ["wca_environment.proto"],
+)
+java_proto_library(
+    name = "wca_environment_java_proto",
+    deps = [":wca_environment_proto"],
+)
