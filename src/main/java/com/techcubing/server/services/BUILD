@@ -3,11 +3,13 @@ java_library(
     srcs = ["TechCubingServiceImpl.java"],
     visibility = ["//src/main/java/com/techcubing/server:__pkg__"],
     deps = [
+        ":AcquireDeviceImpl",
         ":AcquireScorecardImpl",
         ":GetByIdImpl",
         ":GetScrambleImpl",
         ":ListPersonsImpl",
         ":ReleaseScorecardImpl",
+        "//src/main/proto/services:acquire_device_java_proto",
         "//src/main/proto/services:acquire_scorecard_java_proto",
         "//src/main/proto/services:get_by_id_java_proto",
         "//src/main/proto/services:get_scramble_java_proto",
@@ -90,5 +92,20 @@ java_library(
         "//src/main/java/com/techcubing/server/framework:ServerState",
         "//src/main/java/com/techcubing/server/util:ProtoUtil",
         "@com_google_protobuf//:protobuf_java",
+    ],
+)
+
+java_library(
+    name = "AcquireDeviceImpl",
+    srcs = ["AcquireDeviceImpl.java"],
+    deps = [
+        "//src/main/java/com/techcubing/server/framework:ProtoDb",
+        "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/java/com/techcubing/server/util:ProtoUtil",
+        "//src/main/proto:device_java_proto",
+        "//src/main/proto/services:acquire_device_java_proto",
+        "//src/main/proto/wcif:person_java_proto",
+        "@com_google_protobuf//:protobuf_java",
+        "@com_googlecode_json_simple_json_simple//jar",
     ],
 )

@@ -3,6 +3,8 @@ package com.techcubing.server.services;
 import io.grpc.stub.StreamObserver;
 
 import com.techcubing.server.framework.ServerState;
+import com.techcubing.proto.services.AcquireDeviceProto.AcquireDeviceRequest;
+import com.techcubing.proto.services.AcquireDeviceProto.AcquireDeviceResponse;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardRequest;
 import com.techcubing.proto.services.AcquireScorecardProto.AcquireScorecardResponse;
 import com.techcubing.proto.services.ListPersonsProto.ListPersonsRequest;
@@ -16,6 +18,7 @@ import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardRespo
 import com.techcubing.proto.services.TechCubingServiceGrpc.TechCubingServiceImplBase;
 
 public class TechCubingServiceImpl extends TechCubingServiceImplBase {
+  private AcquireDeviceImpl acquireDeviceImpl;
   private AcquireScorecardImpl acquireScorecardImpl;
   private ReleaseScorecardImpl releaseScorecardImpl;
   private ListPersonsImpl listPersonsImpl;
@@ -26,6 +29,7 @@ public class TechCubingServiceImpl extends TechCubingServiceImplBase {
     listPersonsImpl = new ListPersonsImpl(serverState);
     getByIdImpl = new GetByIdImpl(serverState);
     getScrambleImpl = new GetScrambleImpl(serverState);
+    acquireDeviceImpl = new AcquireDeviceImpl(serverState);
     acquireScorecardImpl = new AcquireScorecardImpl(serverState);
     releaseScorecardImpl = new ReleaseScorecardImpl(serverState);
   }
@@ -62,6 +66,13 @@ public class TechCubingServiceImpl extends TechCubingServiceImplBase {
   public void getScramble(GetScrambleRequest request,
       StreamObserver<GetScrambleResponse> response) {
     response.onNext(getScrambleImpl.getScramble(request));
+    response.onCompleted();
+  }
+
+  @Override
+  public void acquireDevice(AcquireDeviceRequest request,
+      StreamObserver<AcquireDeviceResponse> response) {
+    response.onNext(acquireDeviceImpl.acquireDevice(request));
     response.onCompleted();
   }
 }
