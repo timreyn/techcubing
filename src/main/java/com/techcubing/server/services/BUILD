@@ -8,12 +8,14 @@ java_library(
         ":GetByIdImpl",
         ":GetScrambleImpl",
         ":ListPersonsImpl",
+        ":ReleaseDeviceImpl",
         ":ReleaseScorecardImpl",
         "//src/main/proto/services:acquire_device_java_proto",
         "//src/main/proto/services:acquire_scorecard_java_proto",
         "//src/main/proto/services:get_by_id_java_proto",
         "//src/main/proto/services:get_scramble_java_proto",
         "//src/main/proto/services:list_persons_java_proto",
+        "//src/main/proto/services:release_device_java_proto",
         "//src/main/proto/services:release_scorecard_java_proto",
         "//src/main/proto/services:techcubing_service_java_grpc",
         "//src/main/proto/services:techcubing_service_java_proto",
@@ -107,5 +109,17 @@ java_library(
         "//src/main/proto/wcif:person_java_proto",
         "@com_google_protobuf//:protobuf_java",
         "@com_googlecode_json_simple_json_simple//jar",
+    ],
+)
+
+java_library(
+    name = "ReleaseDeviceImpl",
+    srcs = ["ReleaseDeviceImpl.java"],
+    deps = [
+        "//src/main/java/com/techcubing/server/framework:ProtoDb",
+        "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/proto:device_java_proto",
+        "//src/main/proto/services:release_device_java_proto",
+        "@com_google_protobuf//:protobuf_java",
     ],
 )

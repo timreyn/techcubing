@@ -13,6 +13,8 @@ import com.techcubing.proto.services.GetByIdProto.GetByIdRequest;
 import com.techcubing.proto.services.GetByIdProto.GetByIdResponse;
 import com.techcubing.proto.services.GetScrambleProto.GetScrambleRequest;
 import com.techcubing.proto.services.GetScrambleProto.GetScrambleResponse;
+import com.techcubing.proto.services.ReleaseDeviceProto.ReleaseDeviceRequest;
+import com.techcubing.proto.services.ReleaseDeviceProto.ReleaseDeviceResponse;
 import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardRequest;
 import com.techcubing.proto.services.ReleaseScorecardProto.ReleaseScorecardResponse;
 import com.techcubing.proto.services.TechCubingServiceGrpc.TechCubingServiceImplBase;
@@ -20,17 +22,19 @@ import com.techcubing.proto.services.TechCubingServiceGrpc.TechCubingServiceImpl
 public class TechCubingServiceImpl extends TechCubingServiceImplBase {
   private AcquireDeviceImpl acquireDeviceImpl;
   private AcquireScorecardImpl acquireScorecardImpl;
-  private ReleaseScorecardImpl releaseScorecardImpl;
   private ListPersonsImpl listPersonsImpl;
   private GetByIdImpl getByIdImpl;
   private GetScrambleImpl getScrambleImpl;
+  private ReleaseDeviceImpl releaseDeviceImpl;
+  private ReleaseScorecardImpl releaseScorecardImpl;
 
   public TechCubingServiceImpl(ServerState serverState) {
-    listPersonsImpl = new ListPersonsImpl(serverState);
-    getByIdImpl = new GetByIdImpl(serverState);
-    getScrambleImpl = new GetScrambleImpl(serverState);
     acquireDeviceImpl = new AcquireDeviceImpl(serverState);
     acquireScorecardImpl = new AcquireScorecardImpl(serverState);
+    getByIdImpl = new GetByIdImpl(serverState);
+    getScrambleImpl = new GetScrambleImpl(serverState);
+    listPersonsImpl = new ListPersonsImpl(serverState);
+    releaseDeviceImpl = new ReleaseDeviceImpl(serverState);
     releaseScorecardImpl = new ReleaseScorecardImpl(serverState);
   }
 
@@ -73,6 +77,13 @@ public class TechCubingServiceImpl extends TechCubingServiceImplBase {
   public void acquireDevice(AcquireDeviceRequest request,
       StreamObserver<AcquireDeviceResponse> response) {
     response.onNext(acquireDeviceImpl.acquireDevice(request));
+    response.onCompleted();
+  }
+
+  @Override
+  public void releaseDevice(ReleaseDeviceRequest request,
+      StreamObserver<ReleaseDeviceResponse> response) {
+    response.onNext(releaseDeviceImpl.releaseDevice(request));
     response.onCompleted();
   }
 }
