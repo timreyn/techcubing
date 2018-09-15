@@ -13,6 +13,9 @@ libraries:
     version: latest
 
 handlers:
+  - url: /static
+    static_dir: src/static
+    secure: always
   - url: /.*
     script: techcubing.app
     secure: always
