@@ -18,4 +18,5 @@ message ReleaseDeviceResponse {
   enum Status {
     OK = 0;
   }
+  Status status = 2;
 }
