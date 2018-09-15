@@ -7,3 +7,6 @@
 [submodule "third_party/qrcodejs"]
 	path = third_party/qrcodejs
 	url = https://github.com/davidshimjs/qrcodejs.git
+[submodule "site/src/static/external/qrcodejs"]
+	path = site/src/static/external/qrcodejs
+	url = https://github.com/davidshimjs/qrcodejs.git
