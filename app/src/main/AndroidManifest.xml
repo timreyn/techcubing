@@ -53,7 +53,7 @@
                 <action android:name="com.techcubing.SCAN_BARCODE"/>
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="techcubing"
-                    android:host="acquire_device"/>
+                      android:host="acquire_device"/>
             </intent-filter>
         </activity>
         <activity android:name=".activities.ReleaseDeviceActivity"/>
