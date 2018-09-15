@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Base64;
+import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.Parser;
+import com.jakewharton.disklrucache.DiskLruCache;
+import com.techcubing.android.BuildConfig;
 import com.techcubing.proto.DeviceConfigProto;
 import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.ScorecardProto;
@@ -20,7 +23,12 @@ import com.techcubing.proto.wcif.WcifEvent;
 import com.techcubing.proto.wcif.WcifPerson;
 import com.techcubing.proto.wcif.WcifRound;
 
+import java.io.File;
+import java.io.IOException;
+
 public class ActiveState {
+    private static final String TAG = "TCActiveState";
+
     public static final ProtoStateKey<DeviceProto.Device> DEVICE =
             new ProtoStateKey<>("DEVICE", DeviceProto.Device.parser(), "techcubing.Device");
 
@@ -81,6 +89,11 @@ public class ActiveState {
     @Nullable
     public static <E extends MessageLite> E setActiveById(
             ProtoStateKey<E> key, String id, Context context, Context applicationContext) {
+        E cachedE = readFromCache(key, id, context);
+        if (cachedE != null) {
+            return cachedE;
+        }
+
         TechCubingServiceGrpc.TechCubingServiceBlockingStub stub =
                 Stubs.blockingStub(context, applicationContext);
         GetByIdRequest.Builder requestBuilder =
@@ -91,13 +104,20 @@ public class ActiveState {
 
         GetByIdResponse response = stub.getById(requestBuilder.build());
 
+        E e;
         try {
-            E e = key.parser.parseFrom(response.getEntity().getValue().toByteArray());
+            e = key.parser.parseFrom(response.getEntity().getValue().toByteArray());
             setActive(key, e, context);
-            return e;
-        } catch (InvalidProtocolBufferException e) {
+        } catch (InvalidProtocolBufferException ex) {
             return null;
         }
+
+        try {
+            writeToCache(key, id, e, context);
+        } catch (IOException ex) {
+            Log.e(TAG, "Error writing to cache.", ex);
+        }
+        return e;
     }
 
     public static void clearState(Context context) {
@@ -164,6 +184,41 @@ public class ActiveState {
         @Override
         void setValue(SharedPreferences.Editor preferences, Integer value) {
             preferences.putInt(key, value);
+        }
+    }
+
+    private static DiskLruCache getCache(Context context) throws IOException {
+        return DiskLruCache.open(
+                new File(context.getFilesDir(), "cache"),
+                BuildConfig.VERSION_CODE, 1, 32 * 1024);
+    }
+
+    public static synchronized <E extends MessageLite> void writeToCache(
+            ProtoStateKey<E> protoKey, String key, E e, Context context) throws IOException {
+        DiskLruCache cache = getCache(context);
+        String fullKey = (protoKey.key + "__" + key).toLowerCase();
+        DiskLruCache.Editor editor = cache.edit(fullKey);
+        editor.set(0, new String(e.toByteArray()));
+        editor.commit();
+        cache.close();
+    }
+
+    @Nullable
+    public static synchronized <E extends MessageLite> E readFromCache(
+            ProtoStateKey<E> protoKey, String key, Context context) {
+        try {
+            DiskLruCache cache = getCache(context);
+            String fullKey = (protoKey.key + "__" + key).toLowerCase();
+            DiskLruCache.Snapshot snapshot = cache.get(fullKey);
+            if (snapshot == null) {
+                cache.close();
+                return null;
+            }
+            E e = protoKey.parser.parseFrom(snapshot.getString(0).getBytes());
+            cache.close();
+            return e;
+        } catch (IOException e) {
+            return null;
         }
     }
 }
