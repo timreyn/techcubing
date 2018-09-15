@@ -128,6 +128,7 @@ proto_library(
     name = "acquire_device_proto",
     srcs = ["acquire_device.proto"],
     deps = [
+        "//src/main/proto:device_proto",
         "//src/main/proto:request_context_proto",
         "//src/main/proto:response_context_proto",
         "//src/main/proto/wcif:person_proto",

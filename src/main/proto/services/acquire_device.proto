@@ -5,6 +5,7 @@ package techcubing;
 option java_package = "com.techcubing.proto.services";
 option java_outer_classname = "AcquireDeviceProto";
 
+import "src/main/proto/device.proto";
 import "src/main/proto/request_context.proto";
 import "src/main/proto/response_context.proto";
 import "src/main/proto/wcif/person.proto";
@@ -21,8 +22,11 @@ message AcquireDeviceResponse {
   enum Status {
     OK = 0;
     ALREADY_LOGGED_IN = 1;
+    INTERNAL_ERROR = 2;
   }
   Status status = 2;
 
   wcif.WcifPerson person = 3;
+
+  Device device_already_logged_in = 4;
 }
