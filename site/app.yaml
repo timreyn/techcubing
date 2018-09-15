@@ -16,6 +16,10 @@ handlers:
   - url: /static
     static_dir: src/static
     secure: always
+  - url: /admin/.*
+    script: admin.app
+    login: admin
+    secure: always
   - url: /.*
     script: techcubing.app
     secure: always
