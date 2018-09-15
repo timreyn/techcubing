@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+  <script src="/static/external/qrcodejs/qrcode.min.js"></script>
+  <meta http-equiv="refresh" content="30" />
+  <style>
+    body {
+      text-align: center;
+      font-size: 48pt;
+      font-family: sans-serif;
+    }
+    .container {
+      margin: auto;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 500px;
+    }
+    .qrcode {
+      margin: auto;
+      width: 500px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="qrcode"
+         data-value="{{ qrcode }}"></div>
+    <p>
+      Scan this code to log in to a judging or scrambling device.
+    </p>
+  </div>
+  <script type="application/javascript">
+    window.history.replaceState("", "", "/qr");
+
+    Array.prototype.forEach.call(
+      document.getElementsByClassName("qrcode"),
+      function(elt) {
+        new QRCode(elt, {
+          "text": elt.dataset.value,
+          "width": elt.offsetWidth,
+          "height": elt.offsetWidth,
+        });
+      });
+  </script>
+</body>
+</html>
+
+
+{% endautoescape %}
