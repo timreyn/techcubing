@@ -80,6 +80,7 @@ public class AddDeviceHandler extends BaseHandler {
           .setDevice(device)
           .setServerHost(hostAddress)
           .setServerPort(serverState.getGrpcPort())
+          .setWcaEnvironment(serverState.getWcaEnvironment())
           .build();
 
     String configEncoded = Base64.getUrlEncoder().encodeToString(config.toByteArray());
