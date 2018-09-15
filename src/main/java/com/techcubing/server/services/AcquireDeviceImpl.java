@@ -105,7 +105,7 @@ class AcquireDeviceImpl {
 
   private WcifPerson getOrWritePerson(JSONObject jsonPerson)
       throws SQLException, IOException {
-    String personId = String.valueOf((int) jsonPerson.get("id"));
+    String personId = String.valueOf((int) ((long) jsonPerson.get("id")));
     WcifPerson person =
       (WcifPerson) ProtoDb.getById(personId, WcifPerson.newBuilder(), serverState);
     if (person != null) {
@@ -114,7 +114,7 @@ class AcquireDeviceImpl {
     WcifPerson.Builder builder = WcifPerson.newBuilder()
       .setRegistrantId(-1)
       .setName((String) jsonPerson.get("name"))
-      .setWcaUserId((int) jsonPerson.get("id"));
+      .setWcaUserId((int) ((long) jsonPerson.get("id")));
 
     if (jsonPerson.containsKey("wca_id")) {
       builder.setWcaId((String) jsonPerson.get("wca_id"));
