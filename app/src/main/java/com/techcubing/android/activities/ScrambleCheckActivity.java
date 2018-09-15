@@ -9,13 +9,17 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.techcubing.android.R;
 import com.techcubing.android.util.ActiveState;
+import com.techcubing.android.util.EncodingUtil;
 import com.techcubing.android.util.Puzzle;
+import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.ScorecardProto;
+import com.techcubing.proto.services.GetScrambleProto.GetScrambleResponse;
 import com.techcubing.proto.wcif.WcifEvent;
 import com.wonderkiln.camerakit.CameraKitEventCallback;
 import com.wonderkiln.camerakit.CameraKitImage;
@@ -30,7 +34,6 @@ import java.util.concurrent.Semaphore;
 
 public class ScrambleCheckActivity extends AppCompatActivity {
     private static final String TAG = "TCScrambleCheck";
-    public static final String EXTRA_SCRAMBLE_STATE = "com.techcubing.SCRAMBLE_STATE";
 
     private CameraView cameraView;
     private final Semaphore cameraCloseSemaphore = new Semaphore(1, true);
@@ -180,19 +183,31 @@ public class ScrambleCheckActivity extends AppCompatActivity {
         }
 
         WcifEvent event = ActiveState.getActive(ActiveState.EVENT, this);
-        if (event == null) {
-            throw new RuntimeException("No event");
+        DeviceProto.Device device = ActiveState.getActive(ActiveState.DEVICE, this);
+        GetScrambleResponse scramble = ActiveState.getActive(ActiveState.SCRAMBLE, this);
+        if (device == null || scramble == null || event == null) {
+            onFailure("Can't load active state.");
+            return;
         }
         puzzle = Puzzle.getPuzzleForEvent(event.getId());
         if (puzzle == null) {
-            throw new RuntimeException("Invalid puzzle requested.");
+            onFailure("Scramble checking isn't enabled for this event.");
+            return;
         }
 
         cameraView = findViewById(R.id.scramble_check_camera);
 
         handler = new Handler();
-        puzzle.setScrambleState(
-                getIntent().getStringExtra(EXTRA_SCRAMBLE_STATE).split("\\|"));
+        try {
+            puzzle.setScrambleState(
+                    new String(EncodingUtil.decode(
+                            scramble.getEncryptedScrambleState().toByteArray(), device))
+                            .split("\\|"));
+        } catch (Exception e) {
+            onFailure("Failed to load scramble state.");
+            Log.e(TAG, "Failed to load scramble state.", e);
+            return;
+        }
         nextFaceInstructions = findViewById(R.id.scramble_check_next_face_instructions);
 
         LinearLayout diagramContainer = findViewById(R.id.scramble_check_diagram_container);
@@ -235,6 +250,25 @@ public class ScrambleCheckActivity extends AppCompatActivity {
         cameraView.stop();
         cameraCloseSemaphore.release();
         super.onPause();
+    }
+
+    private void onFailure(String failureReason) {
+        Log.e(TAG, failureReason);
+        runOnUiThread(() -> {
+            setContentView(R.layout.generic_failure);
+            TextView failureDescription = findViewById(R.id.failure_description);
+            failureDescription.setText("Failed to load scramble state.");
+            TextView failureReasonView = findViewById(R.id.failure_reason);
+            failureReasonView.setText(failureReason);
+            Button button = findViewById(R.id.failure_button);
+            button.setOnClickListener(view -> {
+                Intent intent = new Intent(this, ReleaseScorecardActivity.class);
+                intent.putExtra(
+                        ReleaseScorecardActivity.EXTRA_OUTCOME,
+                        ScorecardProto.AttemptPartOutcome.PROTOCOL_FAILURE_VALUE);
+                startActivity(intent);
+            });
+        });
     }
 
     private void acquireLockAndCaptureImage() {

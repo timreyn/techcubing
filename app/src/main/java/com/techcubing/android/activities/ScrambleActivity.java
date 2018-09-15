@@ -52,66 +52,51 @@ public class ScrambleActivity extends AppCompatActivity {
         }
         ScorecardProto.Attempt attempt = scorecard.getAttempts(attemptNumber);
 
-
         String headerText = String.format(
                 Locale.US, "%s %s attempt %d", competitor.getName(), round.getId(), attemptNumber);
         TextView header = findViewById(R.id.scramble_header);
         header.setText(headerText);
 
-        // Get the scramble from the server.
-        TechCubingServiceGrpc.TechCubingServiceFutureStub stub =
-                Stubs.futureStub(this, getApplicationContext());
-        GetScrambleRequest.Builder requestBuilder =
-                GetScrambleRequest.newBuilder().setId(attempt.getScrambleId());
-        requestBuilder.setContext(RequestContextBuilder.signRequest(requestBuilder, this));
+        // Check if the scramble is cached already.
+        GetScrambleResponse scrambleResponse =
+                ActiveState.readFromCache(
+                        ActiveState.SCRAMBLE, attempt.getScrambleId(), this);
+        if (scrambleResponse != null) {
+            onScrambleReady(scrambleResponse, device);
+        } else {
+            // Get the scramble from the server.
+            TechCubingServiceGrpc.TechCubingServiceFutureStub stub =
+                    Stubs.futureStub(this, getApplicationContext());
+            GetScrambleRequest.Builder requestBuilder =
+                    GetScrambleRequest.newBuilder().setId(attempt.getScrambleId());
+            requestBuilder.setContext(RequestContextBuilder.signRequest(requestBuilder, this));
 
-        Futures.addCallback(
-                stub.getScramble(requestBuilder.build()),
-                new FutureCallback<GetScrambleResponse>() {
-                    @Override
-                    public void onSuccess(@Nullable GetScrambleResponse response) {
-                        if (response == null) {
-                            ScrambleActivity.this.onFailure(
-                                    "No response from the server");
-                            return;
-                        }
+            Futures.addCallback(
+                    stub.getScramble(requestBuilder.build()),
+                    new FutureCallback<GetScrambleResponse>() {
+                        @Override
+                        public void onSuccess(@Nullable GetScrambleResponse response) {
+                            if (response == null) {
+                                ScrambleActivity.this.onFailure(
+                                        "No response from the server");
+                                return;
+                            }
+                            ActiveState.writeToCache(
+                                    ActiveState.SCRAMBLE, attempt.getScrambleId(), response,
+                                    ScrambleActivity.this);
 
-                        String scramble;
-                        String scrambleState;
-
-                        try {
-                            scramble = new String(EncodingUtil.decode(
-                                    response.getEncryptedScrambleSequence().toByteArray(), device));
-                            scrambleState = new String(EncodingUtil.decode(
-                                    response.getEncryptedScrambleState().toByteArray(), device));
-                        } catch (Exception e) {
-                            Log.e(TAG, "Error decoding scramble", e);
-                            ScrambleActivity.this.onFailure(
-                                    "Failed to read scramble from server");
-                            return;
-                        }
-
-                        ScrambleActivity.this.runOnUiThread(() -> {
-                            TextView textView = findViewById(R.id.scramble_text_view);
-                            textView.setText(scramble);
-                            Button button = findViewById(R.id.scramble_check_button);
-                            button.setOnClickListener(view -> {
-                                Intent intent = new Intent(
-                                        ScrambleActivity.this,
-                                        ScrambleCheckActivity.class);
-                                intent.putExtra(
-                                        ScrambleCheckActivity.EXTRA_SCRAMBLE_STATE, scrambleState);
-                                startActivity(intent);
+                            ScrambleActivity.this.runOnUiThread(() -> {
+                                onScrambleReady(response, device);
                             });
-                        });
-                    }
+                        }
 
-                    @Override
-                    public void onFailure(Throwable t) {
-                        ScrambleActivity.this.onFailure(t.getMessage());
+                        @Override
+                        public void onFailure(Throwable t) {
+                            ScrambleActivity.this.onFailure(t.getMessage());
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     private void onFailure(String failureReason) {
@@ -131,6 +116,30 @@ public class ScrambleActivity extends AppCompatActivity {
                         ScorecardProto.AttemptPartOutcome.PROTOCOL_FAILURE_VALUE);
                 startActivity(intent);
             });
+        });
+    }
+
+    private void onScrambleReady(GetScrambleResponse response, Device device) {
+        ActiveState.setActive(ActiveState.SCRAMBLE, response, this);
+
+        String scramble;
+        try {
+            scramble = new String(EncodingUtil.decode(
+                    response.getEncryptedScrambleSequence().toByteArray(), device));
+        } catch (Exception e) {
+            Log.e(TAG, "Error decoding scramble", e);
+            onFailure("Failed to read scramble from server");
+            return;
+        }
+
+        TextView textView = findViewById(R.id.scramble_text_view);
+        textView.setText(scramble);
+        Button button = findViewById(R.id.scramble_check_button);
+        button.setOnClickListener(view -> {
+            Intent intent = new Intent(
+                    ScrambleActivity.this,
+                    ScrambleCheckActivity.class);
+            startActivity(intent);
         });
     }
 }
