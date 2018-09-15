@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package techcubing;
+
+option java_package = "com.techcubing.proto.services";
+option java_outer_classname = "AcquireDeviceProto";
+
+import "src/main/proto/request_context.proto";
+import "src/main/proto/response_context.proto";
+import "src/main/proto/wcif/person.proto";
+
+message AcquireDeviceRequest {
+  RequestContext context = 1;
+
+  string authorization_code = 2;
+}
+
+message AcquireDeviceResponse {
+  ResponseContext context = 1;
+
+  enum Status {
+    OK = 0;
+    ALREADY_LOGGED_IN = 1;
+  }
+  Status status = 2;
+
+  wcif.WcifPerson person = 3;
+}

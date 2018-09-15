@@ -11,6 +11,7 @@ proto_library(
     name = "techcubing_service_proto",
     srcs = ["techcubing_service.proto"],
     deps = [
+        ":acquire_device_proto",
         ":acquire_scorecard_proto",
         ":get_by_id_proto",
         ":get_scramble_proto",
@@ -28,6 +29,7 @@ java_grpc_library(
     name = "techcubing_service_java_grpc",
     srcs = [":techcubing_service_proto"],
     deps = [
+        ":acquire_device_java_proto",
         ":acquire_scorecard_java_proto",
         ":get_by_id_java_proto",
         ":get_scramble_java_proto",
@@ -103,7 +105,7 @@ java_proto_library(
     deps = [":release_scorecard_proto"],
 )
 
-# AcquireScorecard
+# GetScramble
 
 proto_library(
     name = "get_scramble_proto",
@@ -116,4 +118,20 @@ proto_library(
 java_proto_library(
     name = "get_scramble_java_proto",
     deps = [":get_scramble_proto"],
+)
+
+# AcquireDevice
+
+proto_library(
+    name = "acquire_device_proto",
+    srcs = ["acquire_device.proto"],
+    deps = [
+        "//src/main/proto:request_context_proto",
+        "//src/main/proto:response_context_proto",
+        "//src/main/proto/wcif:person_proto",
+    ],
+)
+java_proto_library(
+    name = "acquire_device_java_proto",
+    deps = [":acquire_device_proto"],
 )

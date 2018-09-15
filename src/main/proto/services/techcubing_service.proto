@@ -5,6 +5,7 @@ package techcubing;
 option java_package = "com.techcubing.proto.services";
 option java_outer_classname = "TechCubingServiceProto";
 
+import "src/main/proto/services/acquire_device.proto";
 import "src/main/proto/services/acquire_scorecard.proto";
 import "src/main/proto/services/get_by_id.proto";
 import "src/main/proto/services/get_scramble.proto";
@@ -12,9 +13,10 @@ import "src/main/proto/services/list_persons.proto";
 import "src/main/proto/services/release_scorecard.proto";
 
 service TechCubingService {
-  rpc ListPersons (ListPersonsRequest) returns (ListPersonsResponse);
+  rpc AcquireDevice (AcquireDeviceRequest) returns (AcquireDeviceResponse);
+  rpc AcquireScorecard (AcquireScorecardRequest) returns (AcquireScorecardResponse);
   rpc GetById (GetByIdRequest) returns (GetByIdResponse);
   rpc GetScramble (GetScrambleRequest) returns (GetScrambleResponse);
-  rpc AcquireScorecard (AcquireScorecardRequest) returns (AcquireScorecardResponse);
+  rpc ListPersons (ListPersonsRequest) returns (ListPersonsResponse);
   rpc ReleaseScorecard (ReleaseScorecardRequest) returns (ReleaseScorecardResponse);
 }
