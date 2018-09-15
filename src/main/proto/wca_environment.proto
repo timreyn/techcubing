@@ -6,7 +6,7 @@ option java_package = "com.techcubing.proto";
 option java_outer_classname = "WcaEnvironmentProto";
 
 enum WcaEnvironment {
-  UNKNOWN = 0;
+  UNKNOWN_ENVIRONMENT = 0;
   PROD = 1;
   STAGING = 2;
   DEV = 3;
