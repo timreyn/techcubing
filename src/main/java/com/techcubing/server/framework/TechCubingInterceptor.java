@@ -40,7 +40,7 @@ public class TechCubingInterceptor implements ServerInterceptor {
             message.getDescriptorForType().findFieldByName("context");
           RequestContext context =
             (RequestContext) message.getField(fieldDescriptor);
-          Device device = protoDb.getById(context.getDeviceId(), Device.class);
+          Device device = protoDb.getById(Device.class, context.getDeviceId());
           if (device == null) {
             throw new RuntimeException("Unknown device ID");
           }

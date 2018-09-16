@@ -105,7 +105,7 @@ class AcquireDeviceImpl {
       throws SQLException, IOException {
     String personId = String.valueOf((int) ((long) jsonPerson.get("id")));
     WcifPerson person =
-      serverState.getProtoDb().getById(personId, WcifPerson.class);
+      serverState.getProtoDb().getById(WcifPerson.class, personId);
     if (person != null) {
       return person;
     }

@@ -240,7 +240,7 @@ public class ProtoDb {
     }
   }
 
-  public <T extends Message> T getById(String id, Class<T> clazz)
+  public <T extends Message> T getById(Class<T> clazz, String id)
       throws SQLException, IOException {
     Message.Builder tmpl = protoRegistry.getBuilder(clazz);
     tmpl.clear();
@@ -364,6 +364,6 @@ public class ProtoDb {
       message.getDescriptorForType().findFieldByName(fieldName);
     String messageType = field.getOptions().getExtension(OptionsProto.messageType);
     Class<T> clazz = (Class<T>) protoRegistry.getClassForName(messageType);
-    return getById((String) message.getField(field), clazz);
+    return getById(clazz, (String) message.getField(field));
   }
 }

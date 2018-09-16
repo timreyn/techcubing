@@ -39,7 +39,7 @@ class AcquireScorecardImpl {
 
     try {
       final Device device = protoDb.getById(
-          request.getContext().getDeviceId(), Device.class);
+          Device.class, request.getContext().getDeviceId());
 
       // Check if the device already has a scorecard.
       List<Scorecard> scorecards = protoDb.getAllMatching(
@@ -172,7 +172,7 @@ class AcquireScorecardImpl {
         case DECLINED:
           break;
         case OK:
-          Scorecard scorecard = protoDb.getById(scorecardId, Scorecard.class);
+          Scorecard scorecard = protoDb.getById(Scorecard.class, scorecardId);
           responseBuilder.setScorecard(scorecard);
           break;
       }

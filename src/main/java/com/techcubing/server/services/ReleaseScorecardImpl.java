@@ -34,7 +34,7 @@ class ReleaseScorecardImpl {
 
     try {
       final Device device = serverState.getProtoDb().getById(
-          request.getContext().getDeviceId(), Device.class);
+          Device.class, request.getContext().getDeviceId());
 
       // Try to atomically release the scorecard.
       ProtoDb.UpdateResult updateResult = serverState.getProtoDb().atomicUpdate(

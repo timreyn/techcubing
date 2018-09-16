@@ -27,7 +27,7 @@ public class ScorecardHandler extends BaseHandler {
     Map<String, Object> model = new HashMap<>();
     ProtoDb protoDb = serverState.getProtoDb();
 
-    Scorecard scorecard = protoDb.getById(queryParams.get("id"), Scorecard.class);
+    Scorecard scorecard = protoDb.getById(Scorecard.class, queryParams.get("id"));
     WcifPerson person = protoDb.getIdField(scorecard, "person_id");
     WcifRound round = protoDb.getIdField(scorecard, "round_id");
     WcifEvent event = protoDb.getIdField(round, "event_id");
