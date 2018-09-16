@@ -12,8 +12,10 @@ import java.util.Map;
 
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.server.framework.ProtoDb;
+import com.techcubing.server.util.ProtoUtil;
 import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.DeviceTypeProto.DeviceType;
+import com.techcubing.proto.wcif.WcifPerson;
 
 @Handler(path = "/manage_devices")
 public class ManageDevicesHandler extends BaseHandler {
@@ -40,6 +42,13 @@ public class ManageDevicesHandler extends BaseHandler {
       devicesBySerialNumber.put(device.getSerialNumber(), device);
     }
 
+    Map<String, WcifPerson> people = new HashMap<>();
+    for (Message personMessage :
+         ProtoDb.getAll(WcifPerson.newBuilder(), serverState)) {
+      WcifPerson person = (WcifPerson) personMessage;
+      people.put(ProtoUtil.getId(person), person);
+    }
+
     List<Object> attachedDevices = new ArrayList<>();
     AndroidDebugBridge bridge = serverState.getAndroidDebugBridge();
     for (IDevice iDevice : bridge.getDevices()) {
@@ -61,6 +70,7 @@ public class ManageDevicesHandler extends BaseHandler {
     }
 
     Map<String, Object> model = new HashMap<>();
+    model.put("persons", people);
     model.put("devicesByType", devicesByType);
     model.put("attachedDevices", attachedDevices);
     model.put("devicesBySerialNumber", devicesBySerialNumber);

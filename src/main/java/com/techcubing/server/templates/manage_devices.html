@@ -14,7 +14,10 @@
             <input type="hidden" name="id" value="${device.getId()}">
           </form>
           ${device.getVisibleName()} (device ${device.getId()})
-          <#if device.getDeactivated().getSeconds() == 0>
+          <#if device.personId?length != 0 >
+            (${persons[device.personId].name})
+          </#if>
+          <#if device.deactivated.seconds == 0>
             <button type="submit" value="Delete" form="${device.getId()}">Delete</button>
           <#else>
             [deleted]
