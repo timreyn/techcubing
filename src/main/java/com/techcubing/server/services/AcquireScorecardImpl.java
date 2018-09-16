@@ -144,7 +144,7 @@ class AcquireScorecardImpl {
               nextPart.setDeviceType(device.getType());
               nextPart.setDeviceId(device.getId());
               nextPart.setAcquireTimestamp(ProtoUtil.getCurrentTime());
-              // TODO: store person ID.
+              nextPart.setPersonId(device.getPersonId());
               
               // Assign scrambles, if this wasn't already assigned.
               try {
