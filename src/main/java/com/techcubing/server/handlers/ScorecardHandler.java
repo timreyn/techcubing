@@ -1,6 +1,5 @@
 package com.techcubing.server.handlers;
 
-import com.google.protobuf.Message;
 import com.sun.net.httpserver.HttpExchange;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,8 +27,7 @@ public class ScorecardHandler extends BaseHandler {
     Map<String, Object> model = new HashMap<>();
     ProtoDb protoDb = serverState.getProtoDb();
 
-    Scorecard scorecard = protoDb.getById(
-        queryParams.get("id"), Scorecard.newBuilder());
+    Scorecard scorecard = protoDb.getById(queryParams.get("id"), Scorecard.class);
     WcifPerson person = protoDb.getIdField(scorecard, "person_id");
     WcifRound round = protoDb.getIdField(scorecard, "round_id");
     WcifEvent event = protoDb.getIdField(round, "event_id");
@@ -39,17 +37,13 @@ public class ScorecardHandler extends BaseHandler {
     model.put("event", event);
 
     Map<String, WcifPerson> people = new HashMap<>();
-    for (Message personMessage :
-         protoDb.getAll(WcifPerson.newBuilder())) {
-      WcifPerson nextPerson = (WcifPerson) personMessage;
+    for (WcifPerson nextPerson : protoDb.getAll(WcifPerson.class)) {
       people.put(ProtoUtil.getId(nextPerson), nextPerson);
     }
     model.put("persons", people);
 
     Map<String, Device> devices = new HashMap<>();
-    for (Message deviceMessage :
-         protoDb.getAll(Device.newBuilder())) {
-      Device device = (Device) deviceMessage;
+    for (Device device : protoDb.getAll(Device.class)) {
       devices.put(device.getId(), device);
     }
     model.put("devices", devices);

@@ -1,6 +1,5 @@
 package com.techcubing.server.handlers;
 
-import com.google.protobuf.Message;
 import com.sun.net.httpserver.HttpExchange;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,16 +28,14 @@ public class AdminResultsHandler extends BaseHandler {
     Map<String, Object> model = new HashMap<>();
 
     Map<String, WcifEvent> events = new HashMap<>();
-    for (Message eventMessage : protoDb.getAll(WcifEvent.newBuilder())) {
-      WcifEvent event = (WcifEvent) eventMessage;
+    for (WcifEvent event : protoDb.getAll(WcifEvent.class)) {
       events.put(event.getId(), event);
     }
     model.put("events", events);
 
     WcifRound activeRound = null;
     List<WcifRound> rounds = new ArrayList<>();
-    for (Message roundMessage : protoDb.getAll(WcifRound.newBuilder())) {
-      WcifRound round = (WcifRound) roundMessage;
+    for (WcifRound round : protoDb.getAll(WcifRound.class)) {
       rounds.add(round);
       if (round.getId().equals(queryParams.get("r"))) {
         activeRound = round;
@@ -56,17 +53,13 @@ public class AdminResultsHandler extends BaseHandler {
     model.put("rounds", rounds);
 
     Map<String, WcifPerson> people = new HashMap<>();
-    for (Message personMessage :
-         protoDb.getAll(WcifPerson.newBuilder())) {
-      WcifPerson person = (WcifPerson) personMessage;
+    for (WcifPerson person : protoDb.getAll(WcifPerson.class)) {
       people.put(ProtoUtil.getId(person), person);
     }
     model.put("persons", people);
 
     Map<String, Device> devices = new HashMap<>();
-    for (Message deviceMessage :
-         protoDb.getAll(Device.newBuilder())) {
-      Device device = (Device) deviceMessage;
+    for (Device device : protoDb.getAll(Device.class)) {
       devices.put(device.getId(), device);
     }
     model.put("devices", devices);
@@ -75,13 +68,8 @@ public class AdminResultsHandler extends BaseHandler {
       model.put("activeRound", activeRound);
       WcifEvent event = events.get(activeRound.getEventId());
       model.put("activeEvent", event);
-      List<Message> scorecardMessages =
-        protoDb.getAllMatching(Scorecard.newBuilder(), "round_id", activeRound.getId());
-
-      List<Scorecard> scorecards = new ArrayList<>();
-      for (Message message : scorecardMessages) {
-        scorecards.add((Scorecard) message);
-      }
+      List<Scorecard> scorecards =
+        protoDb.getAllMatching(Scorecard.class, "round_id", activeRound.getId());
       model.put("scorecards", scorecards);
     }
     model.put("competitionId", serverState.getCompetitionId());

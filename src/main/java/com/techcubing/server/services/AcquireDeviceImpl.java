@@ -1,6 +1,5 @@
 package com.techcubing.server.services;
 
-import com.google.protobuf.Message;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -42,8 +41,8 @@ class AcquireDeviceImpl {
       String personId = ProtoUtil.getId(person);
 
       // Check if the person already has a device.
-      List<Message> devicesHeld =
-        protoDb.getAllMatching(Device.newBuilder(), "person_id", personId);
+      List<Device> devicesHeld =
+        protoDb.getAllMatching(Device.class, "person_id", personId);
       if (!devicesHeld.isEmpty()) {
         responseBuilder.setStatus(AcquireDeviceResponse.Status.ALREADY_LOGGED_IN);
         return responseBuilder.build();
@@ -51,13 +50,12 @@ class AcquireDeviceImpl {
 
       // Try to atomically acquire the device.
       ProtoDb.UpdateResult updateResult = protoDb.atomicUpdate(
-          Device.newBuilder(), deviceId,
-          new ProtoDb.ProtoUpdate() {
+          Device.class, deviceId,
+          new ProtoDb.ProtoUpdate<Device.Builder>() {
             @Override
-            public boolean update(Message.Builder builder) {
-              Device.Builder deviceBuilder = (Device.Builder) builder;
-              deviceBuilder.setPersonId(personId);
-              deviceBuilder.setAcquired(ProtoUtil.getCurrentTime());
+            public boolean update(Device.Builder builder) {
+              builder.setPersonId(personId);
+              builder.setAcquired(ProtoUtil.getCurrentTime());
               return true;
             }
           });
@@ -107,7 +105,7 @@ class AcquireDeviceImpl {
       throws SQLException, IOException {
     String personId = String.valueOf((int) ((long) jsonPerson.get("id")));
     WcifPerson person =
-      serverState.getProtoDb().getById(personId, WcifPerson.newBuilder());
+      serverState.getProtoDb().getById(personId, WcifPerson.class);
     if (person != null) {
       return person;
     }

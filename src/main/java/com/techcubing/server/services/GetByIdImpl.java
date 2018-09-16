@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import com.techcubing.server.framework.ProtoDb;
+import com.techcubing.server.framework.ProtoRegistry;
 import com.techcubing.server.framework.ServerState;
 import com.techcubing.proto.OptionsProto;
 import com.techcubing.proto.services.GetByIdProto.GetByIdRequest;
@@ -22,19 +23,19 @@ class GetByIdImpl {
 
   public GetByIdResponse getById(GetByIdRequest request) {
     GetByIdResponse.Builder responseBuilder = GetByIdResponse.newBuilder();
-    Message.Builder tmpl =
-      serverState.getProtoRegistry().getBuilder(request.getProtoType());
-    if (tmpl == null) {
+    ProtoRegistry protoRegistry = serverState.getProtoRegistry();
+    Class clazz = protoRegistry.getClassForName(request.getProtoType());
+    if (clazz == null) {
       responseBuilder.setStatus(GetByIdResponse.Status.PROTO_NOT_FOUND);
       return responseBuilder.build();
     }
-    Descriptor descriptor = tmpl.getDescriptorForType();
+    Descriptor descriptor = protoRegistry.getDescriptorForType(clazz);
     if (descriptor.getOptions().getExtension(OptionsProto.disableGetById)) {
       responseBuilder.setStatus(GetByIdResponse.Status.METHOD_DISABLED);
       return responseBuilder.build();
     }
     try {
-      Message message = serverState.getProtoDb().getById(request.getId(), tmpl);
+      Message message = serverState.getProtoDb().getById(request.getId(), clazz);
       if (message != null) {
         Message.Builder builder = message.toBuilder();
         for (FieldDescriptor field : descriptor.getFields()) {

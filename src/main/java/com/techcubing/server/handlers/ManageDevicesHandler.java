@@ -3,7 +3,6 @@ package com.techcubing.server.handlers;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
-import com.google.protobuf.Message;
 import com.sun.net.httpserver.HttpExchange;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,27 +24,22 @@ public class ManageDevicesHandler extends BaseHandler {
 
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
-    List<Message> deviceMessages =
-      serverState.getProtoDb().getAll(Device.newBuilder());
-    Map<DeviceType, List<Device>> devicesByType = new HashMap<>();
+    ProtoDb protoDb = serverState.getProtoDb();
 
+    Map<DeviceType, List<Device>> devicesByType = new HashMap<>();
     for (EnumValueDescriptor enumValue : DeviceType.getDescriptor().getValues()) {
       DeviceType type = DeviceType.valueOf(enumValue);
       devicesByType.put(type, new ArrayList<Device>());
     }
 
     Map<String, Device> devicesBySerialNumber = new HashMap<>();
-
-    for (Message deviceMessage : deviceMessages) {
-      Device device = (Device) deviceMessage;
+    for (Device device : protoDb.getAll(Device.class)) {
       devicesByType.get(device.getType()).add(device);
       devicesBySerialNumber.put(device.getSerialNumber(), device);
     }
 
     Map<String, WcifPerson> people = new HashMap<>();
-    for (Message personMessage :
-         serverState.getProtoDb().getAll(WcifPerson.newBuilder())) {
-      WcifPerson person = (WcifPerson) personMessage;
+    for (WcifPerson person : protoDb.getAll(WcifPerson.class)) {
       people.put(ProtoUtil.getId(person), person);
     }
 

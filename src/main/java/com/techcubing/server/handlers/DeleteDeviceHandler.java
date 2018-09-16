@@ -19,10 +19,11 @@ public class DeleteDeviceHandler extends BaseHandler {
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
     ProtoDb.UpdateResult result = serverState.getProtoDb().atomicUpdate(
-        Device.newBuilder(), queryParams.get("id"), new ProtoDb.ProtoUpdate() {
+        Device.class, queryParams.get("id"),
+        new ProtoDb.ProtoUpdate<Device.Builder>() {
           @Override
-          public boolean update(Message.Builder builder) {
-            ((Device.Builder) builder).setDeactivated(ProtoUtil.getCurrentTime());
+          public boolean update(Device.Builder builder) {
+            builder.setDeactivated(ProtoUtil.getCurrentTime());
             return true;
           }
         });

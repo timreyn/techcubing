@@ -1,6 +1,5 @@
 package com.techcubing.server.framework;
 
-import com.google.protobuf.Message;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,23 +27,17 @@ public class ScorecardGenerator {
     List<Scorecard> newScorecards = new ArrayList<>();
 
     // Read existing scorecards.
-    for (Message scorecardMessage :
-         protoDb.getAll(Scorecard.newBuilder())) {
-      Scorecard scorecard = (Scorecard) scorecardMessage;
+    for (Scorecard scorecard : protoDb.getAll(Scorecard.class)) {
       String key = scorecard.getPersonId() + "|" + scorecard.getRoundId();
       scorecardsByPersonAndRound.put(key, scorecard);
     }
     // Read all rounds from the database.
     Map<String, WcifRound> rounds = new HashMap<>();
-    for (Message roundMessage :
-         protoDb.getAll(WcifRound.newBuilder())) {
-      WcifRound round = (WcifRound) roundMessage;
+    for (WcifRound round : protoDb.getAll(WcifRound.class)) {
       rounds.put(round.getId(), round);
     }
     // Figure out what scorecards we need, and generate the ones we don't have.
-    for (Message personMessage :
-         protoDb.getAll(WcifPerson.newBuilder())) {
-      WcifPerson person = (WcifPerson) personMessage;
+    for (WcifPerson person : protoDb.getAll(WcifPerson.class)) {
       String personId = ProtoUtil.getId(person);
       WcifRegistration registration = person.getRegistration();
       if (registration.getStatus() != WcifRegistration.Status.accepted) {

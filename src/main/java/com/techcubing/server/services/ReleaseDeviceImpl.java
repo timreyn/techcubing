@@ -27,13 +27,12 @@ class ReleaseDeviceImpl {
     try {
       // Try to atomically release the scorecard.
       ProtoDb.UpdateResult updateResult = serverState.getProtoDb().atomicUpdate(
-          Device.newBuilder(), deviceId,
-          new ProtoDb.ProtoUpdate() {
+          Device.class, deviceId,
+          new ProtoDb.ProtoUpdate<Device.Builder>() {
             @Override
-            public boolean update(Message.Builder builder) {
-              Device.Builder deviceBuilder = (Device.Builder) builder;
-              deviceBuilder.clearPersonId();
-              deviceBuilder.clearAcquired();
+            public boolean update(Device.Builder builder) {
+              builder.clearPersonId();
+              builder.clearAcquired();
               return true;
             }
           });

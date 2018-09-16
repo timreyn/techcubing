@@ -34,16 +34,15 @@ class ReleaseScorecardImpl {
 
     try {
       final Device device = serverState.getProtoDb().getById(
-          request.getContext().getDeviceId(), Device.newBuilder());
+          request.getContext().getDeviceId(), Device.class);
 
       // Try to atomically release the scorecard.
       ProtoDb.UpdateResult updateResult = serverState.getProtoDb().atomicUpdate(
-          Scorecard.newBuilder(), scorecardId,
-          new ProtoDb.ProtoUpdate() {
+          Scorecard.class, scorecardId,
+          new ProtoDb.ProtoUpdate<Scorecard.Builder>() {
             @Override
-            public boolean update(Message.Builder builder) {
-              Scorecard.Builder scorecardBuilder = (Scorecard.Builder) builder;
-              if (!scorecardBuilder.getActiveDeviceId().equals(device.getId())) {
+            public boolean update(Scorecard.Builder builder) {
+              if (!builder.getActiveDeviceId().equals(device.getId())) {
                 responseBuilder.setStatus(
                     ReleaseScorecardResponse.Status.SCORECARD_NOT_HELD_BY_DEVICE);
                 return false;
@@ -51,7 +50,7 @@ class ReleaseScorecardImpl {
 
               // Merge data from the request.
               Attempt.Builder attemptBuilder =
-                  scorecardBuilder.getAttemptsBuilder(
+                  builder.getAttemptsBuilder(
                       request.getAttemptNumber() - 1);
 
               AttemptPart.Builder lastPartBuilder =
@@ -76,7 +75,7 @@ class ReleaseScorecardImpl {
                 }
                 attemptBuilder.setResult(request.getResult());
               }
-              scorecardBuilder.setActiveDeviceId("");
+              builder.setActiveDeviceId("");
               return true;
             }
           });

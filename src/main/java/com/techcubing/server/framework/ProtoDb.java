@@ -20,10 +20,12 @@ import com.techcubing.server.util.ProtoUtil;
 public class ProtoDb {
   MysqlConnection connection;
   ServerState serverState;
+  ProtoRegistry protoRegistry;
 
   public ProtoDb(MysqlConnection connection, ServerState serverState) {
     this.connection = connection;
     this.serverState = serverState;
+    this.protoRegistry = serverState.getProtoRegistry();
   }
 
   public String getTable(Descriptor descriptor) {
@@ -238,8 +240,9 @@ public class ProtoDb {
     }
   }
 
-  public <E extends Message> E getById(String id, Message.Builder tmpl)
+  public <T extends Message> T getById(String id, Class<T> clazz)
       throws SQLException, IOException {
+    Message.Builder tmpl = protoRegistry.getBuilder(clazz);
     tmpl.clear();
     String tableName = getTable(tmpl.getDescriptorForType());
     if (tableName == null) {
@@ -251,16 +254,17 @@ public class ProtoDb {
     ResultSet results = statement.executeQuery();
     if (results.next()) {
       tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
-      return (E) tmpl.build();
+      return (T) tmpl.build();
     } else {
       return null;
     }
   }
 
-  public List<Message> getAll(Message.Builder tmpl)
+  public <T extends Message> List<T> getAll(Class<T> clazz)
       throws SQLException, IOException {
+    Message.Builder tmpl = protoRegistry.getBuilder(clazz);
     tmpl.clear();
-    List<Message> values = new ArrayList<>();
+    List<T> values = new ArrayList<>();
     String tableName = getTable(tmpl.getDescriptorForType());
     if (tableName == null) {
       return values;
@@ -271,16 +275,17 @@ public class ProtoDb {
     while (results.next()) {
       Message.Builder value = (Message.Builder) tmpl.clone();
       value.mergeFrom(results.getBlob("data").getBinaryStream());
-      values.add(value.build());
+      values.add((T) value.build());
     }
     return values;
   }
 
-  public List<Message> getAllMatching(
-      Message.Builder tmpl, String fieldName, String fieldValue)
+  public <T extends Message> List<T> getAllMatching(
+      Class<T> clazz, String fieldName, String fieldValue)
       throws SQLException, IOException {
+    Message.Builder tmpl = protoRegistry.getBuilder(clazz);
     tmpl.clear();
-    List<Message> values = new ArrayList<>();
+    List<T> values = new ArrayList<>();
     String tableName = getTable(tmpl.getDescriptorForType());
     if (tableName == null) {
       return values;
@@ -300,7 +305,7 @@ public class ProtoDb {
     while (results.next()) {
       Message.Builder value = (Message.Builder) tmpl.clone();
       value.mergeFrom(results.getBlob("data").getBinaryStream());
-      values.add(value.build());
+      values.add((T) value.build());
     }
     return values;
   }
@@ -308,15 +313,16 @@ public class ProtoDb {
   // Used to atomically update a message in the database, and ensure that no
   // intervening updates occur.  Updates can return false to decline to make this
   // update.
-  public interface ProtoUpdate {
-    public boolean update(Message.Builder builder);
+  public interface ProtoUpdate<B extends Message.Builder> {
+    public boolean update(B builder);
   }
   public enum UpdateResult {
     OK, ID_NOT_FOUND, DECLINED, RETRIES_EXCEEDED
   };
-  public UpdateResult atomicUpdate(
-      Message.Builder tmpl, String id, ProtoUpdate update)
+  public <T extends Message, B extends Message.Builder>
+  UpdateResult atomicUpdate(Class<T> clazz, String id, ProtoUpdate<B> update)
       throws SQLException, IOException {
+    B tmpl = (B) protoRegistry.getBuilder(clazz);
     String tableName = getTable(tmpl.getDescriptorForType());
     for (int i = 0; i < 10; i++) {
       tmpl.clear();
@@ -357,7 +363,7 @@ public class ProtoDb {
     FieldDescriptor field =
       message.getDescriptorForType().findFieldByName(fieldName);
     String messageType = field.getOptions().getExtension(OptionsProto.messageType);
-    Message.Builder builder = serverState.getProtoRegistry().getBuilder(messageType);
-    return getById((String) message.getField(field), builder);
+    Class<T> clazz = (Class<T>) protoRegistry.getClassForName(messageType);
+    return getById((String) message.getField(field), clazz);
   }
 }
