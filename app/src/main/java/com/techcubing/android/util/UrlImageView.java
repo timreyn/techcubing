@@ -14,12 +14,14 @@ import android.util.Log;
 import com.jakewharton.disklrucache.DiskLruCache;
 import com.techcubing.android.BuildConfig;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 public class UrlImageView extends AppCompatImageView {
+    Uri uri = null;
+
     private static final String TAG = "TCUrlImageView";
     public UrlImageView(Context context) {
         super(context);
@@ -34,40 +36,52 @@ public class UrlImageView extends AppCompatImageView {
     private static DiskLruCache getCache(Context context) throws IOException {
         return DiskLruCache.open(
                 new File(context.getFilesDir(), "imgcache"),
-                BuildConfig.VERSION_CODE, 1, 64 * 1024);
+                BuildConfig.VERSION_CODE, 1, 8 * 1024 * 1024);
     }
 
     public void setUri(Uri uri, String cacheKey, Activity activity) {
+        if (uri == this.uri) {
+            return;
+        }
+        this.uri = uri;
         AsyncTask.execute(() -> {
             // First try to read the image from cache.
             try {
                 DiskLruCache cache = getCache(activity);
                 DiskLruCache.Snapshot snapshot = cache.get(cacheKey);
                 if (snapshot != null) {
-                    Log.i(TAG, "Cache hit for image " + uri.toString());
+                    Log.i(TAG, "Cache hit for image " + cacheKey);
                     byte[] cachedImage =
                             Base64.decode(snapshot.getString(0), Base64.URL_SAFE);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(
                             cachedImage, 0, cachedImage.length);
-                    activity.runOnUiThread(() -> {
-                        UrlImageView.this.setImageBitmap(
-                                Bitmap.createScaledBitmap(
-                                        bitmap, this.getMeasuredWidth(), this.getMeasuredHeight(),
-                                        false));
-                    });
-                    return;
+                    if (bitmap != null) {
+                        activity.runOnUiThread(() -> {
+                            UrlImageView.this.setImageBitmap(
+                                    Bitmap.createScaledBitmap(
+                                            bitmap, this.getMeasuredWidth(), this.getMeasuredHeight(),
+                                            false));
+                        });
+                        return;
+                    } else {
+                        Log.i(TAG, "Failed to decode image " + cacheKey);
+                        cache.remove(cacheKey);
+                    }
+                } else {
+                    Log.i(TAG, "Cache miss for image " + cacheKey);
                 }
                 cache.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Failed to read image from cache", e);
             }
             // Next try to read the image from the network.
             try {
                 InputStream inputStream = new java.net.URL(uri.toString()).openStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                ByteBuffer byteBuffer =
-                        ByteBuffer.allocate(bitmap.getRowBytes() * bitmap.getHeight());
-                bitmap.copyPixelsToBuffer(byteBuffer);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
 
                 activity.runOnUiThread(() -> {
                     UrlImageView.this.setImageBitmap(
@@ -80,7 +94,7 @@ public class UrlImageView extends AppCompatImageView {
                 try {
                     DiskLruCache cache = getCache(activity);
                     DiskLruCache.Editor editor = cache.edit(cacheKey);
-                    editor.set(0, Base64.encodeToString(byteBuffer.array(), Base64.URL_SAFE));
+                    editor.set(0, Base64.encodeToString(byteArray, Base64.URL_SAFE));
                     editor.commit();
                     cache.close();
                 } catch (IOException e) {
