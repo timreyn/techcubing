@@ -2,9 +2,8 @@ package com.techcubing.server.services;
 
 import com.google.protobuf.Message;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.techcubing.server.framework.ProtoDb;
 import com.techcubing.server.framework.ServerState;
@@ -42,17 +41,10 @@ class AcquireScorecardImpl {
           request.getContext().getDeviceId(), Device.newBuilder(), serverState);
 
       // Check if the device already has a scorecard.
-      PreparedStatement statement =
-        serverState.getMysqlConnection().prepareStatement(
-            "SELECT data FROM " +
-            ProtoDb.getTable(Scorecard.getDescriptor(), serverState) +
-            " where active_device_id = ?");
-      statement.setString(1, device.getId());
-
-      ResultSet results = statement.executeQuery();
-      if (results.next()) {
-        responseBuilder.getScorecardBuilder().mergeFrom(
-            results.getBlob("data").getBinaryStream());
+      List<Message> scorecards = ProtoDb.getAllMatching(
+          Scorecard.newBuilder(), "active_device_id", device.getId(), serverState);
+      if (!scorecards.isEmpty()) {
+        responseBuilder.getScorecardBuilder().mergeFrom((Scorecard) scorecards.get(0));
         responseBuilder.setStatus(
             AcquireScorecardResponse.Status.ALREADY_HAVE_A_SCORECARD);
         return responseBuilder.build();
@@ -200,14 +192,10 @@ class AcquireScorecardImpl {
     ScrambleSet scrambleSet = null;
     if (scorecardBuilder.getScrambleSetId().isEmpty()) {
       // TODO: do this more systematically, based on group assignments.
-      String tableName = ProtoDb.getTable(ScrambleSet.getDescriptor(), serverState);
-      PreparedStatement statement = serverState.getMysqlConnection().prepareStatement(
-          "SELECT data FROM " + tableName + " WHERE round_id = ? LIMIT 1");
-      statement.setString(1, scorecardBuilder.getRoundId());
-      ResultSet results = statement.executeQuery();
-      if (results.next()) {
-        scrambleSet = ScrambleSet.parseFrom(results.getBlob("data").getBinaryStream());
-      }
+      List<Message> scrambles = ProtoDb.getAllMatching(
+          ScrambleSet.newBuilder(), "round_id", scorecardBuilder.getRoundId(),
+          serverState);
+      scrambleSet = (ScrambleSet) scrambles.get(0);
     }
     // TODO: assign scrambles for extra attempts.
     for (int attemptNumber = 0;
