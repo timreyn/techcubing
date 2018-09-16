@@ -1,6 +1,7 @@
 package com.techcubing.android.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import com.techcubing.android.R;
 import com.techcubing.android.util.ActiveState;
+import com.techcubing.android.util.UrlImageView;
 import com.techcubing.proto.DeviceProto;
 import com.techcubing.proto.ScorecardProto;
 import com.techcubing.proto.wcif.WcifPerson;
@@ -58,5 +60,12 @@ public class LobbyActivity extends AppCompatActivity {
 
         TextView staffNameTextView = findViewById(R.id.lobby_staff_name);
         staffNameTextView.setText("You're signed in as " + staff.getName());
+
+        if (staff.getAvatar().getThumbUrl().length() > 0) {
+            UrlImageView imageView = findViewById(R.id.lobby_staff_image);
+            imageView.setUri(
+                    Uri.parse(staff.getAvatar().getUrl()),
+                    String.valueOf(staff.getWcaUserId()), this);
+        }
     }
 }

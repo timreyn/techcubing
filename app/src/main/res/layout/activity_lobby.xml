@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.techcubing.android.activities.SetupActivity"
-    android:orientation="vertical">
+    tools:context="com.techcubing.android.activities.SetupActivity">
 
-    <TextView
-        android:id="@+id/lobby_staff_name"
+    <com.techcubing.android.util.UrlImageView
+        android:id="@+id/lobby_staff_image"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8"
-        android:gravity="center"
-        android:textSize="24sp"/>
-    <Button
-        android:id="@+id/lobby_scan_scorecard_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:textAlignment="center"
-        android:text="Scan a scorecard" />
-    <Button
-        android:id="@+id/lobby_log_out_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:textAlignment="center"
-        android:text="Log out" />
+        android:layout_height="match_parent"
+        android:alpha="0.4" />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/lobby_staff_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:paddingTop="12dp"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+        <Button
+            android:id="@+id/lobby_scan_scorecard_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Scan a scorecard" />
+        <Button
+            android:id="@+id/lobby_log_out_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:textAlignment="center"
+            android:text="Log out" />
+    </LinearLayout>
+</FrameLayout>

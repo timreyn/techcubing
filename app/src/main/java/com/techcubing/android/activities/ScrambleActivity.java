@@ -1,8 +1,8 @@
 package com.techcubing.android.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
@@ -63,7 +63,7 @@ public class ScrambleActivity extends AppCompatActivity {
                 ActiveState.readFromCache(
                         ActiveState.SCRAMBLE, attempt.getScrambleId(), this);
         if (scrambleResponse != null) {
-            new Handler().post(() -> {
+            AsyncTask.execute(() -> {
                 onScrambleReady(scrambleResponse, device);
             });
         } else {
