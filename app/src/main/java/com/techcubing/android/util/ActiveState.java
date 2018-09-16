@@ -101,6 +101,7 @@ public class ActiveState {
             ProtoStateKey<E> key, String id, Context context, Context applicationContext) {
         E cachedE = readFromCache(key, id, context);
         if (cachedE != null) {
+            setActive(key, cachedE, context);
             return cachedE;
         }
 
@@ -129,6 +130,7 @@ public class ActiveState {
         for (StateKey key : ALL_KEYS) {
             setActive(key, null, context);
         }
+        clearCache(context);
     }
 
     private static abstract class StateKey<E> {
@@ -262,6 +264,24 @@ public class ActiveState {
             cache.remove(fullKey);
         } catch (IOException ex) {
             Log.e(TAG, "Failed to delete from cache " + fullKey, ex);
+        } finally {
+            if (cache != null) {
+                try {
+                    cache.close();
+                } catch (IOException ex) {
+                    Log.e(TAG, "Failed to close cache.", ex);
+                }
+            }
+        }
+    }
+
+    public static synchronized void clearCache(Context context) {
+        DiskLruCache cache = null;
+        try {
+            cache = getCache(context);
+            cache.delete();
+        } catch (IOException ex) {
+            Log.e(TAG, "Failed to clear cache.", ex);
         } finally {
             if (cache != null) {
                 try {

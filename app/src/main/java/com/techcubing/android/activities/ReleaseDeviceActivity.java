@@ -57,6 +57,7 @@ public class ReleaseDeviceActivity extends AppCompatActivity {
                                 ActiveState.setActive(
                                         ActiveState.STAFF, null,
                                         ReleaseDeviceActivity.this);
+                                ActiveState.clearCache(ReleaseDeviceActivity.this);
                                 startActivity(new Intent(
                                         ReleaseDeviceActivity.this,
                                         LoggedOutActivity.class));
