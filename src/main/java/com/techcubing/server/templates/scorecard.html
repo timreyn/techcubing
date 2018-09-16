@@ -33,8 +33,12 @@
         <td>
           <#list attempt.partsList as part >
             <#assign device = devices[part.deviceId]>
+            <#assign staff = persons[device.personId]>
             <#if device.type == "JUDGE">
               <div>
+                <#if staff??>
+                  ${staff.name}
+                </#if>
                 <#if part.outcome == "OK">
                   <b>${device.visibleName}</b>
                 <#elseif part.outcome == "UNKNOWN">
@@ -49,8 +53,12 @@
         <td>
           <#list attempt.partsList as part >
             <#assign device = devices[part.deviceId]>
+            <#assign staff = persons[device.personId]>
             <#if device.type == "SCRAMBLER">
               <div>
+                <#if staff??>
+                  ${staff.name}
+                </#if>
                 <#if part.outcome == "OK">
                   <b>${device.visibleName}</b>
                 <#else>
