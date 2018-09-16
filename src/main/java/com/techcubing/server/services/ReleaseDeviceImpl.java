@@ -26,7 +26,7 @@ class ReleaseDeviceImpl {
 
     try {
       // Try to atomically release the scorecard.
-      ProtoDb.UpdateResult updateResult = ProtoDb.atomicUpdate(
+      ProtoDb.UpdateResult updateResult = serverState.getProtoDb().atomicUpdate(
           Device.newBuilder(), deviceId,
           new ProtoDb.ProtoUpdate() {
             @Override
@@ -36,7 +36,7 @@ class ReleaseDeviceImpl {
               deviceBuilder.clearAcquired();
               return true;
             }
-          }, serverState);
+          });
 
       switch (updateResult) {
         case ID_NOT_FOUND:

@@ -26,16 +26,16 @@ class GetScrambleImpl {
   public GetScrambleResponse getScramble(GetScrambleRequest request) {
     GetScrambleResponse.Builder responseBuilder = GetScrambleResponse.newBuilder();
     try {
-      Device device = ProtoDb.getIdField(
-          request.getContext(), "device_id", serverState);
+      Device device = serverState.getProtoDb().getIdField(
+          request.getContext(), "device_id");
       if (device == null || device.getType() != DeviceType.SCRAMBLER) {
         responseBuilder.setStatus(GetScrambleResponse.Status.NOT_PERMITTED);
         return responseBuilder.build();
       }
       // TODO: check whether this person is allowed to see this scramble.
 
-      Scramble scramble = (Scramble) ProtoDb.getById(
-          request.getId(), Scramble.newBuilder(), serverState);
+      Scramble scramble = (Scramble) serverState.getProtoDb().getById(
+          request.getId(), Scramble.newBuilder());
       if (scramble == null) {
         responseBuilder.setStatus(GetScrambleResponse.Status.SCRAMBLE_NOT_FOUND);
         return responseBuilder.build();
@@ -53,10 +53,9 @@ class GetScrambleImpl {
       responseBuilder.setEncryptedScrambleSequence(ByteString.copyFrom(
           cipher.doFinal(scrambleSequence.getBytes())));
 
-      ScrambleSet scrambleSet = ProtoDb.getIdField(
-          scramble, "scramble_set_id", serverState);
-      WcifRound round = ProtoDb.getIdField(
-          scrambleSet, "round_id", serverState);
+      ScrambleSet scrambleSet =
+          serverState.getProtoDb().getIdField(scramble, "scramble_set_id");
+      WcifRound round = serverState.getProtoDb().getIdField(scrambleSet, "round_id");
       String eventId = round.getEventId();
 
       Puzzle puzzle = Puzzle.getPuzzleForEvent(eventId);

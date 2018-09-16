@@ -25,10 +25,11 @@ public class AdminResultsHandler extends BaseHandler {
 
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
+    ProtoDb protoDb = serverState.getProtoDb();
     Map<String, Object> model = new HashMap<>();
 
     Map<String, WcifEvent> events = new HashMap<>();
-    for (Message eventMessage : ProtoDb.getAll(WcifEvent.newBuilder(), serverState)) {
+    for (Message eventMessage : protoDb.getAll(WcifEvent.newBuilder())) {
       WcifEvent event = (WcifEvent) eventMessage;
       events.put(event.getId(), event);
     }
@@ -36,7 +37,7 @@ public class AdminResultsHandler extends BaseHandler {
 
     WcifRound activeRound = null;
     List<WcifRound> rounds = new ArrayList<>();
-    for (Message roundMessage : ProtoDb.getAll(WcifRound.newBuilder(), serverState)) {
+    for (Message roundMessage : protoDb.getAll(WcifRound.newBuilder())) {
       WcifRound round = (WcifRound) roundMessage;
       rounds.add(round);
       if (round.getId().equals(queryParams.get("r"))) {
@@ -56,7 +57,7 @@ public class AdminResultsHandler extends BaseHandler {
 
     Map<String, WcifPerson> people = new HashMap<>();
     for (Message personMessage :
-         ProtoDb.getAll(WcifPerson.newBuilder(), serverState)) {
+         protoDb.getAll(WcifPerson.newBuilder())) {
       WcifPerson person = (WcifPerson) personMessage;
       people.put(ProtoUtil.getId(person), person);
     }
@@ -64,7 +65,7 @@ public class AdminResultsHandler extends BaseHandler {
 
     Map<String, Device> devices = new HashMap<>();
     for (Message deviceMessage :
-         ProtoDb.getAll(Device.newBuilder(), serverState)) {
+         protoDb.getAll(Device.newBuilder())) {
       Device device = (Device) deviceMessage;
       devices.put(device.getId(), device);
     }
@@ -75,8 +76,7 @@ public class AdminResultsHandler extends BaseHandler {
       WcifEvent event = events.get(activeRound.getEventId());
       model.put("activeEvent", event);
       List<Message> scorecardMessages =
-        ProtoDb.getAllMatching(
-            Scorecard.newBuilder(), "round_id", activeRound.getId(), serverState);
+        protoDb.getAllMatching(Scorecard.newBuilder(), "round_id", activeRound.getId());
 
       List<Scorecard> scorecards = new ArrayList<>();
       for (Message message : scorecardMessages) {

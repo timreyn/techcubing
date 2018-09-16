@@ -83,7 +83,7 @@ public class AddScramblesHandler extends BaseHandler {
               String scrambleString = (String) scrambleObject;
               Scramble scramble = buildScramble(
                   scrambleString, scrambleSetBuilder.getId());
-              ProtoDb.write(scramble, serverState);
+              serverState.getProtoDb().write(scramble);
               scrambleSetBuilder.addScrambleId(scramble.getId());
             }
 
@@ -91,11 +91,11 @@ public class AddScramblesHandler extends BaseHandler {
               String scrambleString = (String) scrambleObject;
               Scramble scramble = buildScramble(
                   scrambleString, scrambleSetBuilder.getId());
-              ProtoDb.write(scramble, serverState);
+              serverState.getProtoDb().write(scramble);
               scrambleSetBuilder.addExtraScrambleId(scramble.getId());
             }
 
-            ProtoDb.write(scrambleSetBuilder.build(), serverState);
+            serverState.getProtoDb().write(scrambleSetBuilder.build());
           }
         }
       }

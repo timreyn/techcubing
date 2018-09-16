@@ -108,7 +108,7 @@ public class AddDeviceHandler extends BaseHandler {
           @Override
           public void flush() {
             try {
-              ProtoDb.write(device, serverState);
+              serverState.getProtoDb().write(device);
               redirectTo(URI.create("/manage_devices"), t);
             } catch (IOException | SQLException e) {
               e.printStackTrace();

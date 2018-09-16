@@ -14,7 +14,7 @@ java_library(
     name = "OAuth",
     srcs = ["OAuth.java"],
     deps = [
-        "//src/main/java/com/techcubing/server/framework:ServerState",
+        "//src/main/java/com/techcubing/server/framework",
         "@javax_javaee_web_api//jar",
     ],
 )

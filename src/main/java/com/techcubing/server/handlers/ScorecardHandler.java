@@ -26,12 +26,13 @@ public class ScorecardHandler extends BaseHandler {
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
     Map<String, Object> model = new HashMap<>();
+    ProtoDb protoDb = serverState.getProtoDb();
 
-    Scorecard scorecard = (Scorecard) ProtoDb.getById(
-        queryParams.get("id"), Scorecard.newBuilder(), serverState);
-    WcifPerson person = ProtoDb.getIdField(scorecard, "person_id", serverState);
-    WcifRound round = ProtoDb.getIdField(scorecard, "round_id", serverState);
-    WcifEvent event = ProtoDb.getIdField(round, "event_id", serverState);
+    Scorecard scorecard = (Scorecard) protoDb.getById(
+        queryParams.get("id"), Scorecard.newBuilder());
+    WcifPerson person = protoDb.getIdField(scorecard, "person_id");
+    WcifRound round = protoDb.getIdField(scorecard, "round_id");
+    WcifEvent event = protoDb.getIdField(round, "event_id");
     model.put("scorecard", scorecard);
     model.put("person", person);
     model.put("round", round);
@@ -39,7 +40,7 @@ public class ScorecardHandler extends BaseHandler {
 
     Map<String, WcifPerson> people = new HashMap<>();
     for (Message personMessage :
-         ProtoDb.getAll(WcifPerson.newBuilder(), serverState)) {
+         protoDb.getAll(WcifPerson.newBuilder())) {
       WcifPerson nextPerson = (WcifPerson) personMessage;
       people.put(ProtoUtil.getId(nextPerson), nextPerson);
     }
@@ -47,7 +48,7 @@ public class ScorecardHandler extends BaseHandler {
 
     Map<String, Device> devices = new HashMap<>();
     for (Message deviceMessage :
-         ProtoDb.getAll(Device.newBuilder(), serverState)) {
+         protoDb.getAll(Device.newBuilder())) {
       Device device = (Device) deviceMessage;
       devices.put(device.getId(), device);
     }

@@ -26,15 +26,18 @@ public class ServerStateInitializer {
     ServerState serverState = new ServerState()
       .setWcaEnvironment(flags.wca)
       .setTemplateConfig(getTemplateConfig())
-      .setMysqlConnection(new MysqlConnection())
       .setPort(8118)
       .setGrpcPort(8119)
       .setProtoRegistry(getProtoRegistry())
       .setAndroidDebugBridge(AndroidDebugBridge.createBridge());
 
+    MysqlConnection mysqlConnection = new MysqlConnection();
+
+    serverState.setProtoDb(new ProtoDb(mysqlConnection, serverState));
+
     try {
       PreparedStatement statement =
-        serverState.getMysqlConnection().prepareStatement(
+        mysqlConnection.prepareStatement(
           "SELECT competitionId FROM __ActiveCompetition WHERE env = ?");
       statement.setString(1, flags.wca.toString());
 

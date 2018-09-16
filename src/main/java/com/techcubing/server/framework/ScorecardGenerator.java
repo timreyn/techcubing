@@ -18,7 +18,7 @@ import com.techcubing.server.util.ProtoUtil;
 import com.techcubing.server.util.WcifUtil;
 
 public class ScorecardGenerator {
-  static public void generateScorecards(ServerState serverState)
+  static public void generateScorecards(ProtoDb protoDb)
       throws IOException, SQLException {
     System.out.println("Generating scorecards");
     // TODO: Currently this is generating scorecards based on event registrations.
@@ -29,7 +29,7 @@ public class ScorecardGenerator {
 
     // Read existing scorecards.
     for (Message scorecardMessage :
-         ProtoDb.getAll(Scorecard.newBuilder(), serverState)) {
+         protoDb.getAll(Scorecard.newBuilder())) {
       Scorecard scorecard = (Scorecard) scorecardMessage;
       String key = scorecard.getPersonId() + "|" + scorecard.getRoundId();
       scorecardsByPersonAndRound.put(key, scorecard);
@@ -37,13 +37,13 @@ public class ScorecardGenerator {
     // Read all rounds from the database.
     Map<String, WcifRound> rounds = new HashMap<>();
     for (Message roundMessage :
-         ProtoDb.getAll(WcifRound.newBuilder(), serverState)) {
+         protoDb.getAll(WcifRound.newBuilder())) {
       WcifRound round = (WcifRound) roundMessage;
       rounds.put(round.getId(), round);
     }
     // Figure out what scorecards we need, and generate the ones we don't have.
     for (Message personMessage :
-         ProtoDb.getAll(WcifPerson.newBuilder(), serverState)) {
+         protoDb.getAll(WcifPerson.newBuilder())) {
       WcifPerson person = (WcifPerson) personMessage;
       String personId = ProtoUtil.getId(person);
       WcifRegistration registration = person.getRegistration();
@@ -73,12 +73,12 @@ public class ScorecardGenerator {
     System.out.println("Deleting " + scorecardsByPersonAndRound.size() + " scorecards.");
     // Write new scorecards to the database.
     for (Scorecard scorecard : newScorecards) {
-      ProtoDb.write(scorecard, serverState);
+      protoDb.write(scorecard);
     }
     // Delete scorecards that we no longer need.  We don't actually delete any
     // scorecards, we just mark them as "deleted".
     for (Scorecard scorecard : scorecardsByPersonAndRound.values()) {
-      ProtoDb.write(scorecard.toBuilder().setDeleted(true).build(), serverState);
+      protoDb.write(scorecard.toBuilder().setDeleted(true).build());
     }
   }
 }

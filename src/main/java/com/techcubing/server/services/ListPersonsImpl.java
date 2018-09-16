@@ -21,7 +21,7 @@ class ListPersonsImpl {
     ListPersonsResponse.Builder responseBuilder = ListPersonsResponse.newBuilder();
     try {
       for (Message person :
-           ProtoDb.getAll(WcifPerson.newBuilder(), serverState)) {
+           serverState.getProtoDb().getAll(WcifPerson.newBuilder())) {
         responseBuilder.addPersons((WcifPerson) person);
       }
     } catch (SQLException | IOException e) {

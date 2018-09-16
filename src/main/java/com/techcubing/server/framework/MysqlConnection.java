@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.util.Calendar;
 
-public class MysqlConnection {
+class MysqlConnection {
   private Connection connection;
 
   public MysqlConnection() throws SQLException {

@@ -32,17 +32,19 @@ class AcquireScorecardImpl {
 
   public AcquireScorecardResponse acquireScorecard(
       AcquireScorecardRequest request) {
+    ProtoDb protoDb = serverState.getProtoDb();
+
     AcquireScorecardResponse.Builder responseBuilder =
       AcquireScorecardResponse.newBuilder();
     String scorecardId = request.getScorecardId();
 
     try {
-      final Device device = (Device) ProtoDb.getById(
-          request.getContext().getDeviceId(), Device.newBuilder(), serverState);
+      final Device device = (Device) protoDb.getById(
+          request.getContext().getDeviceId(), Device.newBuilder());
 
       // Check if the device already has a scorecard.
-      List<Message> scorecards = ProtoDb.getAllMatching(
-          Scorecard.newBuilder(), "active_device_id", device.getId(), serverState);
+      List<Message> scorecards = protoDb.getAllMatching(
+          Scorecard.newBuilder(), "active_device_id", device.getId());
       if (!scorecards.isEmpty()) {
         responseBuilder.getScorecardBuilder().mergeFrom((Scorecard) scorecards.get(0));
         responseBuilder.setStatus(
@@ -51,7 +53,7 @@ class AcquireScorecardImpl {
       }
 
       // Try to atomically acquire the scorecard.
-      ProtoDb.UpdateResult updateResult = ProtoDb.atomicUpdate(
+      ProtoDb.UpdateResult updateResult = protoDb.atomicUpdate(
           Scorecard.newBuilder(), scorecardId,
           new ProtoDb.ProtoUpdate() {
             @Override
@@ -67,8 +69,7 @@ class AcquireScorecardImpl {
               // more.
               WcifRound round = null;
               try {
-                round = ProtoDb.getIdField(
-                    scorecardBuilder, "round_id", serverState);
+                round = protoDb.getIdField(scorecardBuilder, "round_id");
               } catch (SQLException | IOException e) {
                 e.printStackTrace();
                 responseBuilder.setStatus(
@@ -148,7 +149,7 @@ class AcquireScorecardImpl {
               
               // Assign scrambles, if this wasn't already assigned.
               try {
-                maybeAssignScrambles(scorecardBuilder, serverState);
+                maybeAssignScrambles(scorecardBuilder);
               } catch (SQLException | IOException e) {
                 responseBuilder.setStatus(
                     AcquireScorecardResponse.Status.INTERNAL_ERROR);
@@ -162,7 +163,7 @@ class AcquireScorecardImpl {
               responseBuilder.setAttemptNumber(nextAttemptNumber);
               return true;
             }
-          }, serverState);
+          });
 
       switch (updateResult) {
         case ID_NOT_FOUND:
@@ -173,8 +174,8 @@ class AcquireScorecardImpl {
         case DECLINED:
           break;
         case OK:
-          responseBuilder.setScorecard((Scorecard) ProtoDb.getById(
-                scorecardId, Scorecard.newBuilder(), serverState));
+          responseBuilder.setScorecard((Scorecard) protoDb.getById(
+                scorecardId, Scorecard.newBuilder()));
           break;
       }
     } catch (SQLException | IOException e) {
@@ -186,15 +187,13 @@ class AcquireScorecardImpl {
     return responseBuilder.build();
   }
 
-  private void maybeAssignScrambles(
-      Scorecard.Builder scorecardBuilder, ServerState serverState) 
+  private void maybeAssignScrambles(Scorecard.Builder scorecardBuilder)
       throws IOException, SQLException {
     ScrambleSet scrambleSet = null;
     if (scorecardBuilder.getScrambleSetId().isEmpty()) {
       // TODO: do this more systematically, based on group assignments.
-      List<Message> scrambles = ProtoDb.getAllMatching(
-          ScrambleSet.newBuilder(), "round_id", scorecardBuilder.getRoundId(),
-          serverState);
+      List<Message> scrambles = serverState.getProtoDb().getAllMatching(
+          ScrambleSet.newBuilder(), "round_id", scorecardBuilder.getRoundId());
       scrambleSet = (ScrambleSet) scrambles.get(0);
     }
     // TODO: assign scrambles for extra attempts.
@@ -204,8 +203,8 @@ class AcquireScorecardImpl {
       Attempt.Builder attemptBuilder = scorecardBuilder.getAttemptsBuilder(attemptNumber);
       if (attemptBuilder.getScrambleId().isEmpty()) {
         if (scrambleSet == null) {
-          scrambleSet = ProtoDb.getIdField(
-              scorecardBuilder, "scramble_set_id", serverState);
+          scrambleSet =
+            serverState.getProtoDb().getIdField(scorecardBuilder, "scramble_set_id");
         }
         attemptBuilder.setScrambleId(scrambleSet.getScrambleId(attemptNumber));
       }

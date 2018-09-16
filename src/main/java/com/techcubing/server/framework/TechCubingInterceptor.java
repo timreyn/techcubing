@@ -18,10 +18,10 @@ import com.techcubing.proto.DeviceProto.Device;
 import com.techcubing.proto.RequestContextProto.RequestContext;
 
 public class TechCubingInterceptor implements ServerInterceptor {
-  private ServerState serverState;
+  private ProtoDb protoDb;
 
   public TechCubingInterceptor(ServerState serverState) {
-    this.serverState = serverState;
+    this.protoDb = serverState.getProtoDb();
   }
 
   @Override
@@ -41,8 +41,7 @@ public class TechCubingInterceptor implements ServerInterceptor {
           RequestContext context =
             (RequestContext) message.getField(fieldDescriptor);
           Device device =
-            (Device) ProtoDb.getById(
-                context.getDeviceId(), Device.newBuilder(), serverState);
+            (Device) protoDb.getById(context.getDeviceId(), Device.newBuilder());
           if (device == null) {
             throw new RuntimeException("Unknown device ID");
           }

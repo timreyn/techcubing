@@ -26,7 +26,7 @@ public class ManageDevicesHandler extends BaseHandler {
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
     List<Message> deviceMessages =
-      ProtoDb.getAll(Device.newBuilder(), serverState);
+      serverState.getProtoDb().getAll(Device.newBuilder());
     Map<DeviceType, List<Device>> devicesByType = new HashMap<>();
 
     for (EnumValueDescriptor enumValue : DeviceType.getDescriptor().getValues()) {
@@ -44,7 +44,7 @@ public class ManageDevicesHandler extends BaseHandler {
 
     Map<String, WcifPerson> people = new HashMap<>();
     for (Message personMessage :
-         ProtoDb.getAll(WcifPerson.newBuilder(), serverState)) {
+         serverState.getProtoDb().getAll(WcifPerson.newBuilder())) {
       WcifPerson person = (WcifPerson) personMessage;
       people.put(ProtoUtil.getId(person), person);
     }

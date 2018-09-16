@@ -18,14 +18,14 @@ public class DeleteDeviceHandler extends BaseHandler {
 
   @Override
   protected void handleImpl(HttpExchange t) throws Exception {
-    ProtoDb.UpdateResult result = ProtoDb.atomicUpdate(
+    ProtoDb.UpdateResult result = serverState.getProtoDb().atomicUpdate(
         Device.newBuilder(), queryParams.get("id"), new ProtoDb.ProtoUpdate() {
           @Override
           public boolean update(Message.Builder builder) {
             ((Device.Builder) builder).setDeactivated(ProtoUtil.getCurrentTime());
             return true;
           }
-        }, serverState);
+        });
     if (result == ProtoDb.UpdateResult.RETRIES_EXCEEDED) {
       throw new RuntimeException("Too many retries updating device.");
     }

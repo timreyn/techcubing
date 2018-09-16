@@ -33,11 +33,11 @@ class ReleaseScorecardImpl {
     String scorecardId = request.getScorecardId();
 
     try {
-      final Device device = (Device) ProtoDb.getById(
-          request.getContext().getDeviceId(), Device.newBuilder(), serverState);
+      final Device device = (Device) serverState.getProtoDb().getById(
+          request.getContext().getDeviceId(), Device.newBuilder());
 
       // Try to atomically release the scorecard.
-      ProtoDb.UpdateResult updateResult = ProtoDb.atomicUpdate(
+      ProtoDb.UpdateResult updateResult = serverState.getProtoDb().atomicUpdate(
           Scorecard.newBuilder(), scorecardId,
           new ProtoDb.ProtoUpdate() {
             @Override
@@ -79,7 +79,7 @@ class ReleaseScorecardImpl {
               scorecardBuilder.setActiveDeviceId("");
               return true;
             }
-          }, serverState);
+          });
 
       switch (updateResult) {
         case ID_NOT_FOUND:

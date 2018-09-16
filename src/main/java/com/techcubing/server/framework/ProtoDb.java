@@ -18,8 +18,15 @@ import com.techcubing.proto.OptionsProto;
 import com.techcubing.server.util.ProtoUtil;
 
 public class ProtoDb {
-  public static String getTable(
-      Descriptor descriptor, ServerState serverState) {
+  MysqlConnection connection;
+  ServerState serverState;
+
+  public ProtoDb(MysqlConnection connection, ServerState serverState) {
+    this.connection = connection;
+    this.serverState = serverState;
+  }
+
+  public String getTable(Descriptor descriptor) {
     String competitionId = serverState.getCompetitionId();
     if (competitionId == null) {
       return null;
@@ -34,10 +41,7 @@ public class ProtoDb {
     return competitionId + "__" + wcaEnvironment + "__" + tableName;
   }
 
-  public static void initializeCompetition(
-      String competitionId,
-      ServerState serverState) throws SQLException {
-    MysqlConnection connection = serverState.getMysqlConnection();
+  public void initializeCompetition(String competitionId) throws SQLException {
     serverState.setCompetitionId(competitionId);
 
     connection.prepareStatement(
@@ -53,7 +57,7 @@ public class ProtoDb {
     statement.executeUpdate();
 
     for (Descriptor descriptor : serverState.getProtoRegistry().allProtos()) {
-      String tableName = getTable(descriptor, serverState);
+      String tableName = getTable(descriptor);
       if (tableName == null) {
         continue;
       }
@@ -91,14 +95,13 @@ public class ProtoDb {
                 ".  Skipping.");
             continue;
         }
-        maybeAddColumn(tableName, mysqlColumnName, columnType, connection);
+        maybeAddColumn(tableName, mysqlColumnName, columnType);
       }
     }
   }
 
-  private static void maybeAddColumn(
-      String tableName, String columnName, String columnType,
-      MysqlConnection connection) throws SQLException {
+  private void maybeAddColumn(
+      String tableName, String columnName, String columnType) throws SQLException {
     // First check if the column already exists.
     PreparedStatement statement = connection.prepareStatement(
         "SELECT column_name FROM information_schema.columns " +
@@ -117,19 +120,17 @@ public class ProtoDb {
         columnName + " " + columnType).executeUpdate();
   }
 
-  public static void recursivelyWrite(
-      Message wcifProto, ServerState serverState) throws SQLException {
+  public void recursivelyWrite(Message wcifProto) throws SQLException {
     List<Message> toWrite = new ArrayList<>();
     recursivelyCollectMessagesToWrite(
-        wcifProto.toBuilder(), serverState, null, toWrite);
+        wcifProto.toBuilder(), null, toWrite);
     for (Message message : toWrite) {
-      write(message, serverState);
+      write(message);
     }
   }
 
-  private static void recursivelyCollectMessagesToWrite(
+  private void recursivelyCollectMessagesToWrite(
       Message.Builder builder,
-      ServerState serverState,
       String parentId,
       List<Message> toWrite) {
     String id = ProtoUtil.getId(builder);
@@ -175,8 +176,7 @@ public class ProtoDb {
                 .isEmpty()) {
               queue.add(subBuilder);
             } else {
-              recursivelyCollectMessagesToWrite(
-                  subBuilder, serverState, id, toWrite);
+              recursivelyCollectMessagesToWrite(subBuilder, id, toWrite);
             }
           }
         }
@@ -194,36 +194,32 @@ public class ProtoDb {
     toWrite.add(builder.build());
   }
 
-  public static void write(Message message, ServerState serverState)
-      throws SQLException {
+  public void write(Message message) throws SQLException {
     Descriptor descriptor = message.getDescriptorForType();
     String id = ProtoUtil.getId(message);
-    String tableName = getTable(descriptor, serverState);
-    PreparedStatement statement = serverState.getMysqlConnection().prepareStatement(
+    String tableName = getTable(descriptor);
+    PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO " + tableName + " (id, data) VALUES (?, ?) " +
         "ON DUPLICATE KEY UPDATE data = VALUES(data)");
     statement.setString(1, id);
     statement.setBlob(2, new SerialBlob(message.toByteArray()));
     statement.executeUpdate();
 
-    writeAdditionalColumns(message, serverState);
+    writeAdditionalColumns(message);
   }
 
-  private static void writeAdditionalColumns(
-      Message message, ServerState serverState)
-      throws SQLException {
+  private void writeAdditionalColumns(Message message) throws SQLException {
     Descriptor descriptor = message.getDescriptorForType();
     String id = ProtoUtil.getId(message);
-    String tableName = getTable(descriptor, serverState);
+    String tableName = getTable(descriptor);
     for (FieldDescriptor field : descriptor.getFields()) {
       String mysqlColumnName =
         field.getOptions().getExtension(OptionsProto.mysqlColumnName);
       if (mysqlColumnName.isEmpty()) {
         continue;
       }
-      PreparedStatement updateStatement =
-        serverState.getMysqlConnection().prepareStatement(
-            "UPDATE " + tableName + " SET " + mysqlColumnName + " = ? WHERE id = ?");
+      PreparedStatement updateStatement = connection.prepareStatement(
+          "UPDATE " + tableName + " SET " + mysqlColumnName + " = ? WHERE id = ?");
       switch (field.getType()) {
         case STRING:
           updateStatement.setString(1, (String) message.getField(field));
@@ -242,15 +238,14 @@ public class ProtoDb {
     }
   }
 
-  public static Message getById(
-      String id, Message.Builder tmpl, ServerState serverState)
+  public Message getById(String id, Message.Builder tmpl)
       throws SQLException, IOException {
     tmpl.clear();
-    String tableName = getTable(tmpl.getDescriptorForType(), serverState);
+    String tableName = getTable(tmpl.getDescriptorForType());
     if (tableName == null) {
       return null;
     }
-    PreparedStatement statement = serverState.getMysqlConnection().prepareStatement(
+    PreparedStatement statement = connection.prepareStatement(
         "SELECT data FROM " + tableName + " WHERE id = ?");
     statement.setString(1, id);
     ResultSet results = statement.executeQuery();
@@ -262,16 +257,15 @@ public class ProtoDb {
     }
   }
 
-  public static List<Message> getAll(
-      Message.Builder tmpl, ServerState serverState)
+  public List<Message> getAll(Message.Builder tmpl)
       throws SQLException, IOException {
     tmpl.clear();
     List<Message> values = new ArrayList<>();
-    String tableName = getTable(tmpl.getDescriptorForType(), serverState);
+    String tableName = getTable(tmpl.getDescriptorForType());
     if (tableName == null) {
       return values;
     }
-    ResultSet results = serverState.getMysqlConnection().prepareStatement(
+    ResultSet results = connection.prepareStatement(
         "SELECT data FROM " + tableName)
       .executeQuery();
     while (results.next()) {
@@ -282,12 +276,12 @@ public class ProtoDb {
     return values;
   }
 
-  public static List<Message> getAllMatching(
-      Message.Builder tmpl, String fieldName, String fieldValue, ServerState serverState)
+  public List<Message> getAllMatching(
+      Message.Builder tmpl, String fieldName, String fieldValue)
       throws SQLException, IOException {
     tmpl.clear();
     List<Message> values = new ArrayList<>();
-    String tableName = getTable(tmpl.getDescriptorForType(), serverState);
+    String tableName = getTable(tmpl.getDescriptorForType());
     if (tableName == null) {
       return values;
     }
@@ -298,8 +292,7 @@ public class ProtoDb {
     String filterColumnName =
       field.getOptions().getExtension(OptionsProto.mysqlColumnName);
 
-    PreparedStatement statement =
-      serverState.getMysqlConnection().prepareStatement(
+    PreparedStatement statement = connection.prepareStatement(
         "SELECT data FROM " + tableName + " WHERE " + filterColumnName + " = ?");
     statement.setString(1, fieldValue);
 
@@ -321,13 +314,13 @@ public class ProtoDb {
   public enum UpdateResult {
     OK, ID_NOT_FOUND, DECLINED, RETRIES_EXCEEDED
   };
-  public static UpdateResult atomicUpdate(
-      Message.Builder tmpl, String id, ProtoUpdate update,
-      ServerState serverState) throws SQLException, IOException {
-    String tableName = getTable(tmpl.getDescriptorForType(), serverState);
+  public UpdateResult atomicUpdate(
+      Message.Builder tmpl, String id, ProtoUpdate update)
+      throws SQLException, IOException {
+    String tableName = getTable(tmpl.getDescriptorForType());
     for (int i = 0; i < 10; i++) {
       tmpl.clear();
-      PreparedStatement statement = serverState.getMysqlConnection().prepareStatement(
+      PreparedStatement statement = connection.prepareStatement(
           "SELECT data, last_update FROM " + tableName + " WHERE id = ?");
       statement.setString(1, id);
       ResultSet results = statement.executeQuery();
@@ -340,14 +333,14 @@ public class ProtoDb {
         return UpdateResult.DECLINED;
       }
 
-      statement = serverState.getMysqlConnection().prepareStatement(
+      statement = connection.prepareStatement(
           "UPDATE " + tableName + " SET data = ? WHERE id = ? AND last_update = ?");
       statement.setBlob(1, new SerialBlob(tmpl.build().toByteArray()));
       statement.setString(2, id);
       statement.setTimestamp(3, results.getTimestamp("last_update"));
       if (statement.executeUpdate() == 1) {
         // Note that columns other than data are *not* updated atomically.
-        writeAdditionalColumns(tmpl.build(), serverState);
+        writeAdditionalColumns(tmpl.build());
 
         return UpdateResult.OK;
       }
@@ -359,13 +352,12 @@ public class ProtoDb {
     return UpdateResult.RETRIES_EXCEEDED;
   }
 
-  public static <T extends Message> T getIdField(
-      MessageOrBuilder message, String fieldName, ServerState serverState)
+  public <T extends Message> T getIdField(MessageOrBuilder message, String fieldName)
       throws SQLException, IOException {
     FieldDescriptor field =
       message.getDescriptorForType().findFieldByName(fieldName);
     String messageType = field.getOptions().getExtension(OptionsProto.messageType);
     Message.Builder builder = serverState.getProtoRegistry().getBuilder(messageType);
-    return (T) getById((String) message.getField(field), builder, serverState);
+    return (T) getById((String) message.getField(field), builder);
   }
 }

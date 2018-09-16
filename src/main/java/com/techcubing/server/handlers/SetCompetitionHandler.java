@@ -28,16 +28,16 @@ public class SetCompetitionHandler extends BaseHandler {
     JSONObject response = (JSONObject) getWcaApi(
         "/competitions/" + competitionId + "/wcif");
 
-    ProtoDb.initializeCompetition(competitionId, serverState);
+    serverState.getProtoDb().initializeCompetition(competitionId);
 
     WcifCompetition.Builder competitionBuilder = WcifCompetition.newBuilder();
     JsonFormat.parser().ignoringUnknownFields().merge(response.toString(), competitionBuilder);
     // Add some fields that aren't present in WCIF.
     WcifUtil.addExtraInfo(competitionBuilder);
 
-    ProtoDb.recursivelyWrite(competitionBuilder.build(), serverState);
+    serverState.getProtoDb().recursivelyWrite(competitionBuilder.build());
 
-    ScorecardGenerator.generateScorecards(serverState);
+    ScorecardGenerator.generateScorecards(serverState.getProtoDb());
 
     redirectTo(URI.create("/"), t);
   }

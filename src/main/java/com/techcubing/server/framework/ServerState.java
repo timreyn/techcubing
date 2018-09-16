@@ -12,7 +12,7 @@ public class ServerState {
   private String accessTokenGuard = "";
   private int port;
   private int grpcPort;
-  private MysqlConnection mysqlConnection;
+  private ProtoDb protoDb;
   private WcaEnvironment wcaEnvironment = WcaEnvironment.PROD;
   private ProtoRegistry protoRegistry;
   private String competitionId;
@@ -45,13 +45,13 @@ public class ServerState {
     return grpcPort;
   }
 
-  ServerState setMysqlConnection(MysqlConnection connection) {
-    this.mysqlConnection = connection;
+  ServerState setProtoDb(ProtoDb protoDb) {
+    this.protoDb = protoDb;
     return this;
   }
 
-  public MysqlConnection getMysqlConnection() {
-    return mysqlConnection;
+  public ProtoDb getProtoDb() {
+    return protoDb;
   }
 
   ServerState setWcaEnvironment(WcaEnvironment wcaEnvironment) {

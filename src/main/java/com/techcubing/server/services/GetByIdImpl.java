@@ -34,7 +34,7 @@ class GetByIdImpl {
       return responseBuilder.build();
     }
     try {
-      Message message = ProtoDb.getById(request.getId(), tmpl, serverState);
+      Message message = serverState.getProtoDb().getById(request.getId(), tmpl);
       if (message != null) {
         Message.Builder builder = message.toBuilder();
         for (FieldDescriptor field : descriptor.getFields()) {

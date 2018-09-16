@@ -28,6 +28,7 @@ class AcquireDeviceImpl {
 
   public AcquireDeviceResponse acquireDevice(
       AcquireDeviceRequest request) {
+    ProtoDb protoDb = serverState.getProtoDb();
     AcquireDeviceResponse.Builder responseBuilder =
       AcquireDeviceResponse.newBuilder();
 
@@ -42,14 +43,14 @@ class AcquireDeviceImpl {
 
       // Check if the person already has a device.
       List<Message> devicesHeld =
-        ProtoDb.getAllMatching(Device.newBuilder(), "person_id", personId, serverState);
+        protoDb.getAllMatching(Device.newBuilder(), "person_id", personId);
       if (!devicesHeld.isEmpty()) {
         responseBuilder.setStatus(AcquireDeviceResponse.Status.ALREADY_LOGGED_IN);
         return responseBuilder.build();
       }
 
       // Try to atomically acquire the device.
-      ProtoDb.UpdateResult updateResult = ProtoDb.atomicUpdate(
+      ProtoDb.UpdateResult updateResult = protoDb.atomicUpdate(
           Device.newBuilder(), deviceId,
           new ProtoDb.ProtoUpdate() {
             @Override
@@ -59,7 +60,7 @@ class AcquireDeviceImpl {
               deviceBuilder.setAcquired(ProtoUtil.getCurrentTime());
               return true;
             }
-          }, serverState);
+          });
 
       switch (updateResult) {
         case ID_NOT_FOUND:
@@ -70,8 +71,8 @@ class AcquireDeviceImpl {
         case DECLINED:
           break;
         case OK:
-          responseBuilder.setPerson((WcifPerson) ProtoDb.getById(
-                personId, WcifPerson.newBuilder(), serverState));
+          responseBuilder.setPerson((WcifPerson) protoDb.getById(
+                personId, WcifPerson.newBuilder()));
           break;
       }
     } catch (SQLException | IOException e) {
@@ -107,7 +108,7 @@ class AcquireDeviceImpl {
       throws SQLException, IOException {
     String personId = String.valueOf((int) ((long) jsonPerson.get("id")));
     WcifPerson person =
-      (WcifPerson) ProtoDb.getById(personId, WcifPerson.newBuilder(), serverState);
+      (WcifPerson) serverState.getProtoDb().getById(personId, WcifPerson.newBuilder());
     if (person != null) {
       return person;
     }
@@ -120,7 +121,7 @@ class AcquireDeviceImpl {
       builder.setWcaId((String) jsonPerson.get("wca_id"));
     }
     person = builder.build();
-    ProtoDb.write(person, serverState);
+    serverState.getProtoDb().write(person);
     return person;
   }
 }
