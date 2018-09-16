@@ -71,8 +71,7 @@ class AcquireDeviceImpl {
         case DECLINED:
           break;
         case OK:
-          responseBuilder.setPerson((WcifPerson) protoDb.getById(
-                personId, WcifPerson.newBuilder()));
+          responseBuilder.setPerson(person);
           break;
       }
     } catch (SQLException | IOException e) {
@@ -108,7 +107,7 @@ class AcquireDeviceImpl {
       throws SQLException, IOException {
     String personId = String.valueOf((int) ((long) jsonPerson.get("id")));
     WcifPerson person =
-      (WcifPerson) serverState.getProtoDb().getById(personId, WcifPerson.newBuilder());
+      serverState.getProtoDb().getById(personId, WcifPerson.newBuilder());
     if (person != null) {
       return person;
     }

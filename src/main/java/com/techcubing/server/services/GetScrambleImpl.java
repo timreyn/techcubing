@@ -34,7 +34,7 @@ class GetScrambleImpl {
       }
       // TODO: check whether this person is allowed to see this scramble.
 
-      Scramble scramble = (Scramble) serverState.getProtoDb().getById(
+      Scramble scramble = serverState.getProtoDb().getById(
           request.getId(), Scramble.newBuilder());
       if (scramble == null) {
         responseBuilder.setStatus(GetScrambleResponse.Status.SCRAMBLE_NOT_FOUND);

@@ -33,7 +33,7 @@ class ReleaseScorecardImpl {
     String scorecardId = request.getScorecardId();
 
     try {
-      final Device device = (Device) serverState.getProtoDb().getById(
+      final Device device = serverState.getProtoDb().getById(
           request.getContext().getDeviceId(), Device.newBuilder());
 
       // Try to atomically release the scorecard.

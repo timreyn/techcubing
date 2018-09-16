@@ -238,7 +238,7 @@ public class ProtoDb {
     }
   }
 
-  public Message getById(String id, Message.Builder tmpl)
+  public <E extends Message> E getById(String id, Message.Builder tmpl)
       throws SQLException, IOException {
     tmpl.clear();
     String tableName = getTable(tmpl.getDescriptorForType());
@@ -251,7 +251,7 @@ public class ProtoDb {
     ResultSet results = statement.executeQuery();
     if (results.next()) {
       tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
-      return tmpl.build();
+      return (E) tmpl.build();
     } else {
       return null;
     }
@@ -358,6 +358,6 @@ public class ProtoDb {
       message.getDescriptorForType().findFieldByName(fieldName);
     String messageType = field.getOptions().getExtension(OptionsProto.messageType);
     Message.Builder builder = serverState.getProtoRegistry().getBuilder(messageType);
-    return (T) getById((String) message.getField(field), builder);
+    return getById((String) message.getField(field), builder);
   }
 }

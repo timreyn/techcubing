@@ -41,7 +41,7 @@ public class TechCubingInterceptor implements ServerInterceptor {
           RequestContext context =
             (RequestContext) message.getField(fieldDescriptor);
           Device device =
-            (Device) protoDb.getById(context.getDeviceId(), Device.newBuilder());
+            protoDb.getById(context.getDeviceId(), Device.newBuilder());
           if (device == null) {
             throw new RuntimeException("Unknown device ID");
           }
