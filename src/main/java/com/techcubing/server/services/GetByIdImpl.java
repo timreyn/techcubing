@@ -24,12 +24,12 @@ class GetByIdImpl {
   public GetByIdResponse getById(GetByIdRequest request) {
     GetByIdResponse.Builder responseBuilder = GetByIdResponse.newBuilder();
     ProtoRegistry protoRegistry = serverState.getProtoRegistry();
-    Class clazz = protoRegistry.getClassForName(request.getProtoType());
+    Class<Message> clazz = protoRegistry.get(request.getProtoType()).clazz;
     if (clazz == null) {
       responseBuilder.setStatus(GetByIdResponse.Status.PROTO_NOT_FOUND);
       return responseBuilder.build();
     }
-    Descriptor descriptor = protoRegistry.getDescriptorForType(clazz);
+    Descriptor descriptor = protoRegistry.get(clazz).descriptor;
     if (descriptor.getOptions().getExtension(OptionsProto.disableGetById)) {
       responseBuilder.setStatus(GetByIdResponse.Status.METHOD_DISABLED);
       return responseBuilder.build();

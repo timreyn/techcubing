@@ -2,42 +2,52 @@ package com.techcubing.server.framework;
 
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Message;
-import java.util.Collection;
+import com.google.protobuf.Parser;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProtoRegistry {
-  private Map<String, Class> classesByName;
-  private Map<Class, Descriptor> descriptors;
-  private Map<Class, Message.Builder> builders;
+  public class RegistryEntry<T extends Message> {
+    public final Class<T> clazz;
+    public final Descriptor descriptor;
+    public final Parser<T> parser;
+
+    RegistryEntry(T instance) {
+      this.clazz = (Class<T>) instance.getClass();
+      this.parser = (Parser<T>) instance.getParserForType();
+      this.descriptor = instance.getDescriptorForType();
+    }
+  }
+
+  private Map<String, RegistryEntry> entriesByName;
+  private Map<Class, RegistryEntry> entriesByClass;
 
   public ProtoRegistry() {
-    this.descriptors = new HashMap<>();
-    this.builders = new HashMap<>();
-    this.classesByName = new HashMap<>();
+    this.entriesByName = new HashMap<>();
+    this.entriesByClass = new HashMap<>();
   }
 
-  void registerProto(Message.Builder builder) {
-    Descriptor descriptor = builder.getDescriptorForType();
-    Class clazz = builder.build().getClass();
-    descriptors.put(clazz, descriptor);
-    builders.put(clazz, builder);
-    classesByName.put(descriptor.getFullName(), clazz);
+  <T extends Message> void register(T instance) {
+    RegistryEntry<T> entry = new RegistryEntry(instance);
+    entriesByName.put(entry.descriptor.getFullName(), entry);
+    entriesByClass.put(entry.clazz, entry);
   }
 
-  public Class getClassForName(String name) {
-    return classesByName.get(name);
+  public <T extends Message> RegistryEntry<T> get(String name) {
+    return (RegistryEntry<T>) entriesByName.get(name);
   }
 
-  public Descriptor getDescriptorForType(Class clazz) {
-    return descriptors.get(clazz);
+  public <T extends Message> RegistryEntry<T> get(Class<T> clazz) {
+    return (RegistryEntry<T>) entriesByClass.get(clazz);
   }
 
-  public Message.Builder getBuilder(Class clazz) {
-    return builders.get(clazz).clone();
-  }
-
-  public Collection<Descriptor> allProtos() {
-    return descriptors.values();
+  public List<Class<Message>> allProtos() {
+    List<Class<Message>> allProtos = new ArrayList<>();
+    for (RegistryEntry entry : entriesByName.values()) {
+      allProtos.add(entry.clazz);
+    }
+    return allProtos;
   }
 }

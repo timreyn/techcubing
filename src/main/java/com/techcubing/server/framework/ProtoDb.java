@@ -4,6 +4,7 @@ import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
+import com.google.protobuf.Parser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,7 +29,7 @@ public class ProtoDb {
     this.protoRegistry = serverState.getProtoRegistry();
   }
 
-  public String getTable(Descriptor descriptor) {
+  private <T extends Message> String getTable(Class<T> clazz) {
     String competitionId = serverState.getCompetitionId();
     if (competitionId == null) {
       return null;
@@ -36,6 +37,7 @@ public class ProtoDb {
 
     String wcaEnvironment = serverState.getWcaEnvironment().toString();
 
+    Descriptor descriptor = protoRegistry.get(clazz).descriptor;
     String tableName = descriptor.getOptions().getExtension(OptionsProto.mysqlTableName);
     if (tableName == null) {
       return null;
@@ -58,8 +60,8 @@ public class ProtoDb {
     statement.setString(3, competitionId);
     statement.executeUpdate();
 
-    for (Descriptor descriptor : serverState.getProtoRegistry().allProtos()) {
-      String tableName = getTable(descriptor);
+    for (Class<Message> clazz : protoRegistry.allProtos()) {
+      String tableName = getTable(clazz);
       if (tableName == null) {
         continue;
       }
@@ -72,7 +74,8 @@ public class ProtoDb {
           ")").executeUpdate();
 
       // Add other columns that might be needed.
-      for (FieldDescriptor field : descriptor.getFields()) {
+      for (FieldDescriptor field :
+           protoRegistry.get(clazz).descriptor.getFields()) {
         String mysqlColumnName =
           field.getOptions().getExtension(OptionsProto.mysqlColumnName);
         if (mysqlColumnName.isEmpty()) {
@@ -199,7 +202,7 @@ public class ProtoDb {
   public void write(Message message) throws SQLException {
     Descriptor descriptor = message.getDescriptorForType();
     String id = ProtoUtil.getId(message);
-    String tableName = getTable(descriptor);
+    String tableName = getTable(message.getClass());
     PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO " + tableName + " (id, data) VALUES (?, ?) " +
         "ON DUPLICATE KEY UPDATE data = VALUES(data)");
@@ -213,7 +216,7 @@ public class ProtoDb {
   private void writeAdditionalColumns(Message message) throws SQLException {
     Descriptor descriptor = message.getDescriptorForType();
     String id = ProtoUtil.getId(message);
-    String tableName = getTable(descriptor);
+    String tableName = getTable(message.getClass());
     for (FieldDescriptor field : descriptor.getFields()) {
       String mysqlColumnName =
         field.getOptions().getExtension(OptionsProto.mysqlColumnName);
@@ -242,9 +245,8 @@ public class ProtoDb {
 
   public <T extends Message> T getById(Class<T> clazz, String id)
       throws SQLException, IOException {
-    Message.Builder tmpl = protoRegistry.getBuilder(clazz);
-    tmpl.clear();
-    String tableName = getTable(tmpl.getDescriptorForType());
+    Parser<T> parser = protoRegistry.get(clazz).parser;
+    String tableName = getTable(clazz);
     if (tableName == null) {
       return null;
     }
@@ -253,8 +255,7 @@ public class ProtoDb {
     statement.setString(1, id);
     ResultSet results = statement.executeQuery();
     if (results.next()) {
-      tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
-      return (T) tmpl.build();
+      return parser.parseFrom(results.getBlob("data").getBinaryStream());
     } else {
       return null;
     }
@@ -262,10 +263,9 @@ public class ProtoDb {
 
   public <T extends Message> List<T> getAll(Class<T> clazz)
       throws SQLException, IOException {
-    Message.Builder tmpl = protoRegistry.getBuilder(clazz);
-    tmpl.clear();
+    Parser<T> parser = protoRegistry.get(clazz).parser;
     List<T> values = new ArrayList<>();
-    String tableName = getTable(tmpl.getDescriptorForType());
+    String tableName = getTable(clazz);
     if (tableName == null) {
       return values;
     }
@@ -273,9 +273,7 @@ public class ProtoDb {
         "SELECT data FROM " + tableName)
       .executeQuery();
     while (results.next()) {
-      Message.Builder value = (Message.Builder) tmpl.clone();
-      value.mergeFrom(results.getBlob("data").getBinaryStream());
-      values.add((T) value.build());
+      values.add(parser.parseFrom(results.getBlob("data").getBinaryStream()));
     }
     return values;
   }
@@ -283,14 +281,14 @@ public class ProtoDb {
   public <T extends Message> List<T> getAllMatching(
       Class<T> clazz, String fieldName, String fieldValue)
       throws SQLException, IOException {
-    Message.Builder tmpl = protoRegistry.getBuilder(clazz);
-    tmpl.clear();
+    Parser<T> parser = protoRegistry.get(clazz).parser;
     List<T> values = new ArrayList<>();
-    String tableName = getTable(tmpl.getDescriptorForType());
+    String tableName = getTable(clazz);
     if (tableName == null) {
       return values;
     }
-    FieldDescriptor field = tmpl.getDescriptorForType().findFieldByName(fieldName);
+    FieldDescriptor field =
+      protoRegistry.get(clazz).descriptor.findFieldByName(fieldName);
     if (field == null) {
       return values;
     }
@@ -303,9 +301,7 @@ public class ProtoDb {
 
     ResultSet results = statement.executeQuery();
     while (results.next()) {
-      Message.Builder value = (Message.Builder) tmpl.clone();
-      value.mergeFrom(results.getBlob("data").getBinaryStream());
-      values.add((T) value.build());
+      values.add(parser.parseFrom(results.getBlob("data").getBinaryStream()));
     }
     return values;
   }
@@ -317,15 +313,17 @@ public class ProtoDb {
     public boolean update(B builder);
   }
   public enum UpdateResult {
-    OK, ID_NOT_FOUND, DECLINED, RETRIES_EXCEEDED
+    OK, ID_NOT_FOUND, DECLINED, RETRIES_EXCEEDED, INVALID_PROTO
   };
   public <T extends Message, B extends Message.Builder>
   UpdateResult atomicUpdate(Class<T> clazz, String id, ProtoUpdate<B> update)
       throws SQLException, IOException {
-    B tmpl = (B) protoRegistry.getBuilder(clazz);
-    String tableName = getTable(tmpl.getDescriptorForType());
+    Parser<T> parser = protoRegistry.get(clazz).parser;
+    String tableName = getTable(clazz);
+    if (tableName == null) {
+      return UpdateResult.INVALID_PROTO;
+    }
     for (int i = 0; i < 10; i++) {
-      tmpl.clear();
       PreparedStatement statement = connection.prepareStatement(
           "SELECT data, last_update FROM " + tableName + " WHERE id = ?");
       statement.setString(1, id);
@@ -333,20 +331,24 @@ public class ProtoDb {
       if (!results.next()) {
         return UpdateResult.ID_NOT_FOUND;
       }
-      tmpl.mergeFrom(results.getBlob("data").getBinaryStream());
 
-      if (!update.update(tmpl)) {
+      B builder =
+        (B) parser.parseFrom(results.getBlob("data").getBinaryStream()).toBuilder();
+
+      if (!update.update(builder)) {
         return UpdateResult.DECLINED;
       }
 
+      T message = (T) builder.build();
+
       statement = connection.prepareStatement(
           "UPDATE " + tableName + " SET data = ? WHERE id = ? AND last_update = ?");
-      statement.setBlob(1, new SerialBlob(tmpl.build().toByteArray()));
+      statement.setBlob(1, new SerialBlob(message.toByteArray()));
       statement.setString(2, id);
       statement.setTimestamp(3, results.getTimestamp("last_update"));
       if (statement.executeUpdate() == 1) {
         // Note that columns other than data are *not* updated atomically.
-        writeAdditionalColumns(tmpl.build());
+        writeAdditionalColumns(message);
 
         return UpdateResult.OK;
       }
@@ -363,7 +365,7 @@ public class ProtoDb {
     FieldDescriptor field =
       message.getDescriptorForType().findFieldByName(fieldName);
     String messageType = field.getOptions().getExtension(OptionsProto.messageType);
-    Class<T> clazz = (Class<T>) protoRegistry.getClassForName(messageType);
+    Class<T> clazz = (Class<T>) protoRegistry.get(messageType).clazz;
     return getById(clazz, (String) message.getField(field));
   }
 }

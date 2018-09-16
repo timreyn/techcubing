@@ -64,14 +64,14 @@ public class ServerStateInitializer {
 
   static ProtoRegistry getProtoRegistry() {
     ProtoRegistry registry = new ProtoRegistry();
-    registry.registerProto(Device.newBuilder());
-    registry.registerProto(Scorecard.newBuilder());
-    registry.registerProto(Scramble.newBuilder());
-    registry.registerProto(ScrambleSet.newBuilder());
-    registry.registerProto(WcifCompetition.newBuilder());
-    registry.registerProto(WcifEvent.newBuilder());
-    registry.registerProto(WcifPerson.newBuilder());
-    registry.registerProto(WcifRound.newBuilder());
+    registry.register(Device.getDefaultInstance());
+    registry.register(Scorecard.getDefaultInstance());
+    registry.register(Scramble.getDefaultInstance());
+    registry.register(ScrambleSet.getDefaultInstance());
+    registry.register(WcifCompetition.getDefaultInstance());
+    registry.register(WcifEvent.getDefaultInstance());
+    registry.register(WcifPerson.getDefaultInstance());
+    registry.register(WcifRound.getDefaultInstance());
     return registry;
   }
 }
