@@ -2,6 +2,7 @@ package com.techcubing.android.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
@@ -62,7 +63,9 @@ public class ScrambleActivity extends AppCompatActivity {
                 ActiveState.readFromCache(
                         ActiveState.SCRAMBLE, attempt.getScrambleId(), this);
         if (scrambleResponse != null) {
-            onScrambleReady(scrambleResponse, device);
+            new Handler().post(() -> {
+                onScrambleReady(scrambleResponse, device);
+            });
         } else {
             // Get the scramble from the server.
             TechCubingServiceGrpc.TechCubingServiceFutureStub stub =
